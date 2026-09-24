@@ -218,9 +218,8 @@ function initVideo() {
    producción, ponerlo en true: entonces se muestra una sola vez por evento.
    -------------------------------------------------------------------------- */
 
-// Desactivado mientras se revisan los cambios: estorba para iterar rápido.
-// Ponelo en true (o `?popup=on`) para volver a verlo.
-const POPUP_ENABLED = false;
+// `?popup=off` lo saca puntualmente, para mirar la página sin él.
+const POPUP_ENABLED = true;
 
 const REMEMBER_DISMISSAL = false;
 const POPUP_KEY = 'cdi:event-popup';
@@ -364,8 +363,11 @@ function initVersionSwitch() {
   const root = document.querySelector('[data-version-switch]');
   if (!root) return;
 
-  // `?switch=off` para capturas limpias.
-  if (new URLSearchParams(location.search).get('switch') === 'off') {
+  // Oculto salvo que se pida con `?switch=on`. Es una herramienta para mostrar
+  // las variantes, no parte de la página: en el link que ve el cliente estorba.
+  // Las variantes siguen eligiéndose por URL (`?profiles=`, `?intranet=`)
+  // aunque el conmutador no esté a la vista.
+  if (new URLSearchParams(location.search).get('switch') !== 'on') {
     root.remove();
     return;
   }
