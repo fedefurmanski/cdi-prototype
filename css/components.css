@@ -566,12 +566,24 @@
   max-width: calc(100% - 32px);
   max-height: calc(100dvh - 32px);
   padding: 0;
-  border: 0;
+  /* Borde de verdad, no el anillo de foco. El diálogo recibe el foco al
+     abrirse y la regla general de `:focus-visible` le dibujaba un contorno
+     turquesa separado 3px; se veía parecido, pero desaparecía en cuanto el
+     foco pasaba a la cruz de cerrar. */
+  border: 3px solid var(--c-teal);
   border-radius: var(--r-card);
   background: var(--c-surface);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
   color: var(--c-ink);
   overflow: auto;
+}
+
+/* Sin anillo de foco en el contenedor: ahora tiene borde propio y se duplicaba.
+   Los controles de adentro conservan el suyo, que es lo que necesita quien
+   navega con teclado. */
+.event-popup:focus,
+.event-popup:focus-visible {
+  outline: none;
 }
 
 .event-popup::backdrop {
