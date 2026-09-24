@@ -1,0 +1,169 @@
+/* ==========================================================================
+   CDI — Design tokens
+   Valores extraídos del Figma "CDI Refonte HP" (frame home 1 · 549:145).
+   Todo lo que se repite vive acá: si cambia la marca, se cambia acá.
+   ========================================================================== */
+
+:root {
+  /* --- Paleta de marca ---------------------------------------------------- */
+  --c-teal: #2ab7c8;          /* primario: botones, badges, links */
+  --c-teal-deep: #15afc6;     /* acento de tarjetas / links "En savoir plus" */
+  --c-orange: #f7a827;
+  --c-orange-soft: #fe9a41;
+  --c-coral: #e9503e;
+  --c-green: #adcb47;
+  --c-green-soft: #a5cd39;    /* pill "Facile à lire" */
+  --c-pink: #ea5f9e;          /* también el pill "Intranet" */
+  --c-pink-deep: #b14274;     /* disco dentro del pill Intranet */
+  --c-teal-dark: #1f8996;     /* ídem, para la versión azul */
+  --c-navy: #000f2d;          /* botón "Lire le texte" */
+
+  /* --- Neutros ------------------------------------------------------------ */
+  --c-ink: #000000;           /* títulos */
+  --c-ink-soft: #1f1f1f;      /* links de footer */
+  --c-body: #565e6b;          /* textos de párrafo en tarjetas */
+  --c-muted: #909090;         /* pills de categoría, "Voir plus" */
+  --c-grey-500: #5f6776;
+  --c-grey-300: #797979;
+  --c-grey-200: #e9e9e9;      /* fondo de pills */
+  --c-grey-100: #e6e6e6;
+  --c-line: #d9d9d9;
+
+  --c-surface: #ffffff;
+  --c-surface-alt: #f8f9fb;   /* bandas "profils", "video", "footer" */
+  --c-surface-bar: #f5f5f5;   /* barra de accesibilidad */
+  --c-deco: #f1f2f4;          /* formas decorativas grises */
+
+  /* --- Tipografía --------------------------------------------------------- */
+  --font-sans: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+
+  --fw-regular: 400;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  /* Escala tipográfica del Figma, multiplicada por `--fs-scale`. Los botones
+     A+ / A− de la barra de accesibilidad mueven ese multiplicador; con 1 los
+     valores son exactamente los del diseño. Los interlineados van en
+     proporción (sin unidad) para que acompañen el crecimiento. */
+  --fs-scale: 1;
+  --fs-display: calc(50px * var(--fs-scale));   /* H1 hero */
+  --fs-lead: calc(38px * var(--fs-scale));      /* párrafo elevator speech */
+  --fs-h2: calc(32px * var(--fs-scale));        /* títulos de sección */
+  --fs-h3: calc(26px * var(--fs-scale));        /* "Les parents" / "Les professionnels" */
+  --fs-h4: calc(20px * var(--fs-scale));        /* títulos de tarjeta */
+  --fs-lg: calc(22px * var(--fs-scale));        /* bajada del hero */
+  --fs-md: calc(18px * var(--fs-scale));        /* links de footer */
+  --fs-base: calc(16px * var(--fs-scale));
+  --fs-sm: calc(15px * var(--fs-scale));        /* cuerpo de tarjeta, nav */
+  --fs-xs: calc(14px * var(--fs-scale));        /* pills, botones, subtítulos */
+
+  /* --- Espaciado ----------------------------------------------------------
+     Escala de 4px. Las medidas del Figma venían sueltas (146, 147, 149, 171,
+     79, 85, 78…); acá se redondean al escalón más cercano para que el ritmo
+     vertical sea el mismo en todas las bandas. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* Ritmo de las bandas */
+  --section-pt: var(--space-32);   /* aire sobre el encabezado */
+  --section-pb: var(--space-32);   /* aire bajo el contenido */
+  --head-gap: var(--space-20);     /* encabezado → contenido */
+
+  /* --- Layout ------------------------------------------------------------- */
+  --canvas: 1512px;           /* ancho del artboard de Figma */
+  --container: 1272px;        /* contenido: 1512 - 120*2 */
+  --gutter: 120px;            /* margen lateral en el artboard */
+  --gutter-min: 40px;         /* margen lateral mínimo al angostar */
+
+  --topbar-h: 57px;           /* franja del gobierno */
+  --toolbar-h: 51px;          /* barra de accesibilidad */
+  --nav-h: 77px;              /* barra de navegación principal */
+  --header-h: 185px;          /* suma de las tres */
+
+  /* --- Formas ------------------------------------------------------------- */
+  --r-card: 20px;
+  --r-media: 14px;
+  --r-btn: 10px;
+  --r-pill: 33px;
+
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  /* Alto de la tarjeta de actualidad. Las flechas del carrusel se centran
+     contra este valor, así que se mueven solas si cambia. */
+  --news-card-h: 579px;
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  /* --- Versiones del header ----------------------------------------------
+     El cliente pidió dos: botón Intranet en rosa (por defecto) y en azul.
+     El atributo `data-intranet` en <html> cambia estos dos valores; los
+     componentes sólo los consumen. */
+  /* Capa negra sobre el vídeo del hero, como en el Figma.
+     Ojo: con el metraje real, a 0.2 el texto blanco cae a 1.4:1 de contraste
+     en los planos claros (AA pide 4.5:1). Subir este valor es la palanca. */
+  --hero-scrim: 0.2;
+
+  --intranet-bg: var(--c-pink);
+  --intranet-disc: var(--c-pink-deep);
+
+  /* --- Movimiento ---------------------------------------------------------
+     Una sola fuente de verdad para las animaciones que vienen después.       */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  /* Los levantamientos al pasar el puntero: `--ease-out` arranca muy rápido
+     y el gesto se sentía seco. Esta curva sale más despacio. */
+  --dur-hover: 460ms;
+  --ease-hover: cubic-bezier(0.33, 0.9, 0.35, 1);
+  --dur-slow: 620ms;
+  --dur-deco: 800ms; /* entrada de las formas */
+  --dur-line: 760ms; /* entrada del texto, línea por línea */
+}
+
+/* Segunda versión pedida por el cliente: mismo layout, Intranet en azul. */
+[data-intranet="blue"] {
+  --intranet-bg: var(--c-teal);
+  --intranet-disc: var(--c-teal-dark);
+}
+
+/* ==========================================================================
+   Alto contraste
+   Lo activa el botón de la barra de accesibilidad. No es un filtro global:
+   se redefinen los tokens de color por otros que pasan AA (4,5:1) sobre
+   blanco, y se refuerzan los puntos donde el texto va sobre foto.
+   Los valores salen de oscurecer cada color de marca hasta cruzar el umbral.
+   ========================================================================== */
+
+.is-high-contrast {
+  --c-teal: #1d808c;
+  --c-teal-deep: #108193;
+  --c-teal-dark: #0e5f6b;
+  --c-orange: #9e6c19;
+  --c-orange-soft: #9a5c1e;
+  --c-coral: #cd4637;
+  --c-green: #6b7e2c;
+  --c-green-soft: #667a28;
+  --c-pink: #c04e82;
+  --c-pink-deep: #8d3a60;
+  --c-muted: #767676;
+  --c-body: #2b3038;
+  --c-ink-soft: #000000;
+  --c-line: #767676;
+
+  /* El texto del hero va sobre vídeo: con el velo del diseño quedaba en 1,4:1
+     sobre los planos claros. En alto contraste el velo manda. */
+  --hero-scrim: 0.72;
+}

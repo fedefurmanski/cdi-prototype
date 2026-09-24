@@ -1,0 +1,1027 @@
+/* ==========================================================================
+   CDI — Secciones de la home
+   Las medidas siguen el artboard de 1512px del Figma.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1 · Header (franja gobierno + barra de accesibilidad + navegación)
+   -------------------------------------------------------------------------- */
+
+.header {
+  position: relative;
+  z-index: 10;
+  background: var(--c-surface);
+}
+
+/* Franja del Gouvernement */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--topbar-h);
+  padding-inline: 16px;
+  background: var(--c-surface);
+}
+
+.topbar__gov {
+  width: 173px;
+  height: 34px;
+  object-fit: contain;
+}
+
+/* Barra de accesibilidad */
+/* La banda centra su contenido ella misma. Con `min-height` en el padre, un
+   `height: 100%` en el hijo no resuelve —el alto del padre es auto— y la fila
+   quedaba pegada arriba dejando aire abajo. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  min-height: var(--toolbar-h);
+  background: var(--c-surface-bar);
+}
+
+.toolbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.toolbar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--c-ink);
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.toolbar__btn:hover {
+  opacity: 0.7;
+}
+
+.toolbar__langs {
+  display: flex;
+  gap: 5px;
+  /* Igual que antes del selector: los idiomas son un grupo propio. */
+  margin-right: 18px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+}
+
+.toolbar__lang {
+  color: var(--c-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.toolbar__lang:hover {
+  color: var(--c-grey-500);
+}
+
+.toolbar__lang[aria-current="true"] {
+  color: var(--c-ink);
+}
+
+.toolbar__easy {
+  gap: 8px;
+  min-height: 30px;
+  padding: 0 14px 0 4px;
+  border-radius: var(--r-pill);
+  background: var(--c-green-soft);
+  color: #fff;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+}
+
+.toolbar__easy img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+
+.toolbar__intranet {
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 10px 0 8px;
+  border-radius: var(--r-pill);
+  background-color: var(--intranet-bg);
+  color: #fff;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+}
+
+/* Disco relleno más oscuro con la flecha blanca encima — no un aro con borde,
+   que era como lo tenía mal. */
+.toolbar__intranet-icon {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background-color: var(--intranet-disc);
+  color: #fff;
+}
+
+/* Navegación principal */
+.nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--nav-h);
+}
+
+.nav__logo {
+  width: 173px;
+  height: 42px;
+  /* El logo arranca en x=132 (12px dentro del contenedor). En el Figma está 8px
+     sobre el centro de la barra, pero ópticamente quedaba alto: 2px. */
+  margin-left: 12px;
+  transform: translateY(-2px);
+}
+
+.nav > nav {
+  margin-left: auto;
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+/* La búsqueda bajó de la barra de accesibilidad a la barra principal. */
+.nav__search {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  margin-left: 28px;
+  border-radius: 50%;
+  background: var(--c-grey-200);
+  color: var(--c-ink);
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.nav__search:hover {
+  background: var(--c-line);
+}
+
+/* El glifo vive centrado dentro de un viewBox de 30px: la caja va a tamaño
+   natural para que salga con el grosor de trazo del diseño. */
+.nav__search .icon {
+  width: 30px;
+  height: 30px;
+}
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: 1.6;
+  color: var(--c-ink);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.nav__link:hover {
+  color: var(--c-teal);
+}
+
+.nav__link .icon {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.nav__link:hover .icon {
+  transform: rotate(180deg);
+}
+
+/* Botón de menú: oculto mientras la nav horizontal entre (ver breakpoints). */
+.nav__toggle {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  border-radius: var(--r-btn);
+  color: var(--c-ink);
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.nav__toggle:hover {
+  background: var(--c-surface-alt);
+}
+
+.nav__toggle-bars,
+.nav__toggle-bars::before,
+.nav__toggle-bars::after {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.nav__toggle-bars::before,
+.nav__toggle-bars::after {
+  content: "";
+  position: relative;
+}
+
+.nav__toggle-bars::before {
+  top: -7px;
+}
+
+.nav__toggle-bars::after {
+  top: 5px;
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars {
+  transform: scaleX(0);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars::before {
+  transform: translateY(7px) rotate(45deg) scaleX(1);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__toggle-bars::after {
+  transform: translateY(-5px) rotate(-45deg) scaleX(1);
+}
+
+/* --------------------------------------------------------------------------
+   2 · Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  display: flex;
+  /* Justo el alto del viewport menos el header, para que el primer scroll
+     empiece en la sección siguiente. El piso evita que en ventanas muy bajas
+     el texto se salga del hero. */
+  min-height: 798px;
+  min-height: max(620px, calc(100dvh - var(--header-h)));
+  background-color: var(--c-grey-100);
+  color: #fff;
+  overflow: hidden;
+}
+
+/* El encuadre del Figma (115.6% de ancho anclado al pie) venía de que allí el
+   hero mide 983px de alto y el header tapa los primeros 185. Aplicado al vídeo
+   real recortaba ~30% del fotograma. Con `cover` sobre la caja del hero se
+   recorta lo mínimo indispensable y se ve casi todo el plano. */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+  /* Acercamiento lento al scrollear, con una deriva hacia abajo. Los dos
+     valores los escribe `initHeroParallax()`. En reposo valen 1 y 0, así que
+     el encuadre de arranque es exactamente el mismo de antes. Va en `translate`
+     y `scale` y no en `transform`, como el resto de las animaciones. */
+  translate: 0 var(--hero-shift, 0px);
+  scale: var(--hero-zoom, 1);
+  will-change: translate, scale;
+}
+
+/* Capa negra plana sobre todo el vídeo, como en el Figma. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, var(--hero-scrim));
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 188px;
+  padding-bottom: 62px;
+}
+
+.hero__eyebrow {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  line-height: 2.375;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hero__title {
+  margin-top: 10px;
+  max-width: 904px;
+  font-size: var(--fs-display);
+  font-weight: var(--fw-bold);
+  line-height: 1.08;
+}
+
+/* La caja del Figma mide 652px, pero con Open Sans real el "des" del final
+   sube a la línea 2. 616px reproduce los cortes del diseño (línea más larga:
+   615px). Revisar este valor cuando entre el responsive. */
+.hero__text {
+  margin-top: 23px;
+  max-width: 616px;
+  font-size: var(--fs-lg);
+  line-height: 1.5455;
+}
+
+.hero__text strong {
+  font-weight: var(--fw-extrabold);
+}
+
+.hero .btn {
+  margin-top: 36px;
+  width: 212px;
+}
+
+/* Empuja el botón al pie: el hueco absorbe el alto sobrante del viewport. */
+.hero__play {
+  margin-top: auto;
+}
+
+/* --------------------------------------------------------------------------
+   3 · Elevator speech
+   -------------------------------------------------------------------------- */
+
+/* El bloque de texto se centra en la banda en vez de apoyarse arriba: con el
+   padding fijo quedaba 75px por encima del centro óptico. */
+.elevator {
+  display: flex;
+  align-items: center;
+  min-height: 654px;
+  background: var(--c-surface);
+}
+
+.elevator__inner {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--section-pt);
+  /* Algo más de aire abajo que arriba: centrado exacto se leía bajo. */
+  padding-bottom: calc(var(--section-pb) + var(--space-16));
+  text-align: center;
+}
+
+.elevator__label {
+  font-size: var(--fs-xs);
+  line-height: 1.8571;
+  color: var(--c-ink);
+}
+
+.elevator__text {
+  margin: 21px auto 0;
+  max-width: 840px;
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-regular);
+  line-height: 1.3889;
+  color: var(--c-ink);
+}
+
+.elevator__text strong {
+  font-weight: var(--fw-bold);
+}
+
+/* --------------------------------------------------------------------------
+   4 · Nos services par profils
+   -------------------------------------------------------------------------- */
+
+.profiles {
+  min-height: 588px;
+}
+
+.profiles__inner {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--space-24);
+  padding-bottom: var(--space-24);
+}
+
+.profiles__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-10);
+  margin-top: var(--head-gap);
+}
+
+/* Sólo se muestra la variante elegida en el conmutador. */
+.profiles__variant {
+  display: none;
+}
+
+[data-profiles="cards"] [data-profiles-variant="cards"],
+[data-profiles="banners"] [data-profiles-variant="banners"],
+[data-profiles="gradient"] [data-profiles-variant="gradient"] {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   5 · Tous nos services
+   -------------------------------------------------------------------------- */
+
+.services {
+  min-height: 1470px;
+  background: var(--c-surface);
+}
+
+.services__inner {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--section-pt);
+  padding-bottom: var(--section-pb);
+}
+
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-12) var(--space-10);
+  margin-top: var(--head-gap);
+}
+
+/* --------------------------------------------------------------------------
+   6 · Video block
+   -------------------------------------------------------------------------- */
+
+.videoblock {
+  min-height: 754px;
+}
+
+.videoblock__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  /* 656 : 507 es la proporción del Figma; en fr acompaña al contenedor. */
+  grid-template-columns: 656fr 507fr;
+  gap: var(--space-24);
+  padding-top: var(--section-pt);
+  padding-bottom: var(--section-pb);
+}
+
+.videoblock__media {
+  position: relative;
+  aspect-ratio: 656 / 426;
+  border-radius: var(--r-card);
+  overflow: hidden;
+}
+
+.videoblock__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--c-grey-100);
+}
+
+.videoblock__media .play-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.videoblock__media .play-btn:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.videoblock__body {
+  padding-top: var(--space-12);
+}
+
+.videoblock__title {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-regular);
+  line-height: 1.3125;
+}
+
+.videoblock__title strong {
+  font-weight: var(--fw-bold);
+}
+
+.videoblock__lead {
+  margin-top: var(--space-5);
+  max-width: 397px;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  line-height: 1.4444;
+}
+
+.videoblock__text {
+  margin-top: var(--space-5);
+  max-width: 342px;
+  font-size: var(--fs-base);
+  line-height: 1.6875;
+  color: var(--c-body);
+}
+
+.videoblock .btn {
+  margin-top: var(--space-10);
+  width: 201px;
+}
+
+/* --------------------------------------------------------------------------
+   7 · Toute l'actualité du CDI
+   -------------------------------------------------------------------------- */
+
+.news {
+  min-height: 1204px;
+  background: var(--c-surface);
+}
+
+.news__inner {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--section-pt);
+  padding-bottom: var(--section-pb);
+}
+
+.news__viewport {
+  margin-top: var(--head-gap);
+  /* El recorte existe para ocultar las tarjetas que están fuera del carrusel,
+     pero al ras se comía la sombra. Se le da aire por los cuatro lados: a los
+     costados hay 42px de separación entre tarjetas, así que 26px de holgura
+     deja respirar la sombra sin que asome la tarjeta siguiente. Abajo hace
+     falta más, porque al pasar el puntero la sombra crece a 14+28px. */
+  clip-path: inset(-22px -26px -48px -26px);
+}
+
+.news__track {
+  --per-view: 3;
+  --card-gap: 42px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc(
+    (100% - (var(--per-view) - 1) * var(--card-gap)) / var(--per-view)
+  );
+  gap: var(--card-gap);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.news__controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  margin-top: var(--space-10);
+}
+
+/* En desktop las flechas salen del flujo y se apoyan sobre los márgenes
+   laterales del artboard, como en el Figma. */
+.news__arrow {
+  position: absolute;
+  z-index: 2;
+  /* Centradas contra el carrusel, no contra una coordenada del artboard: desde
+     el borde superior de esta fila se sube el margen, media tarjeta y medio
+     botón. Antes estaban en `top: 627px` y `603px` —distintas entre sí— y se
+     descolgaban cada vez que cambiaba el alto de las tarjetas. */
+  bottom: calc(100% + var(--space-10) + var(--news-card-h) / 2 - 22px);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--c-ink);
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.news__arrow:hover {
+  background: var(--c-surface-alt);
+}
+
+.news__arrow .icon {
+  width: 30px;
+  height: 30px;
+}
+
+/* Cuánto salen las flechas del borde del contenido. El `min()` las frena
+   cuando el margen lateral se achica, así no se salen de la ventana entre
+   1400px y 1512px, que es donde siguen estando fuera del flujo. */
+.news {
+  --arrow-out: min(70px, (100vw - var(--container)) / 2 - 16px);
+}
+
+.news__arrow--prev {
+  left: calc(-1 * var(--arrow-out));
+}
+
+.news__arrow--prev .icon {
+  transform: rotate(180deg);
+}
+
+.news__arrow--prev:hover {
+  transform: translateX(-3px);
+}
+
+/* Misma separación que la anterior: venía con -81px, otro valor calcado. */
+.news__arrow--next {
+  right: calc(-1 * var(--arrow-out));
+}
+
+.news__arrow--next:hover {
+  transform: translateX(3px);
+}
+
+.news__arrow[disabled] {
+  opacity: 0.3;
+  cursor: default;
+  transform: none;
+}
+
+.news__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.news__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c-line);
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.news__dot[aria-current="true"] {
+  background: var(--c-ink);
+}
+
+.news__cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-16);
+}
+
+.news__cta .btn {
+  width: 159px;
+}
+
+/* --------------------------------------------------------------------------
+   8 · Footer
+   -------------------------------------------------------------------------- */
+
+.footer {
+  min-height: 506px;
+  background: var(--c-surface-alt);
+}
+
+.footer__inner {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--space-20);
+  padding-bottom: var(--space-12);
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: 440fr 271fr 309fr 252fr;
+  gap: 0 24px;
+}
+
+.footer__logo {
+  width: 306px;
+  height: 74px;
+}
+
+.footer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.footer__nav a {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  line-height: 2.0;
+  color: var(--c-ink-soft);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.footer__nav a:hover {
+  color: var(--c-teal);
+}
+
+.footer__contact {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 8px;
+  font-size: var(--fs-sm);
+  line-height: 1.3333;
+  color: var(--c-ink-soft);
+}
+
+.footer__contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  color: var(--c-ink-soft);
+}
+
+.footer__contact-row .icon {
+  color: var(--c-grey-500);
+}
+
+.footer__social {
+  display: flex;
+  gap: 7px;
+  margin-top: var(--space-3);
+}
+
+.footer__social a {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--c-teal);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.footer__social a:hover {
+  transform: translateY(-3px);
+}
+
+.footer__social img {
+  width: 17px;
+  height: 17px;
+}
+
+.footer__divider {
+  height: 1px;
+  margin-top: var(--space-20);
+  border: 0;
+  background: var(--c-line);
+}
+
+.footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-5);
+}
+
+.footer__copyright {
+  font-size: var(--fs-sm);
+  line-height: 2.4;
+  color: var(--c-muted);
+}
+
+.footer__legal {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.footer__legal a {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  line-height: 2.4;
+  color: var(--c-ink-soft);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.footer__legal a:hover {
+  color: var(--c-teal);
+}
+
+.footer__a11y {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  margin-left: 12px;
+  border-radius: 50%;
+  background: var(--c-teal);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.footer__a11y:hover {
+  transform: scale(1.08);
+}
+
+.footer__a11y img {
+  width: 27px;
+  height: 27px;
+}
+
+
+/* ==========================================================================
+   Breakpoints
+
+   A 1512px o más el resultado es idéntico al Figma. Por debajo, el contenedor
+   se encoge y las grillas van bajando de columnas.
+
+   OJO: el Figma sólo define la vista desktop. De 1080px para abajo — el menú
+   desplegable, el apilado de las tarjetas, la fila de controles del carrusel —
+   son decisiones propias para que la página no se rompa, no diseño validado.
+   Cuando llegue el diseño de tablet/mobile hay que revisarlas.
+   ========================================================================== */
+
+/* --- Portátiles chicos: el carrusel recupera sus flechas dentro del flujo --- */
+@media (max-width: 1400px) {
+  .news__arrow {
+    position: static;
+  }
+}
+
+/* --- La nav horizontal deja de entrar --- */
+@media (max-width: 1080px) {
+  .nav__toggle {
+    display: grid;
+    margin-left: 16px;
+  }
+
+  .nav__search {
+    margin-left: auto;
+  }
+
+  .nav > nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-left: 0;
+    padding: 8px 0 20px;
+    background: var(--c-surface);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  /* El panel lo abre la clase, no el atributo: en desktop la nav se muestra
+     siempre, sin depender del estado que haya dejado el JS. */
+  .nav > nav {
+    display: none;
+  }
+
+  .nav.is-open > nav {
+    display: block;
+  }
+
+  .nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: min(var(--container), 100% - 2 * var(--gutter-min));
+    margin-inline: auto;
+  }
+
+  .nav__link {
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--c-line);
+    font-size: var(--fs-md);
+  }
+
+  .profiles__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .news__track {
+    --per-view: 2;
+  }
+}
+
+/* --- Tablet --- */
+@media (max-width: 900px) {
+  /* Sin diseño de mobile, la capa decorativa se atenúa: con el contenido a
+     todo el ancho las formas quedan detrás del texto y compiten con él. */
+  .deco {
+    opacity: 0.55;
+  }
+
+  .videoblock__inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .videoblock__body {
+    padding-top: 0;
+  }
+
+  .footer__top {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px 32px;
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+/* --- Angosto: todo a una columna --- */
+@media (max-width: 680px) {
+  :root {
+    --gutter-min: 20px;
+    --fs-display: calc(34px * var(--fs-scale));
+    --fs-lead: calc(28px * var(--fs-scale));
+    --fs-h2: calc(26px * var(--fs-scale));
+    --fs-lg: calc(18px * var(--fs-scale));
+  }
+
+  .hero__title {
+    line-height: 1.1765;
+  }
+
+  .hero__text {
+    line-height: 1.5556;
+  }
+
+  .elevator__text {
+    line-height: 1.4615;
+  }
+
+  .section-title,
+  .videoblock__title {
+    line-height: 1.3077;
+  }
+
+  .services__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .news__track {
+    --per-view: 1;
+  }
+
+  .footer__top {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar {
+    height: auto;
+    padding-block: 10px;
+  }
+
+  .toolbar__inner {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 10px;
+  }
+
+  /* Las alturas del artboard dejan de tener sentido cuando todo se apila. */
+  .hero,
+  .elevator,
+  .profiles,
+  .services,
+  .videoblock,
+  .news,
+  .footer {
+    min-height: 0;
+  }
+
+  .hero__inner {
+    padding-top: 120px;
+  }
+
+  .hero__play {
+    margin-top: 72px;
+  }
+
+  .elevator__inner,
+  .profiles__inner,
+  .services__inner,
+  .videoblock__inner,
+  .news__inner {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}
+
+/* Botones de tamaño de texto (A+ / A−) de la barra de accesibilidad.
+   Medido contra el Figma: la "A" va al mismo cuerpo que los pills y en
+   semibold, no en bold; y el signo se apoya sobre la caja de la A en vez de
+   flotar como exponente. */
+.toolbar__sizes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Aire extra antes del selector de idioma: son dos grupos distintos y con el
+     gap de la barra quedaban leyéndose como uno solo. */
+  margin-right: 18px;
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+}
+
+/* La "A" y su signo son dos ítems flex: sin gap quedan pegados. */
+.toolbar__sizes .toolbar__btn {
+  gap: 1px;
+}
+
+/* `line-height: 0` evita que el signo agrande la caja del botón. */
+.toolbar__sizes sup {
+  font-size: 0.62em;
+  line-height: 0;
+  vertical-align: 0.34em;
+}
