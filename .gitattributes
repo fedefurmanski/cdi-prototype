@@ -1,0 +1,7 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Binarios: sin normalizar saltos de línea
+*.mp4 binary
+*.jpg binary
+*.png binary
