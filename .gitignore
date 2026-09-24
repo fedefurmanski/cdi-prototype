@@ -9,3 +9,6 @@
 # Temporales
 *.log
 *.tmp
+
+# Clon del repo que quedó dentro del proyecto
+cdi-prototype/
