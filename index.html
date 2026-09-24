@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CDI — Centre pour le développement intellectuel</title>
+    <meta
+      name="description"
+      content="Un centre de compétences en psycho-pédagogie spécialisée qui prend en charge les enfants et les jeunes présentant des troubles du développement intellectuel."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // Versiones del prototipo, resueltas antes del primer pintado para que no
+      // parpadeen: manda la URL, si no la última elegida en el conmutador.
+      (function () {
+        // `js` acá y no en main.js: el módulo está diferido y se aplica recién
+        // después del primer pintado, así que los elementos que el CSS oculta
+        // para animarlos alcanzaban a verse y se desvanecían a la vista.
+        document.documentElement.classList.add('js');
+
+        var p = new URLSearchParams(location.search);
+        // El primero de cada lista es el que se muestra por defecto.
+        var ejes = { intranet: ['blue', 'pink'], profiles: ['gradient', 'cards', 'banners'] };
+        Object.keys(ejes).forEach(function (eje) {
+          var valores = ejes[eje];
+          var guardado = null;
+          try {
+            guardado = localStorage.getItem('cdi:v2-' + eje);
+          } catch (e) {
+            /* storage bloqueado: vale el valor por defecto */
+          }
+          var v = p.get(eje) || guardado;
+          document.documentElement.dataset[eje] = valores.indexOf(v) >= 0 ? v : valores[0];
+        });
+      })();
+    </script>
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/sections.css" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+    <!-- ===================================================================
+         Header
+         =================================================================== -->
+    <header class="header">
+      <div class="topbar">
+        <img
+          class="topbar__gov"
+          src="assets/icons/gov-luxembourg.png"
+          alt="Le Gouvernement du Grand-Duché de Luxembourg"
+        />
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar__inner container">
+          <button class="toolbar__btn toolbar__contrast" type="button" data-action="contrast">
+            <span class="toolbar__contrast-glyph" aria-hidden="true"></span>
+            <span class="visually-hidden">Activer le contraste élevé</span>
+          </button>
+
+          <div class="toolbar__sizes">
+            <button class="toolbar__btn" type="button" data-action="font-up">
+              A<sup>+</sup><span class="visually-hidden">Augmenter la taille du texte</span>
+            </button>
+            <button class="toolbar__btn" type="button" data-action="font-down">
+              A<sup>-</sup><span class="visually-hidden">Réduire la taille du texte</span>
+            </button>
+          </div>
+
+          <nav class="toolbar__langs" aria-label="Langue">
+            <a class="toolbar__lang" href="#" aria-current="true" hreflang="fr">FR</a>
+            <a class="toolbar__lang" href="#" hreflang="de">DE</a>
+            <a class="toolbar__lang" href="#" hreflang="en">EN</a>
+          </nav>
+
+          <a class="toolbar__btn toolbar__easy" href="#">
+            <img src="assets/icons/facile-a-lire.png" alt="" />
+            Facile à lire
+          </a>
+
+          <a class="toolbar__btn toolbar__intranet" href="#">
+            <span class="toolbar__intranet-icon" aria-hidden="true">
+              <span class="icon icon--arrow-pill"></span>
+            </span>
+            Intranet
+          </a>
+        </div>
+      </div>
+
+      <div class="nav container">
+        <a href="/" aria-label="CDI — accueil">
+          <img class="nav__logo" src="assets/svg/logo-cdi.svg" alt="CDI" />
+        </a>
+
+        <nav id="nav-principal" aria-label="Navigation principale">
+          <ul class="nav__list">
+            <li>
+              <a class="nav__link" href="#">À propos
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" href="#">Pour les parents
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" href="#">Pour les professionnels
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li><a class="nav__link" href="#">Nos actualités</a></li>
+            <li><a class="nav__link" href="#">Contactez nous</a></li>
+          </ul>
+        </nav>
+
+        <button class="nav__search" type="button" data-action="search">
+          <span class="icon icon--search" aria-hidden="true"></span>
+          <span class="visually-hidden">Rechercher</span>
+        </button>
+
+        <button
+          class="nav__toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-principal"
+          data-action="nav-toggle"
+        >
+          <span class="nav__toggle-bars" aria-hidden="true"></span>
+          <span class="visually-hidden">Ouvrir le menu</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- =================================================================
+           1 · Hero
+           ================================================================= -->
+      <section class="hero">
+        <!-- El poster es la foto actual: mientras no exista el mp4, el hero se ve
+             exactamente igual que ahora. -->
+        <video
+          class="hero__video"
+          poster="assets/img/hero-poster.jpg"
+          data-autoplay
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          <source data-src="assets/video/hero.mp4" type="video/mp4" />
+        </video>
+
+        <div class="hero__inner container">
+          <p class="hero__eyebrow" data-reveal="up">Bienvenue au CDI</p>
+          <h1 class="hero__title" data-lines data-lines-delay="90">Centre pour le<br />développement intellectuel</h1>
+          <p class="hero__text" data-lines data-lines-delay="280">
+            Un centre de compétences en psycho-pédagogie spécialisée qui prend en charge les
+            enfants et les jeunes présentant des
+            <strong>troubles du développement intellectuel.</strong>
+          </p>
+          <a class="btn btn--primary" href="#services" data-reveal="up" style="--reveal-delay: 660ms">
+            Tous nos services
+            <span class="icon icon--arrow" aria-hidden="true"></span>
+          </a>
+          <button class="play-btn hero__play" type="button" data-player=".hero__video">
+            <span class="play-btn__glyph" aria-hidden="true"></span>
+            <span class="visually-hidden">Mettre la vidéo en pause</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =================================================================
+           2 · Elevator speech
+           ================================================================= -->
+      <section class="section elevator">
+        <div class="deco" aria-hidden="true">
+          <!-- Z turquesa + X naranja, pegadas al borde derecho. -->
+          <div class="deco-cluster is-right" style="--rx: 0px; --y: 2px; --w: 168px; --h: 496px">
+            <img src="assets/svg/deco-z-teal.svg" alt="" style="--x: 1px; --y: 0px; --w: 167px; --h: 326px" />
+            <img src="assets/svg/deco-x-orange.svg" alt="" style="--x: 0px; --y: 329px; --w: 167px; --h: 167px" />
+          </div>
+
+          <!-- Círculos turquesa + rayas rosas + onda verde, abajo a la izquierda. -->
+          <div class="deco-cluster is-bottom" style="--x: 0px; --b: 2px; --w: 452px; --h: 312px">
+            <img src="assets/svg/deco-circles-teal.svg" alt="" style="--x: 1px; --y: 0px; --w: 156px; --h: 156px" />
+            <img src="assets/svg/deco-stripes-pink.svg" alt="" style="--x: 0px; --y: 156px; --w: 156px; --h: 156px" />
+            <img src="assets/svg/deco-wave-green.svg" alt="" style="--x: 158px; --y: 154px; --w: 294px; --h: 158px" />
+          </div>
+        </div>
+        <!-- TODO(cliente): Maxime y Mark van a redactar un texto nuevo para esta
+             sección. El de abajo es el del Figma, provisional. -->
+        <div class="elevator__inner container">
+          <p class="elevator__label" data-reveal="up">Centre pour le développement intellectuel</p>
+          <p class="elevator__text" data-lines data-lines-delay="120">
+            Un centre de compétences en <strong>psycho-pédagogie</strong> spécialisée qui prend en
+            charge les enfants et les jeunes présentant des troubles du
+            <strong>développement intellectuel</strong>.
+          </p>
+        </div>
+      </section>
+
+      <!-- =================================================================
+           3 · Nos services par profils
+           ================================================================= -->
+      <section class="section section--alt profiles">
+        <div class="deco" aria-hidden="true">
+          <!-- Círculo + triángulos grises, pegados entre sí arriba a la izquierda. -->
+          <div class="deco-cluster" style="--x: 0px; --y: -1px; --w: 318px; --h: 162px">
+            <img src="assets/svg/deco-grey-circle.svg" alt="" style="--x: 0px; --y: 1px; --w: 158px; --h: 158px" />
+            <img src="assets/svg/deco-grey-x3.svg" alt="" style="--x: 158px; --y: 1px; --w: 160px; --h: 161px" />
+          </div>
+
+          <img class="is-right" src="assets/svg/deco-grey-checkers-wide.svg" alt="" style="--rx: 0px; --y: 0px; --w: 325px; --h: 162px" />
+        </div>
+        <div class="profiles__inner container">
+          <!-- Tres propuestas para esta sección. El conmutador de abajo a la
+               izquierda cambia entre ellas; sólo se muestra una a la vez. -->
+
+          <!-- A · Figma V8: tarjeta blanca con foto chica y borde de color -->
+          <div class="profiles__variant" data-profiles-variant="cards">
+            <header class="section-head" data-reveal="up">
+              <h2 class="section-title">Nos services <strong>par profils</strong></h2>
+            </header>
+
+            <div class="profiles__grid" data-reveal-group>
+              <a class="profile-card" href="#" style="--accent: var(--c-orange)">
+                <img class="profile-card__media" src="assets/img/profil-parents.jpg" alt="" loading="lazy" />
+                <div class="profile-card__body">
+                  <h3 class="profile-card__title">Pour les parents</h3>
+                  <p class="profile-card__text">Diagnostic, suivi et accompagnement de votre enfant</p>
+                </div>
+                <span class="circle-arrow" style="--accent: var(--c-orange)" aria-hidden="true">
+                  <span class="icon icon--arrow"></span>
+                </span>
+              </a>
+
+              <a class="profile-card" href="#" style="--accent: var(--c-teal)">
+                <img class="profile-card__media" src="assets/img/profil-professionnels.jpg" alt="" loading="lazy" />
+                <div class="profile-card__body">
+                  <h3 class="profile-card__title">Pour les professionnels</h3>
+                  <p class="profile-card__text">Formations, ressources et collaboration</p>
+                </div>
+                <span class="circle-arrow" style="--accent: var(--c-teal)" aria-hidden="true">
+                  <span class="icon icon--arrow"></span>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <!-- B · r7: bandeau a sangre, foto en duotono sobre el color -->
+          <div class="profiles__variant" data-profiles-variant="banners">
+            <header class="section-head" data-reveal="up">
+              <h2 class="section-title">Consulter tous <strong>nos services pour</strong></h2>
+            </header>
+
+            <div class="profiles__grid" data-reveal-group>
+              <a class="profile-banner" href="#" style="--accent: var(--c-orange)">
+                <img class="profile-banner__media" src="assets/img/profil-parents-wide.jpg" alt="" loading="lazy" />
+                <div class="profile-banner__body">
+                  <h3 class="profile-banner__title">Les parents</h3>
+                </div>
+                <span class="profile-banner__arrow" aria-hidden="true">
+                  <span class="icon icon--arrow"></span>
+                </span>
+              </a>
+
+              <a class="profile-banner" href="#" style="--accent: var(--c-teal)">
+                <img class="profile-banner__media" src="assets/img/profil-professionnels-wide.jpg" alt="" loading="lazy" />
+                <div class="profile-banner__body">
+                  <h3 class="profile-banner__title">Les professionnels</h3>
+                </div>
+                <span class="profile-banner__arrow" aria-hidden="true">
+                  <span class="icon icon--arrow"></span>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <!-- C · propuesta: mismo bandeau, pero el color entra en degradado
+               desde la izquierda, así el título se apoya en color pleno y las
+               caras quedan a la vista. En un centro que trabaja con chicos,
+               que se vea a la gente no es un detalle menor. -->
+          <div class="profiles__variant" data-profiles-variant="gradient">
+            <header class="section-head" data-reveal="up">
+              <h2 class="section-title">Consulter tous <strong>nos services pour</strong></h2>
+            </header>
+
+            <div class="profiles__grid" data-reveal-group>
+              <a class="profile-banner profile-banner--gradient" href="#" data-reveal="banner" style="--accent: var(--c-orange)">
+                <img class="profile-banner__media" src="assets/img/profil-parents-focus.jpg" alt="" loading="lazy" />
+                <div class="profile-banner__body">
+                  <h3 class="profile-banner__title">Les parents</h3>
+                  <p class="profile-banner__text">Diagnostic, suivi et accompagnement</p>
+                </div>
+                <span class="profile-banner__arrow" aria-hidden="true">
+                  <span class="icon icon--arrow"></span>
+                </span>
+              </a>
+
+              <a class="profile-banner profile-banner--gradient" href="#" data-reveal="banner" style="--accent: var(--c-teal)">
+                <img class="profile-banner__media" src="assets/img/profil-professionnels-focus.jpg" alt="" loading="lazy" />
+                <div class="profile-banner__body">
+                  <h3 class="profile-banner__title">Les professionnels</h3>
+                  <p class="profile-banner__text">Formations, ressources et collaboration</p>
+                </div>
+                <span class="profile-banner__arrow" aria-hidden="true">
+                  <span class="icon icon--arrow"></span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================
+           4 · Tous nos services
+           ================================================================= -->
+      <section class="section services" id="services">
+        <div class="deco" aria-hidden="true">
+          <div class="deco-cluster is-right" style="--rx: 0px; --y: 0px; --w: 331px; --h: 167px">
+            <img src="assets/svg/deco-grey-ring.svg" alt="" style="--x: 0px; --y: 0px; --w: 167px; --h: 167px" />
+            <img src="assets/svg/deco-grey-x2.svg" alt="" style="--x: 167px; --y: 0px; --w: 164px; --h: 167px" />
+          </div>
+          <img class="at-content is-bottom" src="assets/svg/deco-chevrons-teal.svg" alt="" style="--x: 72px; --b: 0px; --w: 246px; --h: 122px" />
+        </div>
+        <div class="services__inner container">
+          <header class="section-head" data-reveal="up">
+            <h2 class="section-title">Tous <strong>nos services</strong></h2>
+            <p class="section-subtitle">Trouvez toutes les réponses à vos questions</p>
+          </header>
+
+          <div class="services__grid" data-reveal-group>
+            <a class="service-card" href="#" style="--accent: var(--c-teal-deep)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--diagnostic"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Parents</li>
+                <li class="tag">Professionnels</li>
+              </ul>
+              <h3 class="service-card__title">Diagnostic spécialisé</h3>
+              <p class="service-card__text">Évaluation approfondie des difficultés d'apprentissage.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+
+            <a class="service-card" href="#" style="--accent: var(--c-coral)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--familles"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Parents</li>
+              </ul>
+              <h3 class="service-card__title">Conseils aux familles</h3>
+              <p class="service-card__text">Soutien et guidance pour les parents et les familles.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+
+            <a class="service-card" href="#" style="--accent: var(--c-orange-soft)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--enseignement"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Parents</li>
+                <li class="tag">Professionnels</li>
+              </ul>
+              <h3 class="service-card__title">Enseignement pour les élèves</h3>
+              <p class="service-card__text">Programmes éducatifs adaptés à chaque élève.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+
+            <a class="service-card" href="#" style="--accent: var(--c-green)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--therapie"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Parents</li>
+              </ul>
+              <h3 class="service-card__title">Thérapie et rééducation</h3>
+              <p class="service-card__text">Interventions thérapeutiques et rééducatives.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+
+            <a class="service-card" href="#" style="--accent: var(--c-pink)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--recherche"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Parents</li>
+              </ul>
+              <h3 class="service-card__title">Recherche et documentation</h3>
+              <p class="service-card__text">Ressources pédagogiques et scientifiques.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+
+            <a class="service-card" href="#" style="--accent: var(--c-teal)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--conseils-pro"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Professionnels</li>
+              </ul>
+              <h3 class="service-card__title">Conseils aux professionnels</h3>
+              <p class="service-card__text">Ressources pédagogiques et scientifiques.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+
+            <a class="service-card" href="#" style="--accent: var(--c-coral)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--enseignement-eleves"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Professionnels</li>
+              </ul>
+              <h3 class="service-card__title">Enseignement aux élèves</h3>
+              <p class="service-card__text">Interventions thérapeutiques et rééducatives.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+
+            <a class="service-card" href="#" style="--accent: var(--c-green)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--leichte-sprache"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Professionnels</li>
+              </ul>
+              <h3 class="service-card__title">Service Leichte Sprache</h3>
+              <p class="service-card__text">Ressources pédagogiques et scientifiques.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+
+            <a class="service-card" href="#" style="--accent: var(--c-orange)">
+              <span class="service-card__badge" aria-hidden="true">
+                <span class="service-card__icon service-card__icon--formation"></span>
+              </span>
+              <ul class="tag-list">
+                <li class="tag">Professionnels</li>
+              </ul>
+              <h3 class="service-card__title">Formation des enseignants</h3>
+              <p class="service-card__text">Ressources pédagogiques et scientifiques.</p>
+              <span class="link-arrow">En savoir plus
+                <span class="icon icon--arrow" aria-hidden="true"></span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================
+           5 · Video block
+           ================================================================= -->
+      <section class="section section--alt videoblock">
+        <div class="deco" aria-hidden="true">
+          <div class="deco-cluster is-right" style="--rx: 1px; --y: 1px; --w: 327px; --h: 165px">
+            <img src="assets/svg/deco-grey-checkers.svg" alt="" style="--x: 0px; --y: 0px; --w: 165px; --h: 165px" />
+            <img src="assets/svg/deco-x-pink.svg" alt="" style="--x: 166px; --y: 0px; --w: 161px; --h: 162px" />
+          </div>
+          <img class="is-right is-bottom" src="assets/svg/deco-grey-chevrons.svg" alt="" style="--rx: 0px; --b: 0px; --w: 159px; --h: 323px" />
+          <img class="is-bottom is-half-top" src="assets/svg/deco-chevrons-coral.svg" alt="" style="--x: 0px; --b: 2px; --w: 287px; --h: 145px" />
+        </div>
+        <div class="videoblock__inner container">
+          <figure class="videoblock__media" data-reveal="zoom">
+            <!-- Falta el clip de esta sección. Cuando exista, agregar:
+                 <source data-src="assets/video/video-block.mp4" type="video/mp4" />
+                 Mientras tanto se ve el poster y el botón de play queda inactivo. -->
+            <video
+              class="videoblock__video"
+              poster="assets/img/hero.jpg"
+              playsinline
+              preload="none"
+            ></video>
+            <button class="play-btn" type="button" data-player=".videoblock__video">
+              <span class="play-btn__glyph" aria-hidden="true"></span>
+              <span class="visually-hidden">Lire la vidéo</span>
+            </button>
+          </figure>
+
+          <div class="videoblock__body" data-reveal="right" style="--reveal-delay: 120ms">
+            <h2 class="videoblock__title">Video <strong>Block</strong></h2>
+            <p class="videoblock__lead">Lorem ipsum dolor sit amet consectetur.</p>
+            <p class="videoblock__text">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac est eros maecenas
+              facilisis imperdiet ornare.
+            </p>
+            <a class="btn btn--primary" href="#">
+              Call to action
+              <span class="icon icon--arrow" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================
+           6 · Toute l'actualité du CDI
+           ================================================================= -->
+      <section class="section news">
+        <div class="deco" aria-hidden="true">
+          <div class="deco-cluster is-right" style="--rx: 0px; --y: 0px; --w: 323px; --h: 163px">
+            <img src="assets/svg/deco-burst-teal.svg" alt="" style="--x: 0px; --y: 0px; --w: 160px; --h: 162px" />
+            <img src="assets/svg/deco-grey-checkers2.svg" alt="" style="--x: 161px; --y: 0px; --w: 162px; --h: 162px" />
+          </div>
+          <img class="is-right is-bottom" src="assets/svg/deco-grey-bigcircle.svg" alt="" style="--rx: 0px; --b: 0px; --w: 317px; --h: 364px" />
+
+          <!-- Triángulos verdes + rayas rosas, abajo a la izquierda. -->
+          <div class="deco-cluster is-bottom" style="--x: 0px; --b: 1px; --w: 332px; --h: 166px">
+            <img src="assets/svg/deco-triangles-green.svg" alt="" style="--x: 0px; --y: 0px; --w: 168px; --h: 166px" />
+            <img src="assets/svg/deco-stripes-pink-2.svg" alt="" style="--x: 166px; --y: 2px; --w: 166px; --h: 164px" />
+          </div>
+        </div>
+        <div class="news__inner container">
+          <header class="section-head" data-reveal="up">
+            <h2 class="section-title">Toute <strong>l'actualité du CDI</strong></h2>
+            <p class="section-subtitle">Projets, événements et temps forts du centre</p>
+          </header>
+
+          <div class="news__viewport" data-carousel="viewport">
+            <div class="news__track" data-carousel="track" data-reveal-group>
+              <article class="news-card news-card--featured">
+                <div class="news-card__media">
+                  <img src="assets/img/news-atelier-parents.jpg" alt="" loading="lazy" />
+                  <p class="news-card__badge">Événement à venir</p>
+                  <p class="news-card__date-box">
+                    <time datetime="2026-09-24">
+                      <span class="news-card__date-day">24</span>
+                      <span class="news-card__date-rest">SEP <span>2026</span></span>
+                    </time>
+                  </p>
+                </div>
+                <div class="news-card__body">
+                  <h3 class="news-card__title" style="margin-top: 58px">
+                    Atelier parents : accompagner l'apprentissage
+                  </h3>
+                  <p class="news-card__text">Une matinée d'échange avec nos psycho-pédagogues.</p>
+                  <a class="link-arrow" href="#">Lire la suite
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+
+              <article class="news-card">
+                <div class="news-card__media">
+                  <img src="assets/img/news-ateliers-therapeutiques.jpg" alt="" loading="lazy" />
+                </div>
+                <div class="news-card__body">
+                  <p class="news-card__date">
+                    <span class="icon icon--calendar icon--md" aria-hidden="true"></span>
+                    <time datetime="2026-03-08">8 mars 2026</time>
+                  </p>
+                  <h3 class="news-card__title" style="margin-top: 14px">
+                    Ateliers thérapeutiques : bilan du trimestre
+                  </h3>
+                  <p class="news-card__text">
+                    Retour sur les ateliers thérapeutiques et rééducatifs qui ont marqué ce trimestre
+                    avec des résultats encourageants.
+                  </p>
+                  <a class="link-arrow" href="#">Lire la suite
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+
+              <article class="news-card">
+                <div class="news-card__media">
+                  <img src="assets/img/news-portes-ouvertes.jpg" alt="" loading="lazy" />
+                </div>
+                <div class="news-card__body">
+                  <p class="news-card__date">
+                    <span class="icon icon--calendar icon--md" aria-hidden="true"></span>
+                    <time datetime="2026-02-15">15 février 2026</time>
+                  </p>
+                  <h3 class="news-card__title" style="margin-top: 14px">
+                    Journée portes ouvertes : un grand succès
+                  </h3>
+                  <p class="news-card__text">
+                    Plus de 200 familles ont participé à notre journée portes ouvertes pour découvrir
+                    nos installations et rencontrer nos équipes.
+                  </p>
+                  <a class="link-arrow" href="#">Lire la suite
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+
+              <article class="news-card">
+                <div class="news-card__media">
+                  <img src="assets/img/formation-enseignants.jpg" alt="" loading="lazy" />
+                </div>
+                <div class="news-card__body">
+                  <p class="news-card__date">
+                    <span class="icon icon--calendar icon--md" aria-hidden="true"></span>
+                    <time datetime="2026-01-20">20 janvier 2026</time>
+                  </p>
+                  <h3 class="news-card__title" style="margin-top: 14px">
+                    Formation des enseignants : nouvelle session
+                  </h3>
+                  <p class="news-card__text">
+                    Une session dédiée aux pratiques inclusives en classe, animée par nos équipes
+                    pédagogiques.
+                  </p>
+                  <a class="link-arrow" href="#">Lire la suite
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="news__controls">
+            <button class="news__arrow news__arrow--prev" type="button" data-carousel="prev">
+              <span class="icon icon--arrow" aria-hidden="true"></span>
+              <span class="visually-hidden">Actualité précédente</span>
+            </button>
+            <div class="news__dots" role="tablist" aria-label="Pages d'actualités" data-carousel="dots"></div>
+            <button class="news__arrow news__arrow--next" type="button" data-carousel="next">
+              <span class="icon icon--arrow" aria-hidden="true"></span>
+              <span class="visually-hidden">Actualité suivante</span>
+            </button>
+          </div>
+
+          <div class="news__cta" data-reveal="up">
+            <a class="btn btn--primary" href="#">
+              Voir tout
+              <span class="icon icon--arrow" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================================================================
+         Footer
+         =================================================================== -->
+    <footer class="section section--alt footer">
+      <div class="footer__inner container">
+        <div class="footer__top" data-reveal-group>
+          <div>
+            <img class="footer__logo" src="assets/svg/logo-cdi-footer.svg" alt="CDI — Centre pour le développement intellectuel" />
+          </div>
+
+          <nav class="footer__nav" aria-label="Le centre">
+            <a href="#">À propos</a>
+            <a href="#">Pour les parents</a>
+            <a href="#">Pour les professionnels</a>
+            <a href="#">Nos annexes</a>
+            <a href="#">Nos services</a>
+          </nav>
+
+          <nav class="footer__nav" aria-label="Ressources">
+            <a href="#">Centre de documentation</a>
+            <a href="#">Demande de traduction</a>
+            <a href="#">Intranet</a>
+            <a href="#">Contact</a>
+            <a href="#">Nos actualités</a>
+          </nav>
+
+          <address class="footer__contact">
+            <p class="footer__contact-row">
+              <span class="icon icon--location icon--lg" aria-hidden="true"></span>
+              <span>5, rue Thomas Edison<br />L-1445 Strassen</span>
+            </p>
+            <a class="footer__contact-row" href="tel:+35224755700">
+              <span class="icon icon--phone icon--lg" aria-hidden="true"></span>
+              <span>+352 247-55700</span>
+            </a>
+            <a class="footer__contact-row" href="mailto:info@cc-cdi.lu">
+              <span class="icon icon--mail icon--lg" aria-hidden="true"></span>
+              <span>info@cc-cdi.lu</span>
+            </a>
+
+            <div class="footer__social">
+              <a href="#" aria-label="LinkedIn"><img src="assets/icons/linkedin.svg" alt="" /></a>
+              <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.svg" alt="" /></a>
+              <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.svg" alt="" /></a>
+            </div>
+          </address>
+        </div>
+
+        <hr class="footer__divider" />
+
+        <div class="footer__bottom">
+          <p class="footer__copyright">© 2026 CDI Luxembourg. Tous droits réservés</p>
+
+          <div class="footer__legal">
+            <a href="#">Mentions légales</a>
+            <a href="#">Cookies</a>
+            <a href="#">Accessibilité</a>
+            <button class="btn btn--dark" type="button" data-action="read-aloud">
+              <span class="icon icon--speaker icon--lg" aria-hidden="true"></span>
+              Lire le texte
+            </button>
+            <button class="footer__a11y" type="button" data-action="a11y-panel">
+              <img src="assets/icons/accessibility.svg" alt="" />
+              <span class="visually-hidden">Ouvrir les options d'accessibilité</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ===================================================================
+         Conmutador de versiones — herramienta de revisión, no parte del sitio.
+         `?switch=off` lo oculta para sacar capturas limpias.
+         =================================================================== -->
+    <div class="version-switch" data-version-switch>
+      <div class="version-switch__group" data-axis="intranet">
+        <span class="version-switch__label">Intranet</span>
+        <button class="version-switch__opt" type="button" data-value="pink">
+          <span class="version-switch__dot" data-color="pink" aria-hidden="true"></span>
+          Rose
+        </button>
+        <button class="version-switch__opt" type="button" data-value="blue">
+          <span class="version-switch__dot" data-color="blue" aria-hidden="true"></span>
+          Bleu
+        </button>
+      </div>
+
+      <div class="version-switch__group" data-axis="profiles">
+        <span class="version-switch__label">Profils</span>
+        <button class="version-switch__opt" type="button" data-value="cards">Cartes</button>
+        <button class="version-switch__opt" type="button" data-value="banners">Bandeaux</button>
+        <button class="version-switch__opt" type="button" data-value="gradient">Dégradé</button>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         Popup de evento — se abre al cargar la página
+         =================================================================== -->
+    <dialog class="event-popup" tabindex="-1" aria-labelledby="event-popup-title">
+      <div class="event-popup__media">
+        <img src="assets/img/news-atelier-parents.jpg" alt="" />
+        <p class="event-popup__badge">Événement à venir</p>
+        <button class="event-popup__close" type="button" data-action="close-popup">
+          <span class="visually-hidden">Fermer</span>
+        </button>
+      </div>
+
+      <p class="event-popup__date">
+        <time datetime="2026-09-24">
+          <span class="event-popup__date-day">24</span>
+          <span class="event-popup__date-rest">SEP <span>2026</span></span>
+        </time>
+      </p>
+
+      <div class="event-popup__body">
+        <h2 class="event-popup__title" id="event-popup-title">
+          Atelier parents : accompagner l'apprentissage
+        </h2>
+        <p class="event-popup__text">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+        </p>
+        <a class="link-arrow event-popup__link" href="#">
+          Lire la suite
+          <span class="icon icon--arrow" aria-hidden="true"></span>
+        </a>
+      </div>
+    </dialog>
+
+    <script src="js/main.js" type="module"></script>
+  </body>
+</html>

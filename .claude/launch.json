@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cdi-static",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "/Users/federicofurmanski/Downloads/CDI_claude/.claude/serve.py"
+      ],
+      "port": 4173
+    }
+  ]
+}
