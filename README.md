@@ -127,8 +127,10 @@ validado. Hay que revisarlas cuando llegue el diseño de tablet/mobile.
 búsqueda bajó a la barra principal, a la derecha. La barra de accesibilidad
 queda, de izquierda a derecha: idiomas · Facile à lire · Intranet.
 
-**Versiones para comparar.** Hay un conmutador abajo a la izquierda con dos
-ejes independientes:
+**Versiones para comparar.** Hay un conmutador con dos ejes independientes.
+**Está oculto**: aparece abajo a la izquierda sólo con `?switch=on`, porque en
+el link que ve el cliente estorbaba. Las variantes se pueden elegir igual por
+URL aunque el conmutador no esté a la vista.
 
 | Eje        | Opciones                          | Qué cambia |
 |------------|-----------------------------------|------------|
@@ -138,6 +140,11 @@ ejes independientes:
 En negrita, lo elegido: son los valores por defecto. El conmutador queda para
 poder volver a mostrar las alternativas; si ya no hace falta, se borra el bloque
 `.version-switch` del HTML y listo.
+
+**Popup de evento.** Encendido (`POPUP_ENABLED`). `?popup=off` lo saca
+puntualmente. `REMEMBER_DISMISSAL` está en `false`: se muestra en cada carga, que
+es lo cómodo para mostrarlo. Para producción conviene ponerlo en `true`, así se
+ve una sola vez por evento.
 
 ### Contraste de los bandeaux — decisión de diseño pendiente
 
@@ -162,7 +169,7 @@ hay fotos pensadas para apaisado, el encuadre mejora solo.
 Cada eje se guarda por separado y se escribe en la URL
 (`?profiles=banners&intranet=blue`), así se puede pasar un link a una
 combinación concreta. Agregar un eje nuevo es un grupo `data-axis` en el
-conmutador más una regla CSS: el JS no se toca. `?switch=off` lo oculta para sacar capturas limpias.
+conmutador más una regla CSS: el JS no se toca. `?switch=on` lo muestra.
 
 El valor inicial lo fija un script en línea en el `<head>`, antes del primer
 pintado, así que no parpadea. Los tokens `--intranet-bg` / `--intranet-disc`
