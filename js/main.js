@@ -144,6 +144,128 @@ function initNav() {
   });
 }
 
+/**
+ * El header aparece al scrollear hacia arriba y se va al bajar.
+ *
+ * El «cuánto se ve» lo resuelve el CSS con un `top` negativo —sólo queda la
+ * barra de navegación—; acá sólo se decide si está o no. Dos cuidados:
+ * un umbral de 6px para que el temblor del trackpad no lo haga parpadear, y
+ * nunca esconderlo con el menú desplegado o con el foco dentro, que sería
+ * hacer desaparecer lo que la persona está usando.
+ */
+function initHeadroom() {
+  const header = document.querySelector('.header');
+  if (!header) return;
+
+  const UMBRAL = 6;
+  // Por debajo de esto estamos en la cabecera: se muestra entera y quieta.
+  const TOPE = 120;
+
+  let ultimo = window.scrollY;
+  let pedido = false;
+
+  const revisar = () => {
+    pedido = false;
+    const y = Math.max(0, window.scrollY);
+    const delta = y - ultimo;
+
+    header.classList.toggle('is-stuck', y > TOPE);
+
+    if (Math.abs(delta) < UMBRAL) return;
+    ultimo = y;
+
+    const retenido =
+      header.querySelector('.nav.is-open') ||
+      header.querySelector('.nav__item.is-open') ||
+      header.contains(document.activeElement);
+
+    header.classList.toggle('is-hidden', delta > 0 && y > TOPE && !retenido);
+  };
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (pedido) return;
+      pedido = true;
+      requestAnimationFrame(revisar);
+    },
+    { passive: true },
+  );
+
+  revisar();
+}
+
+/**
+ * Menú desplegable de la navegación.
+ *
+ * Con ratón abre al pasar por encima y cierra con un respiro de 120 ms, para
+ * que el recorrido diagonal hasta el panel no lo apague a mitad de camino. Sin
+ * hover —táctil, o la nav apilada— el primer toque abre y el segundo navega.
+ *
+ * El panel cerrado no se oculta con `hidden`: eso cortaría la transición. Lo
+ * saca de foco y del lector `inert`, y de la vista el `visibility` del CSS.
+ */
+function initDropdown() {
+  const items = [...document.querySelectorAll('[data-dropdown]')];
+  if (!items.length) return;
+
+  const ancha = window.matchMedia('(min-width: 1081px)');
+  const conRaton = window.matchMedia('(hover: hover)');
+
+  items.forEach((item) => {
+    const enlace = item.querySelector('.nav__link');
+    const panel = item.querySelector('.dropdown');
+    if (!enlace || !panel) return;
+
+    let cierre;
+    const abrir = (v) => {
+      clearTimeout(cierre);
+      item.classList.toggle('is-open', v);
+      enlace.setAttribute('aria-expanded', String(v));
+      panel.toggleAttribute('inert', !v);
+    };
+
+    abrir(false);
+
+    item.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse' && ancha.matches) abrir(true);
+    });
+
+    item.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse' || !ancha.matches) return;
+      clearTimeout(cierre);
+      cierre = setTimeout(() => abrir(false), 120);
+    });
+
+    enlace.addEventListener('click', (e) => {
+      if (ancha.matches && conRaton.matches) return;
+      if (item.classList.contains('is-open')) return;
+      e.preventDefault();
+      abrir(true);
+    });
+
+    // El foco por teclado abre; al salir del item, cierra. `relatedTarget` es
+    // quien recibe el foco: en `focusout`, `activeElement` todavía es el viejo.
+    item.addEventListener('focusin', () => {
+      if (ancha.matches) abrir(true);
+    });
+
+    item.addEventListener('focusout', (e) => {
+      if (!item.contains(e.relatedTarget)) abrir(false);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!item.contains(e.target)) abrir(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !item.classList.contains('is-open')) return;
+      abrir(false);
+      enlace.focus();
+    });
+  });
+}
+
 /* --------------------------------------------------------------------------
    Vídeo y botones de play
    El vídeo del hero pesa ~6 MB: sólo se descarga si vale la pena. En pantallas
@@ -471,6 +593,175 @@ function initReveal() {
    -------------------------------------------------------------------------- */
 
 const DECO_SHIFT = 26; // píxeles de recorrido, de punta a punta de la banda
+
+/**
+ * Carrusel de la aproximación: una diapositiva a la vista, con los pasos
+ * numerados abajo.
+ *
+ * Es un `tablist` de verdad —flechas para moverse, Inicio y Fin para los
+ * extremos— y no avanza solo: el contenido es largo y nadie quiere que se lo
+ * cambien mientras lee.
+ */
+function initStepper() {
+  document.querySelectorAll('[data-stepper]').forEach((root) => {
+    const tabs = [...root.querySelectorAll('[role="tab"]')];
+    const paneles = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+    const fotos = [...root.querySelectorAll('[data-media]')];
+    // Los rótulos del índice viven fuera del botón —el control es el número—
+    // así que se marcan por posición, igual que las fotos.
+    const nombres = [...root.querySelectorAll('[data-name]')];
+    if (!tabs.length || paneles.some((p) => !p)) return;
+
+    // El fondo toma el color del paso activo, muy diluido. El color va como
+    // valor literal en `data-tint` y no como variable: una propiedad en
+    // transición no se re-evalúa cuando cambia la custom property de la que
+    // depende, y el fondo se quedaría en el primer color.
+    const tiñe = root.hasAttribute('data-tint-bg');
+    const pintar = (tab) => {
+      const tono = tab.dataset.tint;
+      if (!tiñe || !tono) return;
+      root.style.backgroundColor = `${tono}14`;
+    };
+
+    const mostrar = (i, mover) => {
+      pintar(tabs[i]);
+      tabs.forEach((tab, j) => {
+        const activo = i === j;
+        tab.setAttribute('aria-selected', String(activo));
+        tab.tabIndex = activo ? 0 : -1;
+        // `inert` y no `hidden`: el panel tiene que seguir ocupando su celda
+        // —el alto lo fija el más largo— pero sin recibir foco ni ser leído.
+        if (activo) paneles[j].removeAttribute('inert');
+        else paneles[j].setAttribute('inert', '');
+        if (fotos[j]) {
+          fotos[j].style.opacity = activo ? '1' : '0';
+          fotos[j].toggleAttribute('aria-hidden', !activo);
+        }
+        if (nombres[j]) nombres[j].classList.toggle('is-on', activo);
+      });
+      if (mover) tabs[i].focus();
+    };
+
+    // Las flechas de la foto recorren los pasos en círculo.
+    const actual = () => tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+    root.querySelectorAll('[data-approach]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const paso = btn.dataset.approach === 'next' ? 1 : -1;
+        mostrar((actual() + paso + tabs.length) % tabs.length, false);
+      });
+    });
+
+    const inicial = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+    pintar(tabs[inicial >= 0 ? inicial : 0]);
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => mostrar(i, false));
+      tab.addEventListener('keydown', (e) => {
+        const ultimo = tabs.length - 1;
+        let destino = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') destino = i === ultimo ? 0 : i + 1;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') destino = i === 0 ? ultimo : i - 1;
+        if (e.key === 'Home') destino = 0;
+        if (e.key === 'End') destino = ultimo;
+        if (destino === null) return;
+        e.preventDefault();
+        mostrar(destino, true);
+      });
+    });
+  });
+}
+
+/**
+ * Cifras que cuentan hacia arriba al entrar en pantalla.
+ *
+ * El número final ya está en el marcado: si el JS no corre, se lee igual. Acá
+ * sólo se reemplaza mientras dura la animación.
+ */
+function initCounters() {
+  const cifras = [...document.querySelectorAll('[data-count]')];
+  if (!cifras.length) return;
+
+  // En modo exportación no cuenta: la captura agarraría un número a mitad de
+  // camino en vez del definitivo.
+  if (document.documentElement.classList.contains('is-export')) return;
+  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducido || !('IntersectionObserver' in window)) return;
+
+  const contar = (el) => {
+    const destino = Number(el.dataset.count);
+    if (!Number.isFinite(destino)) return;
+    const duracion = 1100;
+    const inicio = performance.now();
+
+    const paso = (ahora) => {
+      const t = Math.min(1, (ahora - inicio) / duracion);
+      // Desacelera al final, igual que el resto de las animaciones.
+      const suave = 1 - Math.pow(1 - t, 3);
+      el.textContent = String(Math.round(destino * suave));
+      if (t < 1) requestAnimationFrame(paso);
+    };
+
+    el.textContent = '0';
+    requestAnimationFrame(paso);
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        contar(entry.target);
+        observer.unobserve(entry.target);
+      });
+    },
+    { rootMargin: '0px 0px -20% 0px', threshold: 0 }
+  );
+
+  cifras.forEach((el) => observer.observe(el));
+}
+
+/**
+ * Barra lateral de las páginas interiores: marca en qué sección está el lector.
+ *
+ * Se queda con la sección visible que esté más arriba, y no con la última que
+ * entró: al scrollear hacia arriba, si no, queda marcada la de abajo.
+ */
+function initSubnav() {
+  const nav = document.querySelector('.subnav');
+  if (!nav || !('IntersectionObserver' in window)) return;
+
+  const enlaces = [...nav.querySelectorAll('a[href^="#"]')];
+  const secciones = enlaces
+    .map((a) => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+  if (!secciones.length) return;
+
+  const visibles = new Set();
+
+  const marcar = () => {
+    if (!visibles.size) return;
+    const arriba = [...visibles].sort((a, b) => a.offsetTop - b.offsetTop)[0];
+    enlaces.forEach((a) => {
+      const activo = a.getAttribute('href') === `#${arriba.id}`;
+      if (activo) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) visibles.add(entry.target);
+        else visibles.delete(entry.target);
+      });
+      marcar();
+    },
+    // La franja activa es el tercio superior de la pantalla: es donde está
+    // mirando quien lee, no el centro ni el borde.
+    { rootMargin: '0px 0px -67% 0px', threshold: 0 }
+  );
+
+  secciones.forEach((s) => observer.observe(s));
+}
 
 const LINE_STEP = 120; // ms entre una línea y la siguiente
 
@@ -861,11 +1152,16 @@ function initDecoParallax() {
 const news = document.querySelector('.news');
 if (news) initNewsCarousel(news);
 initNav();
+initDropdown();
+initHeadroom();
 initVideo();
 initEventPopup();
 initVersionSwitch();
 initA11yToolbar();
 initReveal();
+initSubnav();
+initStepper();
+initCounters();
 initLineReveal();
 initDecoReveal();
 initDecoParallax();

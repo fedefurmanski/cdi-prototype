@@ -112,7 +112,7 @@
 
 /* La flecha acompaña el hover: micro-gesto listo para encadenar. */
 .btn .icon {
-  transition: transform var(--dur-base) var(--ease-out);
+  transition: transform var(--dur-hover) var(--ease-hover);
 }
 
 .btn:hover .icon {
@@ -135,7 +135,7 @@
 }
 
 .link-arrow .icon {
-  transition: transform var(--dur-base) var(--ease-out);
+  transition: transform var(--dur-hover) var(--ease-hover);
 }
 
 .link-arrow:hover .icon {
@@ -168,6 +168,9 @@
    Botón circular con flecha (tarjetas de perfil)
    -------------------------------------------------------------------------- */
 
+/* Crece, no se desplaza: el desplazamiento tironeaba del ojo y con un círculo
+   de 40px el recorrido se notaba más que el gesto. `scale` y no `transform`
+   para no chocar con el `transform: none` del revelado. */
 .circle-arrow {
   display: grid;
   place-items: center;
@@ -176,7 +179,7 @@
   border-radius: 50%;
   background: var(--accent, var(--c-teal));
   color: #fff;
-  transition: transform var(--dur-base) var(--ease-out);
+  transition: scale var(--dur-hover) var(--ease-hover);
 }
 
 .circle-arrow .icon {
@@ -206,7 +209,7 @@
 
 .service-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* El icono va como máscara y no como imagen, para poder animarle el color.
@@ -273,8 +276,8 @@
   mask: var(--icon) center / contain no-repeat;
 
   transition:
-    background-color var(--dur-base) var(--ease-out),
-    scale var(--dur-base) var(--ease-out);
+    background-color var(--dur-hover) var(--ease-hover),
+    scale var(--dur-hover) var(--ease-hover);
 }
 
 .service-card:hover .service-card__icon,
@@ -334,11 +337,11 @@
 
 .profile-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .profile-card:hover .circle-arrow {
-  transform: translateX(4px);
+  scale: 1.12;
 }
 
 .profile-card__media {
@@ -390,7 +393,7 @@
 
 .news-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* La primera tarjeta es el evento destacado: borde teal completo, 6px. */
@@ -413,7 +416,7 @@
   object-fit: cover;
   /* Mismo gesto que en los bandeaux de perfiles. La tarjeta ya recorta con
      `overflow: hidden`, así que la foto crece por dentro del marco. */
-  transition: scale 620ms var(--ease-out);
+  transition: scale var(--dur-slow) var(--ease-hover);
 }
 
 /* La tarjeta es un `<article>`, no recibe foco: `:focus-within` hace que el
@@ -527,8 +530,8 @@
   border-radius: 50%;
   color: #fff;
   transition:
-    background-color var(--dur-base) var(--ease-out),
-    transform var(--dur-base) var(--ease-out);
+    background-color var(--dur-hover) var(--ease-hover),
+    transform var(--dur-hover) var(--ease-hover);
 }
 
 .play-btn:hover:not([disabled]) {
@@ -826,7 +829,7 @@
 
 .profile-banner:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .profile-banner__media {
@@ -899,7 +902,7 @@
   border-radius: 50%;
   background: #fff;
   color: var(--accent);
-  transition: transform var(--dur-base) var(--ease-out);
+  transition: scale var(--dur-hover) var(--ease-hover);
 }
 
 .profile-banner__arrow .icon {
@@ -908,7 +911,7 @@
 }
 
 .profile-banner:hover .profile-banner__arrow {
-  transform: translateX(4px);
+  scale: 1.12;
 }
 
 /* --- Variante C: panel de color + foto, unidos por un degradado corto ------
@@ -948,7 +951,7 @@
      no se corre y el degradado sigue entrando sobre la misma zona. El bandeau
      ya recorta con `overflow: hidden`. */
   transform-origin: right center;
-  transition: scale 620ms var(--ease-out);
+  transition: scale var(--dur-slow) var(--ease-hover);
 }
 
 .profile-banner--gradient:hover .profile-banner__media,

@@ -22,7 +22,10 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* `clip` y no `hidden`: los dos recortan lo que se va de ancho —las formas
+     decorativas, sobre todo— pero `hidden` convierte al body en contenedor de
+     scroll y eso deja sin efecto el `position: sticky` del header. */
+  overflow-x: clip;
 }
 
 img,
@@ -258,13 +261,24 @@ button {
    `.is-visible` —tres clases— le ganaba por especificidad al `:hover` de las
    tarjetas —dos—, y el levantarse al pasar el puntero no llegaba a aplicarse
    en nada que se hubiera revelado al scrollear. */
+/* Segunda trampa, hermana de la anterior y más difícil de ver: esta regla gana
+   por especificidad (0,2,0) a la transición que declara cada componente
+   (0,1,0), así que no se suma, la reemplaza entera. Como casi toda tarjeta es
+   objetivo de revelado, se llevaba puestos su `transform` y su `box-shadow`, y
+   el levantamiento al pasar el puntero saltaba de golpe —sin transición
+   ninguna— por más que el componente la declarara. Por eso los dos están acá
+   abajo: no los usa el revelado, los devuelve al componente.
+
+   Los retardos van dentro del atajo y no en un `transition-delay` aparte,
+   porque ése se aplicaría también al hover y lo dejaría esperando. */
 .js [data-reveal] {
   opacity: 0;
   transition:
-    opacity var(--dur-slow) var(--ease-out),
-    translate var(--dur-slow) var(--ease-out),
-    scale var(--dur-slow) var(--ease-out);
-  transition-delay: var(--reveal-delay, 0ms);
+    opacity var(--dur-slow) var(--ease-out) var(--reveal-delay, 0ms),
+    translate var(--dur-slow) var(--ease-out) var(--reveal-delay, 0ms),
+    scale var(--dur-slow) var(--ease-out) var(--reveal-delay, 0ms),
+    transform var(--dur-hover) var(--ease-hover),
+    box-shadow var(--dur-hover) var(--ease-hover);
   will-change: opacity, translate;
 }
 
@@ -318,6 +332,8 @@ button {
    se asienta desde un zoom corto y el texto llega un instante después.
    -------------------------------------------------------------------------- */
 
+/* `transform` y `box-shadow` viajan otra vez de arriba: esta regla reemplaza
+   la de `[data-reveal]` y, sin ellos, el bandeau se levantaría de golpe. */
 .js [data-reveal="banner"] {
   opacity: 0;
   translate: 0 26px;
@@ -325,7 +341,9 @@ button {
   transition:
     opacity 680ms var(--ease-out),
     translate 680ms var(--ease-out),
-    scale 680ms var(--ease-out);
+    scale 680ms var(--ease-out),
+    transform var(--dur-hover) var(--ease-hover),
+    box-shadow var(--dur-hover) var(--ease-hover);
 }
 
 .js [data-reveal="banner"].is-visible {
@@ -340,14 +358,16 @@ button {
   scale: 1.1;
 }
 
+/* Misma trampa que arriba: esta regla reemplaza la transición del botón, así
+   que el `scale` del hover viaja con ella —sin el retardo de la entrada. */
 .js [data-reveal="banner"] .profile-banner__body,
 .js [data-reveal="banner"] .profile-banner__arrow {
   opacity: 0;
   translate: 0 12px;
   transition:
-    opacity 520ms var(--ease-out),
-    translate 520ms var(--ease-out);
-  transition-delay: calc(var(--reveal-delay, 0ms) + 240ms);
+    opacity 520ms var(--ease-out) calc(var(--reveal-delay, 0ms) + 240ms),
+    translate 520ms var(--ease-out) calc(var(--reveal-delay, 0ms) + 240ms),
+    scale var(--dur-hover) var(--ease-hover);
 }
 
 .js [data-reveal="banner"].is-visible .profile-banner__body,
