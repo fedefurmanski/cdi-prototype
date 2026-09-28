@@ -256,9 +256,11 @@
     color var(--dur-hover) var(--ease-hover);
 }
 
+/* En negro y no en turquesa: el color del paso ya está en el fondo, en el
+   filete y en el número, y una flecha teal se sumaba a la cuenta. */
 .steps__arrow:hover {
-  border-color: var(--c-teal);
-  color: var(--c-teal-deep);
+  border-color: var(--c-ink);
+  color: var(--c-ink);
 }
 
 .steps__arrow .icon {
