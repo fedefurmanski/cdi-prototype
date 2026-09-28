@@ -397,8 +397,9 @@ izquierda y ocupa el ancho, abajo a la izquierda va el índice del paso —`01. 
 la conception`— y abajo a la derecha las flechas.**
 
 El índice es el `tablist`: **los cuatro números se ven siempre** —el activo en
-el color de su paso, los otros tres en gris claro, para que se note que hay más
-estados y que se puede saltar a cualquiera— y después de un filete vertical va
+el color de su paso, los otros tres en un gris bien claro (el de cuerpo al 42%),
+porque están para decir que hay más estados y no para leerse; al pasar el
+puntero suben de contraste y que se puede saltar a cualquiera— y después de un filete vertical va
 el nombre del paso. Los cuatro nombres viven apilados en la misma celda de
 grilla y sólo se ve el activo, así el filete no se corre de sitio al cambiar:
 el ancho lo fija el nombre más largo. El rótulo está fuera del botón, así que
@@ -438,9 +439,14 @@ válido.
 Los items entran escalonados con `--i` escrito en el marcado: es posición, no
 estado, así que el retardo sale de CSS y el JS no reparte nada.
 
-La rejilla de enlaces lleva `align-content: center`. Sin eso las cuatro filas se
-reparten el alto de la columna de la foto —las pistas `auto` crecen cuando sobra
-sitio— y el índice queda desparramado.
+**La foto va en su propia columna, sangrada hasta el borde del panel**, y no
+dentro de la columna de texto. Como recuadro de proporción fija arriba del
+título dejaba un hueco blanco debajo y el panel quedaba alto y desbalanceado;
+estirada, toma el alto que haya y es la lista la que da la proporción.
+
+Los ocho enlaces van **en una sola columna**. En dos, «Le trouble du
+développement intellectuel» se partía en tres líneas y las filas quedaban
+disparejas.
 
 Apilado (≤1080px) el panel no cuelga: se despliega en el sitio como acordeón,
 animando `grid-template-rows` de `0fr` a `1fr` con `overflow: hidden` en el
@@ -540,6 +546,29 @@ Dos decisiones que importan:
   `main.js` son los dos números a tocar.
 
 No corre en modo exportación ni con movimiento reducido.
+
+## El header acompaña al scroll
+
+Al bajar se va; al subir vuelve, pero **sólo la barra de navegación**, no la
+cabecera entera. Eso último lo resuelve el CSS sin una línea de JS: el header es
+`position: sticky` con un `top` negativo que vale lo que miden la franja del
+gobierno más la barra de accesibilidad, así que esas dos se van con el scroll y
+lo que queda clavado arriba son los 77px de la navegación. Sin eso, al subir
+aparecía una cortina de 185px.
+
+El elemento sigue ocupando su sitio en el flujo, así que no hay saltos ni hace
+falta un espaciador. El JS sólo decide si está o no (`is-hidden`), con un umbral
+de 6px para que el temblor del trackpad no lo haga parpadear, y no lo esconde
+nunca si el menú está desplegado o el foco está dentro.
+
+**`body` pasó de `overflow-x: hidden` a `overflow-x: clip`.** Los dos recortan
+lo que se va de ancho —las formas decorativas—, pero `hidden` convierte al body
+en contenedor de scroll y eso deja el `sticky` sin efecto. `clip` no crea
+contenedor de scroll. Es la clase de detalle que hace perder una tarde: el
+`sticky` está bien escrito y simplemente no pasa nada.
+
+La barra lateral del interior se detiene a `--nav-h + 24px`, para no pegarse a
+la navegación cuando ésta vuelve.
 
 ## Los estados de hover
 

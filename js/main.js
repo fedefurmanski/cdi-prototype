@@ -145,6 +145,57 @@ function initNav() {
 }
 
 /**
+ * El header aparece al scrollear hacia arriba y se va al bajar.
+ *
+ * El «cuánto se ve» lo resuelve el CSS con un `top` negativo —sólo queda la
+ * barra de navegación—; acá sólo se decide si está o no. Dos cuidados:
+ * un umbral de 6px para que el temblor del trackpad no lo haga parpadear, y
+ * nunca esconderlo con el menú desplegado o con el foco dentro, que sería
+ * hacer desaparecer lo que la persona está usando.
+ */
+function initHeadroom() {
+  const header = document.querySelector('.header');
+  if (!header) return;
+
+  const UMBRAL = 6;
+  // Por debajo de esto estamos en la cabecera: se muestra entera y quieta.
+  const TOPE = 120;
+
+  let ultimo = window.scrollY;
+  let pedido = false;
+
+  const revisar = () => {
+    pedido = false;
+    const y = Math.max(0, window.scrollY);
+    const delta = y - ultimo;
+
+    header.classList.toggle('is-stuck', y > TOPE);
+
+    if (Math.abs(delta) < UMBRAL) return;
+    ultimo = y;
+
+    const retenido =
+      header.querySelector('.nav.is-open') ||
+      header.querySelector('.nav__item.is-open') ||
+      header.contains(document.activeElement);
+
+    header.classList.toggle('is-hidden', delta > 0 && y > TOPE && !retenido);
+  };
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (pedido) return;
+      pedido = true;
+      requestAnimationFrame(revisar);
+    },
+    { passive: true },
+  );
+
+  revisar();
+}
+
+/**
  * Menú desplegable de la navegación.
  *
  * Con ratón abre al pasar por encima y cierra con un respiro de 120 ms, para
@@ -1102,6 +1153,7 @@ const news = document.querySelector('.news');
 if (news) initNewsCarousel(news);
 initNav();
 initDropdown();
+initHeadroom();
 initVideo();
 initEventPopup();
 initVersionSwitch();

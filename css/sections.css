@@ -7,10 +7,34 @@
    1 · Header (franja gobierno + barra de accesibilidad + navegación)
    -------------------------------------------------------------------------- */
 
+/* El header acompaña al scroll: al bajar se va, al subir vuelve.
+   El `top` negativo hace el trabajo fino y sin JS: vale lo que miden la franja
+   del gobierno y la barra de accesibilidad, así que esas dos se van con el
+   scroll y lo que queda clavado arriba es sólo la barra de navegación. Sin
+   eso, al volver aparecía una cortina de 185px.
+   El elemento sigue ocupando su sitio en el flujo, así que nada salta. */
 .header {
-  position: relative;
+  position: sticky;
+  top: calc(-1 * (var(--topbar-h) + var(--toolbar-h)));
   z-index: 10;
   background: var(--c-surface);
+  transition: translate 400ms var(--ease-hover);
+}
+
+.header.is-hidden {
+  translate: 0 -100%;
+}
+
+/* Una vez despegado del tope de la página se le pone una sombra, que es lo
+   único que lo separa del contenido que pasa por debajo. */
+.header.is-stuck {
+  box-shadow: 0 6px 20px rgba(17, 32, 43, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
+  }
 }
 
 /* Franja del Gouvernement */
@@ -239,7 +263,7 @@
 
 .dropdown__inner {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 280px 1fr 300px;
   gap: var(--space-12);
   padding: var(--space-10);
 }
@@ -248,13 +272,16 @@
    page» son un solo blanco de clic, que es como se lee. */
 .dropdown__intro {
   display: block;
+  align-self: center;
   color: inherit;
 }
 
+/* La foto va en su propia columna y sangrada hasta el borde del panel, no
+   dentro de la columna de texto: así toma el alto que haya y no deja el hueco
+   blanco que quedaba debajo cuando era un recuadro de proporción fija. */
 .dropdown__media {
-  aspect-ratio: 16 / 9;
-  margin-bottom: var(--space-5);
-  border-radius: var(--r-media);
+  margin: calc(-1 * var(--space-10)) calc(-1 * var(--space-10)) calc(-1 * var(--space-10)) 0;
+  border-radius: 0 var(--r-card) var(--r-card) 0;
   overflow: hidden;
 }
 
@@ -265,7 +292,7 @@
   transition: scale var(--dur-slow) var(--ease-hover);
 }
 
-.dropdown__intro:hover .dropdown__media img {
+.dropdown__media:hover img {
   scale: 1.06;
 }
 
@@ -292,17 +319,13 @@
   margin-top: var(--space-5);
 }
 
-/* Se llena hacia abajo y no de lado: la primera columna lleva 01–04 y la
-   segunda 05–08, que es como se lee un índice. */
+/* Una sola columna de ocho. En dos columnas los rótulos largos —«Le trouble du
+   développement intellectuel»— se partían en tres líneas y las filas quedaban
+   disparejas; así cada uno entra en una línea y el alto de la lista es el que
+   le da al panel su proporción. */
 .dropdown__links {
   display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(4, auto);
-  grid-auto-columns: 1fr;
-  /* Sin esto las cuatro filas se reparten el alto de la columna de la foto y
-     el índice queda desparramado: `auto` crece cuando sobra sitio. */
   align-content: center;
-  column-gap: var(--space-10);
 }
 
 /* Los items entran escalonados. El orden lo lleva `--i` en el marcado: es
@@ -325,10 +348,14 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) 0;
+  padding: 9px 0;
   border-bottom: 1px solid var(--c-line);
   color: var(--c-ink);
   transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.dropdown__links li:last-child a {
+  border-bottom: 0;
 }
 
 .dropdown__links a:hover {
@@ -1079,14 +1106,11 @@
     padding: 0;
   }
 
-  /* La bajada y el «voir la page» sobran acá: el propio item es el enlace. */
-  .dropdown__intro {
+  /* La bajada, el «voir la page» y la foto sobran acá: el propio item ya es el
+     enlace a la página. */
+  .dropdown__intro,
+  .dropdown__media {
     display: none;
-  }
-
-  .dropdown__links {
-    grid-auto-flow: row;
-    grid-template-rows: none;
   }
 
   .dropdown__links a {

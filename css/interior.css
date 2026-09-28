@@ -47,9 +47,11 @@
    Barra lateral
    -------------------------------------------------------------------------- */
 
+/* Se detiene por debajo de la barra de navegación, que ahora queda clavada
+   arriba al subir: con los 80px de antes se le pegaba a 3px. */
 .subnav-wrap {
   position: sticky;
-  top: var(--space-20);
+  top: calc(var(--nav-h) + var(--space-6));
 }
 
 /* El texto se alinea con el de los ítems —3px del filete + 24px del relleno—
@@ -261,7 +263,9 @@
   font-size: var(--fs-md);
   font-weight: var(--fw-bold);
   line-height: 1.2;
-  color: var(--c-grey-300);
+  /* Bien claros: están para decir que hay otros tres estados, no para leerse.
+     Al pasar el puntero suben a gris de cuerpo, que es cuando importan. */
+  color: color-mix(in srgb, var(--c-grey-300) 42%, #fff);
   font-variant-numeric: tabular-nums;
   transition: color var(--dur-hover) var(--ease-hover);
 }

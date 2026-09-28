@@ -22,7 +22,10 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* `clip` y no `hidden`: los dos recortan lo que se va de ancho —las formas
+     decorativas, sobre todo— pero `hidden` convierte al body en contenedor de
+     scroll y eso deja sin efecto el `position: sticky` del header. */
+  overflow-x: clip;
 }
 
 img,
