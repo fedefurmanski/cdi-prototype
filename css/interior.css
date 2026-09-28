@@ -205,9 +205,14 @@
   margin-top: var(--space-6);
   padding: var(--space-6);
   border-radius: var(--r-card);
-  /* El de arranque; a partir de ahí lo escribe el JS con el color del paso. */
+  /* Los de arranque; a partir de ahí los escribe el JS con el color del paso:
+     el fondo muy diluido y el filete a color pleno, que es lo que le da borde
+     a una caja que si no flota sobre el blanco. */
+  border: 1px solid var(--c-line);
   background-color: var(--c-surface-alt);
-  transition: background-color 520ms var(--ease-out);
+  transition:
+    background-color 520ms var(--ease-out),
+    border-color 520ms var(--ease-out);
 }
 
 /* El bloque de causas es un objeto cerrado: lo que sigue necesita despegarse
@@ -375,7 +380,7 @@
 }
 
 .rule-list__item + .rule-list__item {
-  margin-top: var(--space-5);
+  margin-top: var(--space-8);
 }
 
 .rule-list__item h3 {

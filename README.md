@@ -406,7 +406,10 @@ el ancho lo fija el nombre más largo. El rótulo está fuera del botón, así q
 el JS lo marca por posición (igual que las fotos de «Notre approche») y cada
 botón lleva el nombre repetido en `visually-hidden` para el lector de pantalla.
 
-**El fondo toma el color del paso, al 8%.** El color va como valor literal en
+**El fondo toma el color del paso al 8%, y el filete de 1px el mismo color a
+tono pleno** —sin él la caja flota sobre el blanco—. Los dos los escribe el JS.
+
+**Sobre el color literal.** El color va como valor literal en
 `data-tint` y no como variable: una propiedad en transición no se re-evalúa
 cuando cambia la custom property de la que depende, y el fondo se quedaba en el
 primer color. Es la misma trampa de Chrome que ya había mordido en el conmutador

@@ -621,6 +621,7 @@ function initStepper() {
       const tono = tab.dataset.tint;
       if (!tiñe || !tono) return;
       root.style.backgroundColor = `${tono}14`;
+      root.style.borderColor = tono;
     };
 
     const mostrar = (i, mover) => {
