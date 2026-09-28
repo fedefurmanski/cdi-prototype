@@ -605,42 +605,36 @@
 
 /* --------------------------------------------------------------------------
    Públicos cibles
+   Tres filas a lo ancho, con la foto al costado. Eran tres columnas con la foto
+   redonda arriba; al quedar solas en su propia página, tres tarjetas angostas
+   en el tercio superior dejaban la página medio vacía.
    -------------------------------------------------------------------------- */
 
 .target-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-5);
   margin-top: var(--space-6);
 }
 
-/* Estas llevan el filete abajo, corto y centrado, en vez del de la izquierda:
-   la tarjeta está centrada y una regla de punta a punta la partía en dos. */
+/* El filete de acento va al pie del texto, no a la izquierda de la tarjeta:
+   con la foto sangrada al borde, una regla vertical quedaría enmarcándola. */
 .target {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-8) var(--space-6) 0;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: auto auto 1fr;
+  column-gap: var(--space-8);
+  min-height: 232px;
+  padding: var(--space-8) var(--space-8) var(--space-8) 0;
   border-left: 0;
-  text-align: center;
-}
-
-/* `margin-top: auto` lo empuja al pie: si siguiera al texto quedaría a distinta
-   altura en cada tarjeta, porque los textos no miden lo mismo. */
-.target::after {
-  content: '';
-  width: 88px;
-  height: 4px;
-  margin: auto auto 0;
-  border-radius: 2px 2px 0 0;
-  background: var(--accent);
-}
-
-.target__media {
-  width: 148px;
-  margin: 0 auto var(--space-5);
-  aspect-ratio: 1;
-  border-radius: 50%;
+  text-align: left;
   overflow: hidden;
+}
+
+/* Ocupa las tres filas y se sale del relleno por arriba y por abajo, así llega
+   a los bordes de la tarjeta y toma el alto que haya. */
+.target__media {
+  grid-area: 1 / 1 / -1 / 2;
+  margin-block: calc(-1 * var(--space-8));
 }
 
 .target__media img {
@@ -655,20 +649,34 @@
 }
 
 .target h3 {
-  font-size: var(--fs-md);
+  grid-column: 2;
+  font-size: var(--fs-h4);
   font-weight: var(--fw-bold);
   line-height: 1.3;
   color: var(--c-ink);
 }
 
 .target p {
+  grid-column: 2;
   margin-top: var(--space-3);
-  /* El margen del párrafo garantiza el aire mínimo sobre el filete cuando el
-     texto es largo y el `auto` de arriba no tiene espacio que repartir. */
-  margin-bottom: var(--space-8);
-  font-size: var(--fs-sm);
+  margin-bottom: var(--space-6);
+  max-width: 52ch;
+  font-size: var(--fs-md);
   line-height: 1.7;
   color: var(--c-body);
+}
+
+/* `align-self: end` lo clava al pie de la tarjeta: si siguiera al texto
+   quedaría a distinta altura en cada una, porque no miden lo mismo. */
+.target::after {
+  content: '';
+  grid-column: 2;
+  align-self: end;
+  justify-self: start;
+  width: 120px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
 }
 
 /* --------------------------------------------------------------------------
@@ -949,9 +957,28 @@
     aspect-ratio: 4 / 3;
   }
 
-  .target-list,
   .annexes {
     grid-template-columns: 1fr;
+  }
+
+  /* La foto vuelve arriba: a 300px de ancho fijo no queda sitio para el texto. */
+  .target {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto 1fr;
+    padding: 0 var(--space-6) var(--space-6);
+  }
+
+  .target__media {
+    grid-area: 1 / 1;
+    margin-block: 0 var(--space-6);
+    margin-inline: calc(-1 * var(--space-6));
+    aspect-ratio: 16 / 9;
+  }
+
+  .target h3,
+  .target p,
+  .target::after {
+    grid-column: 1;
   }
 
   .bars__row {
