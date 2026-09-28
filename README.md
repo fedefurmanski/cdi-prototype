@@ -498,8 +498,7 @@ que están partidas:
 
 | Archivo | Sección |
 | --- | --- |
-| `a-propos.html` | portada de la sección: título, foto e índice de las ocho |
-| `a-propos-qui-sommes-nous.html` | Qui sommes-nous ? |
+| `a-propos-qui-sommes-nous.html` | Qui sommes-nous ? (entrada de la sección) |
 | `a-propos-trouble.html` | Le trouble du développement intellectuel |
 | `a-propos-philosophie.html` | Notre philosophie |
 | `a-propos-approche.html` | Notre approche |
@@ -507,6 +506,13 @@ que están partidas:
 | `a-propos-chiffres.html` | Le CDI en chiffres |
 | `a-propos-equipe.html` | Notre équipe |
 | `a-propos-annexes.html` | Nos annexes |
+
+**No hay página «À propos».** Se probó una portada de sección —título, foto e
+índice de las ocho— y el cliente la descartó: la sección entra directamente por
+«Qui sommes-nous ?», que se quedó con la foto. De ahí que el item «À propos» de
+la navegación enlace a esa página y que la columna izquierda del desplegable sea
+sólo texto: sin página de sección no tiene a dónde llevar, y los ocho destinos
+están listados al lado.
 
 **Nombres planos y no una carpeta `a-propos/`**, para que las rutas de
 `assets/`, `css/` y `js/` sigan siendo las mismas en todos los archivos. Sin
