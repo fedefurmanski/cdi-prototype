@@ -176,74 +176,100 @@
 }
 
 /* --------------------------------------------------------------------------
-   Causas — cuatro momentos, en dos columnas
+   Causas — cuatro momentos, uno a la vista
+   Panel gris con los números en columna haciendo de riel y el texto al lado.
+   Sin subrayados, sin filete y sin flechas: los números son el control, y así
+   el bloque no se llena de líneas.
    -------------------------------------------------------------------------- */
 
-.timeline {
+.steps {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-5);
+  grid-template-columns: 224px 1fr;
+  gap: var(--space-10);
+  margin-top: var(--space-6);
+  padding: var(--space-8);
+  border-radius: var(--r-card);
+  background: var(--c-surface-alt);
 }
 
-/* Todas las cajas de la página comparten el estilo de las tarjetas del resto
-   del sitio: fondo blanco, redondeo, sombra y un filete del color de acento a
-   la izquierda. */
-.timeline__item,
-.rule-list__item,
-.target {
-  padding: var(--space-6);
-  border-left: 4px solid var(--accent);
-  border-radius: var(--r-card);
+.steps__ctrls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.steps__ctrl {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--r-btn);
+  text-align: left;
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover);
+}
+
+.steps__ctrl:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.steps__ctrl[aria-selected='true'] {
   background: var(--c-surface);
   box-shadow: var(--shadow-card);
 }
 
-/* Las de públicos cibles llevan el filete abajo, corto y centrado, en vez del
-   de la izquierda: la tarjeta está centrada y una regla de punta a punta la
-   partía en dos. */
-.target {
-  display: flex;
-  flex-direction: column;
-  border-left: 0;
-  /* Sin relleno abajo: el filete se apoya en el borde de la tarjeta. El aire
-     sobre él lo da el margen del párrafo. */
-  padding-bottom: 0;
-}
-
-/* `margin-top: auto` empuja el filete al pie: si siguiera al texto, quedaría a
-   distinta altura en cada tarjeta, porque los textos no miden lo mismo. */
-.target::after {
-  content: '';
-  width: 88px;
-  height: 4px;
-  margin: auto auto 0;
-  border-radius: 2px 2px 0 0;
-  background: var(--accent);
-}
-
-/* El margen del párrafo garantiza el aire mínimo sobre el filete cuando el
-   texto es largo y el `auto` de arriba no tiene espacio que repartir. */
-.target p {
-  margin-bottom: var(--space-8);
-}
-
-.timeline__item {
-  padding: var(--space-6) var(--space-8);
-}
-
-.timeline__when {
-  font-size: var(--fs-sm);
+.steps__num {
+  font-size: var(--fs-md);
   font-weight: var(--fw-bold);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  line-height: 1.2;
+  color: var(--c-grey-300);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.steps__ctrl[aria-selected='true'] .steps__num {
   color: var(--accent);
 }
 
-.timeline__what {
-  margin-top: var(--space-3);
+.steps__name {
   font-size: var(--fs-sm);
-  line-height: 1.7;
+  font-weight: var(--fw-bold);
+  line-height: 1.35;
   color: var(--c-body);
+  transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.steps__ctrl[aria-selected='true'] .steps__name {
+  color: var(--c-ink);
+}
+
+.steps__panels {
+  display: grid;
+  align-content: center;
+}
+
+.steps__panel {
+  grid-area: 1 / 1;
+}
+
+.js .steps__panel[inert] {
+  visibility: hidden;
+  opacity: 0;
+  translate: 0 8px;
+}
+
+.js .steps__panel {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    translate var(--dur-base) var(--ease-out);
+}
+
+.steps__panel p {
+  max-width: 54ch;
+  font-size: var(--fs-lg);
+  line-height: 1.6;
+  color: var(--c-ink);
 }
 
 /* --------------------------------------------------------------------------
@@ -807,7 +833,6 @@
     aspect-ratio: 4 / 3;
   }
 
-  .timeline,
   .target-list,
   .annexes {
     grid-template-columns: 1fr;
@@ -867,9 +892,12 @@
 }
 
 /* --- El mapa --- */
+/* Localizador: el mapa manda y a su lado va una sola ficha, la del anexo
+   elegido. Con la lista de siete al costado, el mapa quedaba chico y las dos
+   columnas competían. */
 .annexes-map {
   display: grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-10);
   margin-top: var(--space-8);
   align-items: start;
@@ -934,56 +962,93 @@
   opacity: 0.22;
 }
 
-/* --- Las fichas chicas --- */
-.annexes-mini {
+/* --- Los nombres, debajo del mapa --- */
+.chip-row {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
 }
 
-.mini {
-  display: block;
-  width: 100%;
-  padding: var(--space-5) var(--space-6);
-  border-left: 3px solid transparent;
+.chip-btn {
+  padding: 6px var(--space-4);
+  border-radius: var(--r-pill);
+  background: var(--c-surface-alt);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--c-body);
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover);
+}
+
+.chip-btn:hover {
+  color: var(--c-ink);
+}
+
+.chip-btn.is-on {
+  background: var(--c-teal);
+  color: #fff;
+}
+
+/* --- La ficha del anexo elegido --- */
+.detail {
   border-radius: var(--r-card);
   background: var(--c-surface);
   box-shadow: var(--shadow-card);
-  text-align: left;
-  transition:
-    border-color var(--dur-hover) var(--ease-hover),
-    transform var(--dur-hover) var(--ease-hover);
+  overflow: hidden;
 }
 
-.mini:hover {
-  transform: translateX(4px);
+.detail__media {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
 }
 
-.mini.is-on {
-  border-left-color: var(--c-teal);
-  transform: translateX(4px);
+.detail__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.mini__name {
-  display: block;
-  font-size: var(--fs-md);
+.detail__body {
+  padding: var(--space-6);
+}
+
+.detail__body h3 {
+  font-size: var(--fs-h4);
   font-weight: var(--fw-bold);
   color: var(--c-ink);
 }
 
-.mini__addr {
-  display: block;
-  margin-top: 2px;
-  font-size: var(--fs-sm);
+.detail__addr {
+  margin-top: var(--space-3);
+  font-size: var(--fs-md);
+  line-height: 1.6;
   color: var(--c-body);
 }
 
-.mini__tel {
-  display: block;
-  margin-top: 4px;
+.detail__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: var(--space-4);
   font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.detail__contact a {
+  width: fit-content;
   font-weight: var(--fw-semibold);
   color: var(--c-teal-deep);
+}
+
+.detail__contact a:hover {
+  text-decoration: underline;
+}
+
+.detail__map {
+  margin-top: var(--space-5);
+  font-size: var(--fs-sm);
 }
 
 @media (max-width: 900px) {
@@ -992,7 +1057,7 @@
   }
 
   .annexes-map__plan {
-    max-width: 320px;
+    max-width: 340px;
     margin: 0 auto;
   }
 }

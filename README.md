@@ -373,9 +373,12 @@ como un cuadrado de color).
 
 ## Annexes: las dos vistas y el mapa
 
-«Nos annexes» tiene dos vistas —fichas con foto y mapa con fichas chicas— que
-comparten la selección: un pin y su ficha llevan el mismo `data-annexe` y se
-marcan juntos, se haga clic donde se haga.
+«Nos annexes» tiene dos vistas: fichas con foto, y un **localizador** —mapa
+grande a la izquierda y, a la derecha, una sola ficha con la foto del anexo
+elegido—. Con la lista de siete al costado el mapa quedaba chico y las dos
+columnas competían. Debajo del mapa hay una fila de nombres, para poder recorrer
+los siete sin adivinar cuál es cada punto. Pin, nombre y ficha llevan el mismo
+`data-annexe` y se marcan juntos, se haga clic donde se haga.
 
 **El mapa se dibuja en el sitio, no viene de un servicio externo.** En un sitio
 público un iframe de mapas arrastra cookies de terceros y consentimiento, y para
@@ -392,6 +395,15 @@ se amplía conviene geocodificar las direcciones de verdad.
 
 Los pines son `<g>` con `role="button"` y `tabindex="0"`: no son botones, así que
 Enter y espacio se atienden a mano.
+
+## «Les causes»: por qué no lleva flechas ni subrayados
+
+Es el mismo mecanismo que el carrusel de «Notre approche» —`tablist`, paneles
+apilados en una celda de grilla— pero con otra piel: un panel gris con los
+números en columna haciendo de riel y el texto al lado. La primera versión tenía
+cuatro subrayados, el filete del texto y dos flechas, y el bloque se llenaba de
+líneas. Acá el control son los números: el activo va sobre una pastilla blanca y
+no hace falta nada más.
 
 ## Tres detalles del interior que vale recordar
 

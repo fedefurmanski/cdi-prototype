@@ -553,7 +553,13 @@ function initAnnexes() {
     // Un pin y su ficha comparten el mismo `data-annexe`: se marcan juntos.
     const marcables = [...root.querySelectorAll('[data-annexe]')];
     const marcar = (slug) => {
-      marcables.forEach((el) => el.classList.toggle('is-on', el.dataset.annexe === slug));
+      marcables.forEach((el) => {
+        const activo = el.dataset.annexe === slug;
+        el.classList.toggle('is-on', activo);
+        // La ficha grande es la única que se oculta: pines y nombres sólo se
+        // marcan.
+        if (el.classList.contains('detail')) el.hidden = !activo;
+      });
     };
 
     marcables.forEach((el) => {
