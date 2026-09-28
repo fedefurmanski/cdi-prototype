@@ -683,11 +683,13 @@
    Cifras
    -------------------------------------------------------------------------- */
 
+/* Tres columnas iguales y no una fila flexible: con el flex, la cifra de tres
+   dígitos y la de dos repartían el sobrante de distinta manera y las etiquetas
+   no arrancaban alineadas. */
 .figures {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--space-12) var(--space-24);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-10) var(--space-8);
   margin-top: var(--space-8);
   padding: var(--space-8);
   border-radius: var(--r-card);
@@ -706,8 +708,12 @@
   font-variant-numeric: tabular-nums;
 }
 
-.figures__num--alt {
+.figures__num--verde {
   color: var(--c-green);
+}
+
+.figures__num--naranja {
+  color: var(--c-orange);
 }
 
 .figures__label {
@@ -979,6 +985,10 @@
   .bars__track {
     grid-column: 1 / -1;
     order: 3;
+  }
+
+  .figures {
+    grid-template-columns: 1fr;
   }
 
   .figures__num {
