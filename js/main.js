@@ -540,12 +540,16 @@ const STAGGER_MS = 90;
 const STAGGER_MAX = 6;   // a partir de acá el retardo deja de crecer
 
 function initReveal() {
-  // El escalonado se calcula acá y no a mano en el marcado: agregar una
-  // tarjeta no obliga a renumerar delays.
+  // Un grupo sólo declara que sus hijos entran; el escalonado no se calcula
+  // acá sino al revelar (ver más abajo), que es cuando se sabe quiénes entran
+  // juntos.
   document.querySelectorAll('[data-reveal-group]').forEach((group) => {
-    [...group.children].forEach((child, i) => {
-      if (!child.hasAttribute('data-reveal')) child.setAttribute('data-reveal', 'up');
-      child.style.setProperty('--reveal-delay', `${Math.min(i, STAGGER_MAX) * STAGGER_MS}ms`);
+    // El valor del atributo elige el gesto de los hijos: `data-reveal-group`
+    // a secas es `up`; `data-reveal-group="rise"` los sube con un poco de
+    // escala, que es como entran las tarjetas.
+    const gesto = group.dataset.revealGroup || 'up';
+    [...group.children].forEach((child) => {
+      if (!child.hasAttribute('data-reveal')) child.setAttribute('data-reveal', gesto);
     });
   });
 
@@ -560,10 +564,22 @@ function initReveal() {
 
   const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
+      // Lo que entra en la misma tanda se escalona; lo que entra solo no
+      // espera a nadie. Calcularlo acá y no de antemano es lo que hace que una
+      // tarjeta a la que se llega scrolleando aparezca en el acto, y que las
+      // que se ven de entrada lo hagan una detrás de otra.
+      const nuevos = entries.filter((e) => e.isIntersecting).map((e) => e.target);
+      if (!nuevos.length) return;
+      nuevos.sort((a, b) =>
+        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+      );
+      nuevos.forEach((el, i) => {
+        // Un retardo escrito en el marcado manda: está puesto a propósito.
+        if (!el.style.getPropertyValue('--reveal-delay')) {
+          el.style.setProperty('--reveal-delay', `${Math.min(i, STAGGER_MAX) * STAGGER_MS}ms`);
+        }
+        el.classList.add('is-visible');
+        observer.unobserve(el);
       });
     },
     // Umbral 0: alcanza con que asome un borde. Con un umbral alto, un bloque

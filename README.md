@@ -759,6 +759,30 @@ Y dos trampas ya pagadas:
   módulo está diferido y se aplicaba después del primer pintado, así que todo lo
   que el CSS oculta para animarlo alcanzaba a verse y se desvanecía a la vista.
 
+### El escalonado se calcula al revelar, no de antemano
+
+Antes el retardo se repartía al arrancar: `data-reveal-group` numeraba a sus
+hijos y listo. Eso tenía dos problemas. Uno, una tarjeta a la que se llega
+scrolleando —sola, sin compañía— igual esperaba su turno aunque no hubiera
+nadie con quien escalonarse. Dos, todo lo que no estaba en un grupo entraba a la
+vez, así que una página interior era un fogonazo: barra lateral, texto y
+tarjetas apareciendo al mismo tiempo mientras el título se escribía línea por
+línea.
+
+Ahora el retardo se decide dentro del observador, con lo que entra en la misma
+tanda: se ordenan por posición en el documento y se numeran ahí. **Lo que se ve
+de entrada cae uno detrás de otro; lo que entra solo aparece en el acto.** Un
+retardo escrito a mano en el marcado sigue mandando, para los pocos casos donde
+está puesto a propósito (el botón del hero, el cuerpo del bloque de vídeo).
+
+El valor de `data-reveal-group` elige el gesto de los hijos: a secas es `up`;
+`data-reveal-group="rise"` los sube con una pizca de escala, que es como entran
+las tarjetas —parece que se acercan, que es lo que se quiere de una caja con
+sombra—.
+
+**La barra lateral de las páginas interiores entra desde la izquierda.** Era lo
+único que se quedaba quieto mientras todo lo demás se animaba, y se notaba.
+
 ### Cómo verificar una animación (y cómo no)
 
 Ninguna de las dos superficies automáticas sirve:

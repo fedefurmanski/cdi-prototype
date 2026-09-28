@@ -299,6 +299,14 @@ button {
   scale: 0.94;
 }
 
+/* Las tarjetas: suben y crecen un punto. Sólo `up` las hacía deslizarse; con la
+   pizca de escala parece que se acercan, que es lo que se quiere de una caja
+   con sombra. */
+.js [data-reveal="rise"] {
+  translate: 0 32px;
+  scale: 0.97;
+}
+
 /* Las fotos entran con un zoom apenas perceptible: da sensación de
    profundidad sin que se note el truco. */
 .js [data-reveal="zoom"] {
@@ -317,7 +325,8 @@ button {
   translate: 0 0;
 }
 
-.js [data-reveal="scale"].is-visible {
+.js [data-reveal="scale"].is-visible,
+.js [data-reveal="rise"].is-visible {
   scale: 1;
 }
 
