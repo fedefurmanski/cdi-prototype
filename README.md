@@ -547,14 +547,15 @@ la página no se sienta de otro sitio. Además:
   así el alto lo fija el más largo y nada salta al cambiar de paso. Los paneles
   ocultos llevan `inert` y no `hidden`, porque tienen que seguir ocupando su
   celda.
-- `.target` — los públicos cibles: **tres filas a lo ancho, con la foto sangrada
-  al borde izquierdo de la tarjeta.** Eran tres columnas con la foto redonda
-  arriba; al quedar solas en su propia página, tres tarjetas angostas en el
-  tercio superior dejaban el resto vacío. El filete de acento va al pie del
-  texto y no a la izquierda de la tarjeta: con la foto pegada al borde, una
-  regla vertical quedaría enmarcándola. La foto ocupa las tres filas de la
-  grilla y se sale del relleno con un margen negativo, así llega a los bordes y
-  toma el alto que haya. En angosto vuelve arriba, apaisada.
+- `.target` — los públicos cibles: **tres filas a lo ancho, con la foto al
+  costado.** Eran tres columnas con la foto redonda arriba; al quedar solas en
+  su propia página, tres tarjetas angostas en el tercio superior dejaban el
+  resto vacío. La foto va **dentro del relleno**, con su propio redondeo: se
+  probó sangrada al borde y se comía la esquina redondeada de la tarjeta.
+  Tampoco lleva el filete corto al pie —tenía sentido cuando la tarjeta estaba
+  centrada, no en una fila a lo ancho—: vuelve el filete de acento a la
+  izquierda, el de todas las tarjetas del sitio. En angosto la foto vuelve
+  arriba, apaisada.
 - `.bars` — barras de proporción que crecen al entrar en pantalla.
 - `initCounters()` — las cifras cuentan hacia arriba. El número final está en el
   marcado: si el JS no corre, se lee igual.
