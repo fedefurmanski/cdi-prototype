@@ -439,14 +439,16 @@ válido.
 Los items entran escalonados con `--i` escrito en el marcado: es posición, no
 estado, así que el retardo sale de CSS y el JS no reparte nada.
 
-**La foto va en su propia columna, sangrada hasta el borde del panel**, y no
-dentro de la columna de texto. Como recuadro de proporción fija arriba del
-título dejaba un hueco blanco debajo y el panel quedaba alto y desbalanceado;
-estirada, toma el alto que haya y es la lista la que da la proporción.
+**Sin foto, por decisión del cliente.** Se probó una: como recuadro de
+proporción fija encima del título dejaba un hueco blanco debajo y el panel
+quedaba alto; estirada a una columna propia sangrada al borde funcionaba, pero
+obligaba a poner los ocho enlaces en una sola columna —en dos, «Le trouble du
+développement intellectuel» se parte en tres líneas— y el conjunto pesaba más
+de lo que un menú necesita. Quedó el panel sólo de texto.
 
-Los ocho enlaces van **en una sola columna**. En dos, «Le trouble du
-développement intellectuel» se partía en tres líneas y las filas quedaban
-disparejas.
+La rejilla de enlaces lleva `align-content: center`. Sin eso, si la columna de
+la izquierda queda más alta, las cuatro filas se reparten el sobrante —las
+pistas `auto` crecen— y el índice sale desparramado.
 
 Apilado (≤1080px) el panel no cuelga: se despliega en el sitio como acordeón,
 animando `grid-template-rows` de `0fr` a `1fr` con `overflow: hidden` en el

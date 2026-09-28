@@ -263,37 +263,17 @@
 
 .dropdown__inner {
   display: grid;
-  grid-template-columns: 280px 1fr 300px;
+  grid-template-columns: 300px 1fr;
   gap: var(--space-12);
   padding: var(--space-10);
 }
 
-/* La columna entera es el enlace a la página: la foto, el título y el «voir la
-   page» son un solo blanco de clic, que es como se lee. */
+/* La columna entera es el enlace a la página: el título, la bajada y el «voir
+   la page» son un solo blanco de clic, que es como se lee. */
 .dropdown__intro {
   display: block;
   align-self: center;
   color: inherit;
-}
-
-/* La foto va en su propia columna y sangrada hasta el borde del panel, no
-   dentro de la columna de texto: así toma el alto que haya y no deja el hueco
-   blanco que quedaba debajo cuando era un recuadro de proporción fija. */
-.dropdown__media {
-  margin: calc(-1 * var(--space-10)) calc(-1 * var(--space-10)) calc(-1 * var(--space-10)) 0;
-  border-radius: 0 var(--r-card) var(--r-card) 0;
-  overflow: hidden;
-}
-
-.dropdown__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: scale var(--dur-slow) var(--ease-hover);
-}
-
-.dropdown__media:hover img {
-  scale: 1.06;
 }
 
 .dropdown__intro:hover .dropdown__cta .icon {
@@ -319,13 +299,19 @@
   margin-top: var(--space-5);
 }
 
-/* Una sola columna de ocho. En dos columnas los rótulos largos —«Le trouble du
-   développement intellectuel»— se partían en tres líneas y las filas quedaban
-   disparejas; así cada uno entra en una línea y el alto de la lista es el que
-   le da al panel su proporción. */
+/* Se llena hacia abajo y no de lado: la primera columna lleva 01–04 y la
+   segunda 05–08, que es como se lee un índice.
+
+   `align-content: center` no es decorativo: sin él, si la columna de la
+   izquierda queda más alta, las cuatro filas se reparten el sobrante —las
+   pistas `auto` crecen— y el índice sale desparramado. */
 .dropdown__links {
   display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, auto);
+  grid-auto-columns: 1fr;
   align-content: center;
+  column-gap: var(--space-10);
 }
 
 /* Los items entran escalonados. El orden lo lleva `--i` en el marcado: es
@@ -348,14 +334,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: 9px 0;
+  padding: var(--space-3) 0;
   border-bottom: 1px solid var(--c-line);
   color: var(--c-ink);
   transition: color var(--dur-hover) var(--ease-hover);
-}
-
-.dropdown__links li:last-child a {
-  border-bottom: 0;
 }
 
 .dropdown__links a:hover {
@@ -1106,11 +1088,14 @@
     padding: 0;
   }
 
-  /* La bajada, el «voir la page» y la foto sobran acá: el propio item ya es el
-     enlace a la página. */
-  .dropdown__intro,
-  .dropdown__media {
+  /* La bajada y el «voir la page» sobran acá: el propio item es el enlace. */
+  .dropdown__intro {
     display: none;
+  }
+
+  .dropdown__links {
+    grid-auto-flow: row;
+    grid-template-rows: none;
   }
 
   .dropdown__links a {
