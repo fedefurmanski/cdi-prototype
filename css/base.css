@@ -282,6 +282,34 @@ button {
   will-change: opacity, translate;
 }
 
+/* Tercera trampa, y la que más engaña: **los hijos de un grupo reciben su
+   `data-reveal` desde el JS, y el módulo es diferido, o sea que corre después
+   del primer pintado.** Para cuando el JS los marca, ya se pintaron visibles;
+   esconderlos y revelarlos ocurre en el mismo tirón y no se anima nada. El
+   síntoma es el peor posible para diagnosticar: la página «no se anima» salvo
+   el título, que sí funciona porque su `data-lines` está en el marcado y el
+   CSS lo agarra desde el primer pintado.
+
+   Se los oculta desde acá, que es una regla sobre el contenedor —eso sí está
+   en el marcado— y por lo tanto vale antes de que corra una línea de JS. El
+   desplazamiento también: si sólo se ocultaran, al llegar el atributo el
+   elemento saltaría a su posición de partida con la transición ya puesta y se
+   iría deslizando hacia abajo —invisible, pero gastando el recorrido— y la
+   entrada real saldría corta. Los valores repiten los de cada gesto.
+
+   Va antes que las reglas de los gestos a propósito: tienen su misma
+   especificidad, así que un hijo con su propio `data-reveal` en el marcado
+   —los bandeaux, por ejemplo— gana por orden. */
+.js [data-reveal-group] > * {
+  opacity: 0;
+  translate: 0 28px;
+}
+
+.js [data-reveal-group='rise'] > * {
+  translate: 0 32px;
+  scale: 0.97;
+}
+
 .js [data-reveal="up"],
 .js [data-reveal=""] {
   translate: 0 28px;

@@ -759,6 +759,38 @@ Y dos trampas ya pagadas:
   módulo está diferido y se aplicaba después del primer pintado, así que todo lo
   que el CSS oculta para animarlo alcanzaba a verse y se desvanecía a la vista.
 
+### Los hijos de un grupo se ocultan desde el CSS, no desde el JS
+
+La trampa que más engaña de todas. `data-reveal-group` le pone el atributo
+`data-reveal` a sus hijos **desde el JS**, y el módulo es diferido: corre
+*después* del primer pintado. Para cuando el JS los marca ya se pintaron
+visibles, así que esconderlos y revelarlos ocurre en el mismo tirón y no se
+anima nada.
+
+El síntoma es el peor posible para diagnosticar: la página parece no animarse
+**salvo el título**, que sí funciona porque su `data-lines` está escrito en el
+marcado y el CSS lo agarra desde el primer pintado. Pasaba en «Notre
+philosophie» y «Les publics cibles», que son las dos páginas donde el grupo de
+tarjetas es lo único que hay y está arriba de todo; en las demás no se notaba
+porque lo primero es un `.prose` con su `data-reveal` escrito a mano.
+
+La cura es una regla sobre el **contenedor** —eso sí está en el marcado— así
+que vale antes de que corra una línea de JS:
+
+```css
+.js [data-reveal-group] > * { opacity: 0; translate: 0 28px; }
+.js [data-reveal-group='rise'] > * { translate: 0 32px; scale: 0.97; }
+```
+
+El desplazamiento también, no sólo la opacidad: si sólo se ocultaran, al llegar
+el atributo el elemento saltaría a su posición de partida con la transición ya
+puesta y se iría deslizando hacia abajo —invisible, pero gastando el
+recorrido— y la entrada real saldría corta.
+
+Las dos reglas van **antes** que las de cada gesto: tienen su misma
+especificidad, así que un hijo con su propio `data-reveal` en el marcado —los
+bandeaux de perfiles— gana por orden y conserva sus valores.
+
 ### El escalonado se calcula al revelar, no de antemano
 
 Antes el retardo se repartía al arrancar: `data-reveal-group` numeraba a sus
