@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>À propos — CDI</title>
+    <meta
+      name="description"
+      content="Qui sommes-nous, notre philosophie, notre approche, le CDI en chiffres et nos annexes."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // Versiones del prototipo, resueltas antes del primer pintado para que no
+      // parpadeen: manda la URL, si no la última elegida en el conmutador.
+      (function () {
+        // `js` acá y no en main.js: el módulo está diferido y se aplica recién
+        // después del primer pintado, así que los elementos que el CSS oculta
+        // para animarlos alcanzaban a verse y se desvanecían a la vista.
+        var p = new URLSearchParams(location.search);
+
+        document.documentElement.classList.add('js');
+
+        // El modo exportación también acá: aplicado desde el módulo diferido
+        // llega después del primer pintado, y las capturas agarraban las
+        // animaciones de entrada a mitad de camino.
+        var exp = p.get('export');
+        if (exp === '1' || exp === '2') {
+          document.documentElement.classList.add('is-export');
+          if (exp === '1') document.documentElement.classList.add('is-export-nodeco');
+        }
+        // El primero de cada lista es el que se muestra por defecto.
+        var ejes = { intranet: ['blue', 'pink'], profiles: ['gradient', 'cards', 'banners'] };
+        Object.keys(ejes).forEach(function (eje) {
+          var valores = ejes[eje];
+          var guardado = null;
+          try {
+            guardado = localStorage.getItem('cdi:v2-' + eje);
+          } catch (e) {
+            /* storage bloqueado: vale el valor por defecto */
+          }
+          var v = p.get(eje) || guardado;
+          document.documentElement.dataset[eje] = valores.indexOf(v) >= 0 ? v : valores[0];
+        });
+      })();
+    </script>
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/sections.css" />
+    <link rel="stylesheet" href="css/interior.css" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+    <header class="header">
+      <div class="topbar">
+        <img
+          class="topbar__gov"
+          src="assets/icons/gov-luxembourg.png"
+          alt="Le Gouvernement du Grand-Duché de Luxembourg"
+        />
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar__inner container">
+          <button class="toolbar__btn toolbar__contrast" type="button" data-action="contrast">
+            <span class="toolbar__contrast-glyph" aria-hidden="true"></span>
+            <span class="visually-hidden">Activer le contraste élevé</span>
+          </button>
+
+          <div class="toolbar__sizes">
+            <button class="toolbar__btn" type="button" data-action="font-up">
+              A<sup>+</sup><span class="visually-hidden">Augmenter la taille du texte</span>
+            </button>
+            <button class="toolbar__btn" type="button" data-action="font-down">
+              A<sup>-</sup><span class="visually-hidden">Réduire la taille du texte</span>
+            </button>
+          </div>
+
+          <nav class="toolbar__langs" aria-label="Langue">
+            <a class="toolbar__lang" href="#" aria-current="true" hreflang="fr">FR</a>
+            <a class="toolbar__lang" href="#" hreflang="de">DE</a>
+            <a class="toolbar__lang" href="#" hreflang="en">EN</a>
+          </nav>
+
+          <a class="toolbar__btn toolbar__easy" href="#">
+            <img src="assets/icons/facile-a-lire.png" alt="" />
+            Facile à lire
+          </a>
+
+          <a class="toolbar__btn toolbar__intranet" href="#">
+            <span class="toolbar__intranet-icon" aria-hidden="true">
+              <span class="icon icon--arrow-pill"></span>
+            </span>
+            Intranet
+          </a>
+        </div>
+      </div>
+
+      <div class="nav container">
+        <a href="index.html" aria-label="CDI — accueil">
+          <img class="nav__logo" src="assets/svg/logo-cdi.svg" alt="CDI" />
+        </a>
+
+        <nav id="nav-principal" aria-label="Navigation principale">
+          <ul class="nav__list">
+            <li class="nav__item" data-dropdown>
+              <a
+                class="nav__link"
+                href="a-propos.html" aria-current="page"
+                aria-expanded="false"
+                aria-controls="menu-a-propos"
+              >
+                À propos
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+
+              <div class="dropdown" id="menu-a-propos">
+                <div class="dropdown__inner">
+                  <div class="dropdown__intro">
+                    <p class="dropdown__eyebrow">À propos du CDI</p>
+                    <p class="dropdown__pitch">
+                      Un centre de compétences en psycho-pédagogie spécialisée qui prend en
+                      charge les enfants et les jeunes présentant des troubles du développement
+                      intellectuel.
+                    </p>
+                    <a class="dropdown__cta link-arrow" href="a-propos.html">
+                      Voir la page
+                      <span class="icon icon--arrow" aria-hidden="true"></span>
+                    </a>
+                  </div>
+
+                  <ul class="dropdown__links">
+                    <li style="--i: 0">
+                      <a href="a-propos.html#qui-sommes-nous">
+                        <span class="dropdown__num">01</span>
+                        <span class="dropdown__label">Qui sommes-nous&nbsp;?</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 1">
+                      <a href="a-propos.html#trouble">
+                        <span class="dropdown__num">02</span>
+                        <span class="dropdown__label">Le trouble du développement intellectuel</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 2">
+                      <a href="a-propos.html#philosophie">
+                        <span class="dropdown__num">03</span>
+                        <span class="dropdown__label">Notre philosophie</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 3">
+                      <a href="a-propos.html#approche">
+                        <span class="dropdown__num">04</span>
+                        <span class="dropdown__label">Notre approche</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 4">
+                      <a href="a-propos.html#publics">
+                        <span class="dropdown__num">05</span>
+                        <span class="dropdown__label">Les publics cibles</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 5">
+                      <a href="a-propos.html#chiffres">
+                        <span class="dropdown__num">06</span>
+                        <span class="dropdown__label">Le CDI en chiffres</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 6">
+                      <a href="a-propos.html#equipe">
+                        <span class="dropdown__num">07</span>
+                        <span class="dropdown__label">Notre équipe</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 7">
+                      <a href="a-propos.html#annexes">
+                        <span class="dropdown__num">08</span>
+                        <span class="dropdown__label">Nos annexes</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li>
+              <a class="nav__link" href="#">Pour les parents
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" href="#">Pour les professionnels
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li><a class="nav__link" href="#">Nos actualités</a></li>
+            <li><a class="nav__link" href="#">Contactez nous</a></li>
+          </ul>
+        </nav>
+
+        <button class="nav__search" type="button" data-action="search">
+          <span class="icon icon--search" aria-hidden="true"></span>
+          <span class="visually-hidden">Rechercher</span>
+        </button>
+
+        <button
+          class="nav__toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-principal"
+          data-action="nav-toggle"
+        >
+          <span class="nav__toggle-bars" aria-hidden="true"></span>
+          <span class="visually-hidden">Ouvrir le menu</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main" class="interior">
+      <div class="interior__inner container">
+        <!-- ===============================================================
+             Barra lateral — navegación dentro de la página
+             =============================================================== -->
+        <aside class="subnav-wrap">
+          <p class="subnav__eyebrow">
+            <span class="icon icon--arrow" aria-hidden="true"></span>
+            <strong>À propos</strong> du CDI
+          </p>
+
+          <nav class="subnav" aria-label="Sections de la page">
+            <ul>
+              <li><a href="#qui-sommes-nous">Qui sommes-nous&nbsp;?</a></li>
+              <li><a href="#trouble">Le trouble du développement intellectuel</a></li>
+              <li><a href="#philosophie">Notre philosophie</a></li>
+              <li><a href="#approche">Notre approche</a></li>
+              <li><a href="#publics">Les publics cibles</a></li>
+              <li><a href="#chiffres">Le CDI en chiffres</a></li>
+              <li><a href="#equipe">Notre équipe</a></li>
+              <li><a href="#annexes">Nos annexes</a></li>
+            </ul>
+          </nav>
+        </aside>
+
+        <!-- ===============================================================
+             Columna principal
+             =============================================================== -->
+        <div class="interior__main">
+          <header class="page-head">
+            <h1 class="page-title" data-lines data-lines-delay="60">À propos</h1>
+            <p class="page-lead" data-lines data-lines-delay="220">
+              Un centre de compétences en psycho-pédagogie spécialisée qui prend en charge les
+              enfants et les jeunes présentant des troubles du développement intellectuel.
+            </p>
+          </header>
+
+          <figure class="page-media" data-reveal="zoom">
+            <img src="assets/img/profil-professionnels-focus.jpg" alt="" loading="lazy" />
+          </figure>
+
+          <!-- ----------------------------------------------------------- -->
+          <section class="block" id="qui-sommes-nous">
+            <h2 class="block__title" data-reveal="up">Qui sommes-nous&nbsp;?</h2>
+            <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
+              <p>
+                Le Centre pour le développement intellectuel (CDI) est un centre de compétences en
+                psycho-pédagogie spécialisée prenant en charge les enfants et jeunes présentant des
+                troubles du développement intellectuel.
+              </p>
+              <p>
+                Le CDI intègre le réseau de 8&nbsp;centres de compétences en psycho-pédagogie
+                spécialisée et l’Agence pour la transition vers une vie autonome (ATVA), favorisant
+                l’inclusion scolaire.
+              </p>
+            </div>
+          </section>
+
+          <!-- ----------------------------------------------------------- -->
+          <section class="block" id="trouble">
+            <h2 class="block__title" data-reveal="up">Le trouble du développement intellectuel</h2>
+
+            <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
+              <p>
+                Les troubles du développement intellectuel englobent diverses maladies d’étiologie
+                différente, apparaissant en phase développementale. Elles se caractérisent par des
+                fonctions intellectuelles significativement inférieures à la moyenne et par un
+                comportement adaptatif (CIM-11).
+              </p>
+            </div>
+
+
+            <h3 class="block__subtitle" data-reveal="up">Les causes</h3>
+            <div class="steps" data-stepper data-tint-bg data-reveal="up" style="--reveal-delay: 80ms">
+              <div class="steps__panels">
+                <section
+                  class="steps__panel"
+                  role="tabpanel"
+                  id="ca-conception"
+                  aria-labelledby="ca-conception-tab"
+                  style="--accent: var(--c-teal)"
+                  
+                >
+                  <p>Maladies génétiques, aberrations chromosomiques — trisomie, syndrome de l’X fragile —, incompatibilité de groupe sanguin, etc.</p>
+                </section>
+                <section
+                  class="steps__panel"
+                  role="tabpanel"
+                  id="ca-grossesse"
+                  aria-labelledby="ca-grossesse-tab"
+                  style="--accent: var(--c-green)"
+                  inert
+                >
+                  <p>Rayonnements ionisants, virus, médicaments, parasites, alcool, tabagisme, etc.</p>
+                </section>
+                <section
+                  class="steps__panel"
+                  role="tabpanel"
+                  id="ca-naissance"
+                  aria-labelledby="ca-naissance-tab"
+                  style="--accent: var(--c-orange)"
+                  inert
+                >
+                  <p>Maladies cérébrales du nouveau-né, prématurité, etc.</p>
+                </section>
+                <section
+                  class="steps__panel"
+                  role="tabpanel"
+                  id="ca-apres"
+                  aria-labelledby="ca-apres-tab"
+                  style="--accent: var(--c-coral)"
+                  inert
+                >
+                  <p>Maladies infectieuses, virales ou métaboliques, intoxications, traumatismes crâniens, accidents du travail ou de la circulation, noyade, asphyxie, problèmes neurologiques, accidents domestiques, etc.</p>
+                </section>
+              </div>
+
+              <div class="steps__index">
+                <div class="steps__ctrls" role="tablist" aria-label="Les causes">
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-conception-tab"
+                    aria-controls="ca-conception"
+                    data-tint="#2AB7C8"
+                    aria-selected="true"
+                    style="--accent: var(--c-teal)"
+                  >
+                    <span class="steps__num">01</span>
+                    <span class="visually-hidden">À la conception</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-grossesse-tab"
+                    aria-controls="ca-grossesse"
+                    data-tint="#ADCB47"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-green)"
+                  >
+                    <span class="steps__num">02</span>
+                    <span class="visually-hidden">Pendant la grossesse</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-naissance-tab"
+                    aria-controls="ca-naissance"
+                    data-tint="#F7A827"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-orange)"
+                  >
+                    <span class="steps__num">03</span>
+                    <span class="visually-hidden">À la naissance</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-apres-tab"
+                    aria-controls="ca-apres"
+                    data-tint="#E9503E"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-coral)"
+                  >
+                    <span class="steps__num">04</span>
+                    <span class="visually-hidden">Après la naissance</span>
+                  </button>
+                </div>
+
+                <p class="steps__names" aria-hidden="true">
+                  <span class="steps__name is-on" data-name>À la conception</span>
+                  <span class="steps__name" data-name>Pendant la grossesse</span>
+                  <span class="steps__name" data-name>À la naissance</span>
+                  <span class="steps__name" data-name>Après la naissance</span>
+                </p>
+              </div>
+
+              <div class="steps__nav">
+                <button class="steps__arrow steps__arrow--prev" type="button" data-approach="prev">
+                  <span class="icon icon--arrow" aria-hidden="true"></span>
+                  <span class="visually-hidden">Cause précédente</span>
+                </button>
+                <button class="steps__arrow steps__arrow--next" type="button" data-approach="next">
+                  <span class="icon icon--arrow" aria-hidden="true"></span>
+                  <span class="visually-hidden">Cause suivante</span>
+                </button>
+              </div>
+
+            </div>
+
+            <div class="prose" data-reveal="up">
+              <p>
+                Quelle que soit la cause, la personne demeure porteuse permanente d’une déficience
+                intellectuelle. Les personnes concernées peuvent nécessiter un soutien et un
+                accompagnement pour développer leur indépendance, leurs capacités individuelles et
+                leurs interactions sociales dans divers environnements&nbsp;: domicile, école,
+                travail, communauté.
+              </p>
+            </div>
+          </section>
+
+          <!-- ----------------------------------------------------------- -->
+          <section class="block" id="philosophie">
+            <h2 class="block__title" data-reveal="up">Notre philosophie</h2>
+
+            <div class="rule-list" data-reveal-group>
+              <article class="rule-list__item" style="--accent: var(--c-teal)">
+                <h3>Le fondement des actions</h3>
+                <p>
+                  Chaque individu possède une personnalité unique et des attributs estimables. Les
+                  membres de chaque unité s’engagent à valoriser et apprécier cette diversité. Le
+                  travail repose sur le respect mutuel et la confiance, avec l’ambition d’offrir à
+                  chacun le droit à l’autodétermination et la possibilité d’épanouissement
+                  individuel.
+                </p>
+              </article>
+              <article class="rule-list__item" style="--accent: var(--c-green)">
+                <h3>Démarche pédagogique</h3>
+                <p>
+                  Le personnel valorise l’individualité de chaque élève. Les concepts pédagogiques
+                  et thérapeutiques sont complémentaires et fondés sur des constats scientifiques.
+                  Les offres s’appuient sur des théories et modèles didactiques et méthodologiques
+                  innovantes.
+                </p>
+              </article>
+              <article class="rule-list__item" style="--accent: var(--c-orange)">
+                <h3>Vision</h3>
+                <p>
+                  Dans une société inclusive, l’autodétermination est essentielle pour permettre à
+                  chaque individu une participation maximale. Cette prémisse anime toutes les
+                  actions favorisant l’épanouissement intellectuel et physique, l’autonomie et le
+                  bien-être des enfants et jeunes à besoins éducatifs spécifiques.
+                </p>
+              </article>
+              <article class="rule-list__item" style="--accent: var(--c-pink)">
+                <h3>Missions</h3>
+                <p>
+                  Le CDI assure un accompagnement individualisé des enfants et jeunes, des familles
+                  et des partenaires externes, inscrit dans une relation de confiance et de respect
+                  mutuel. Grâce à une approche basée sur la prévention, l’intervention et la
+                  compensation, les collaborateurs permettent aux personnes accompagnées de
+                  participer aux domaines de la vie qui les intéressent.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <!-- ----------------------------------------------------------- -->
+          <section class="block" id="approche">
+            <h2 class="block__title" data-reveal="up">Notre approche</h2>
+            <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
+              <p>
+                Trois leviers guident l’accompagnement, de la sensibilisation la plus précoce
+                jusqu’aux aménagements qui rendent la scolarité et le travail accessibles.
+              </p>
+            </div>
+
+            <div class="approach" data-stepper data-reveal="up" style="--reveal-delay: 120ms">
+              <div class="approach__stage">
+                <figure class="approach__media" data-media="0">
+                  <img src="assets/img/news-atelier-parents.jpg" alt="" />
+                </figure>
+                <figure class="approach__media" data-media="1" aria-hidden="true">
+                  <img src="assets/img/news-ateliers-therapeutiques.jpg" alt="" loading="lazy" />
+                </figure>
+                <figure class="approach__media" data-media="2" aria-hidden="true">
+                  <img src="assets/img/formation-enseignants.jpg" alt="" loading="lazy" />
+                </figure>
+
+                <div class="approach__controls" role="tablist" aria-label="Notre approche">
+                  <button
+                    class="approach__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ap-prevention-tab"
+                    aria-controls="ap-prevention"
+                    aria-selected="true"
+                    
+                  >
+                    <span class="approach__num">01</span>
+                    <span class="approach__name">Prévention</span>
+                  </button>
+                  <button
+                    class="approach__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ap-intervention-tab"
+                    aria-controls="ap-intervention"
+                    aria-selected="false"
+                    tabindex="-1"
+                  >
+                    <span class="approach__num">02</span>
+                    <span class="approach__name">Intervention</span>
+                  </button>
+                  <button
+                    class="approach__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ap-compensation-tab"
+                    aria-controls="ap-compensation"
+                    aria-selected="false"
+                    tabindex="-1"
+                  >
+                    <span class="approach__num">03</span>
+                    <span class="approach__name">Compensation</span>
+                  </button>
+                </div>
+
+                <div class="approach__nav">
+                  <button class="approach__arrow approach__arrow--prev" type="button" data-approach="prev">
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                    <span class="visually-hidden">Étape précédente</span>
+                  </button>
+                  <button class="approach__arrow approach__arrow--next" type="button" data-approach="next">
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                    <span class="visually-hidden">Étape suivante</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="approach__panels">
+                <section
+                  class="approach__panel"
+                  role="tabpanel"
+                  id="ap-prevention"
+                  aria-labelledby="ap-prevention-tab"
+                  style="--accent: var(--c-teal)"
+                  
+                >
+                  <p class="approach__lead">Informer et accompagner les parents et les professionnels le plus tôt possible reste depuis toujours un soutien primordial.</p>
+                  <p>
+                    Dès l’âge précoce, une première sensibilisation dans le domaine du handicap peut
+                    prévenir des frustrations et des échecs futurs. Quel que soit le niveau de
+                    prévention, ciblée ou universelle, le CDI s’efforce de promouvoir l’information
+                    et la sensibilisation au sujet de la psycho-pédagogie spécialisée.
+                  </p>
+                  <p>
+                    Dans le contexte de l’inclusion scolaire et sociale, le personnel assure des
+                    interventions à titre consultatif sur sollicitation et en concertation avec les
+                    parents, représentants légaux et professionnels concernés. Le CDI entend aussi
+                    contribuer aux formations initiales et continues du personnel employé dans les
+                    écoles, les lycées et les services d’éducation et d’accueil.
+                  </p>
+                </section>
+                <section
+                  class="approach__panel"
+                  role="tabpanel"
+                  id="ap-intervention"
+                  aria-labelledby="ap-intervention-tab"
+                  style="--accent: var(--c-green)"
+                  inert
+                >
+                  <p class="approach__lead">Des interventions spécialisées et adaptées favorisent l’inclusion et permettent aux enfants et jeunes de progresser.</p>
+                  <p>
+                    Selon les besoins de l’enfant ou du jeune, le CDI intervient à différents
+                    niveaux&nbsp;:
+                  </p>
+                  <ul class="tick-list">
+                    <li>
+                      Contribuer, avec les différentes prises en charge auprès de l’enfant, à
+                      améliorer constamment les réponses données aux potentiels et besoins
+                      individuels
+                    </li>
+                    <li>
+                      Conseiller et guider les familles dans les contextes de la scolarité de leur
+                      enfant et de l’éducation en général
+                    </li>
+                    <li>
+                      Collaborer avec tous les services et institutions concernés, en éducation
+                      formelle comme non-formelle, afin de préparer l’enfant et le jeune à une vie
+                      adulte et autodéterminée
+                    </li>
+                  </ul>
+                </section>
+                <section
+                  class="approach__panel"
+                  role="tabpanel"
+                  id="ap-compensation"
+                  aria-labelledby="ap-compensation-tab"
+                  style="--accent: var(--c-orange)"
+                  inert
+                >
+                  <p class="approach__lead">La compensation des conséquences du handicap est un droit, indépendamment de l’origine et de la nature de la déficience.</p>
+                  <p>
+                    Des aménagements pédagogiques, quel que soit le lieu de scolarisation, ou le
+                    recours à des professionnels spécialisés sont mis en avant afin d’assurer une
+                    progression dans les apprentissages&nbsp;(Nachteilsausgleich). La mise en place
+                    d’adaptations permet à chaque enfant et jeune de s’intégrer dans sa situation de
+                    formation et de travail&nbsp;: pédagogie adaptée, analyse et organisation de
+                    l’environnement.
+                  </p>
+                  <p>
+                    De manière générale, la compensation des désavantages peut être définie comme
+                    «&nbsp;la neutralisation ou la diminution des limitations occasionnées par un
+                    handicap&nbsp;».
+                    <span class="approach__source">Jost &amp; al., 2014. <em>Nachteilsausgleich: Ein Schritt hin zur inklusiven Schule</em></span>
+                  </p>
+                </section>
+              </div>
+            </div>
+          </section>
+
+          <!-- ----------------------------------------------------------- -->
+          <section class="block" id="publics">
+            <h2 class="block__title" data-reveal="up">Les publics cibles</h2>
+            <div class="target-list" data-reveal-group>
+              <article class="target" style="--accent: var(--c-teal)">
+                <figure class="target__media">
+                  <img src="assets/img/public-parents.jpg" alt="" loading="lazy" />
+                </figure>
+                <h3>Parents et tuteurs</h3>
+                <p>Ou le jeune majeur lui-même, souhaitant avoir des conseils dans le contexte des troubles du développement intellectuel.</p>
+              </article>
+              <article class="target" style="--accent: var(--c-green)">
+                <figure class="target__media">
+                  <img src="assets/img/public-pedagogique.jpg" alt="" loading="lazy" />
+                </figure>
+                <h3>Personnel pédagogique</h3>
+                <p>Des écoles et lycées, souhaitant obtenir un diagnostic spécialisé ou des conseils sur des stratégies d’intervention appropriées.</p>
+              </article>
+              <article class="target" style="--accent: var(--c-orange)">
+                <figure class="target__media">
+                  <img src="assets/img/public-partenaires.jpg" alt="" loading="lazy" />
+                </figure>
+                <h3>Partenaires externes</h3>
+                <p>Demandeurs de formations continues ou d’hospitations dans le contexte des troubles du développement intellectuel.</p>
+              </article>
+            </div>
+          </section>
+
+          <!-- ----------------------------------------------------------- -->
+          <section class="block" id="chiffres">
+            <h2 class="block__title" data-reveal="up">Le CDI en chiffres</h2>
+
+            <div class="figures" data-reveal="up" style="--reveal-delay: 80ms">
+              <p class="figures__hero">
+                <span class="figures__num" data-count="419">419</span>
+                <span class="figures__label">élèves répartis sur 7&nbsp;annexes</span>
+              </p>
+              <p class="figures__aside">
+                <span class="figures__num figures__num--alt" data-count="85">85</span>
+                <span class="figures__label">prises en charge ambulatoires</span>
+              </p>
+            </div>
+
+            <h3 class="block__subtitle" data-reveal="up">Les élèves, par cycle</h3>
+            <ul class="bars" data-reveal-group>
+              <li class="bars__row" style="--accent: var(--c-teal); --part: 35.3%">
+                <span class="bars__label">Cycles 1 à 4 <span>3–12 ans</span></span>
+                <span class="bars__track"><span class="bars__fill"></span></span>
+                <span class="bars__value">148</span>
+              </li>
+              <li class="bars__row" style="--accent: var(--c-green); --part: 43.7%">
+                <span class="bars__label">Cycles 5 et 6 <span>13–16 ans</span></span>
+                <span class="bars__track"><span class="bars__fill"></span></span>
+                <span class="bars__value">183</span>
+              </li>
+              <li class="bars__row" style="--accent: var(--c-orange); --part: 21%">
+                <span class="bars__label">Professionnel et occupationnel <span>16–18 ans</span></span>
+                <span class="bars__track"><span class="bars__fill"></span></span>
+                <span class="bars__value">88</span>
+              </li>
+            </ul>
+
+            <h3 class="block__subtitle" data-reveal="up">Les collaborateurs, par unité</h3>
+            <ul class="bars" data-reveal-group>
+              <li class="bars__row" style="--accent: var(--c-teal); --part: 60%">
+                <span class="bars__label">Enseignement</span>
+                <span class="bars__track"><span class="bars__fill"></span></span>
+                <span class="bars__value">192</span>
+              </li>
+              <li class="bars__row" style="--accent: var(--c-green); --part: 16.6%">
+                <span class="bars__label">Administrative et technique</span>
+                <span class="bars__track"><span class="bars__fill"></span></span>
+                <span class="bars__value">53</span>
+              </li>
+              <li class="bars__row" style="--accent: var(--c-orange); --part: 13.1%">
+                <span class="bars__label">Diagnostic, conseil et suivi</span>
+                <span class="bars__track"><span class="bars__fill"></span></span>
+                <span class="bars__value">42</span>
+              </li>
+              <li class="bars__row" style="--accent: var(--c-pink); --part: 10.3%">
+                <span class="bars__label">Rééducation et thérapie</span>
+                <span class="bars__track"><span class="bars__fill"></span></span>
+                <span class="bars__value">33</span>
+              </li>
+            </ul>
+          </section>
+
+          <!-- ----------------------------------------------------------- -->
+          <section class="block" id="equipe">
+            <h2 class="block__title" data-reveal="up">Notre équipe</h2>
+            <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
+              <p>
+                Nous nous engageons chaque jour pour atteindre nos objectifs communs et assumons
+                ensemble la responsabilité de nos actions. Nous répondons aux exigences quotidiennes
+                avec professionnalisme, créativité, soutien mutuel et empathie.
+              </p>
+              <p>
+                Nous estimons les compétences et l’expérience complémentaire de nos collaborateurs à
+                leur juste valeur et considérons l’individualité de chacun comme une précieuse
+                ressource.
+              </p>
+            </div>
+
+            <!-- TODO(diseño): Federico va a traer referencias para esta sección.
+                 Por ahora, sólo el índice de las unidades; los nombres completos
+                 están en el contenido original de cdi.lu. -->
+            <ul class="chip-list" data-reveal-group>
+              <li class="chip">Direction</li>
+              <li class="chip">Chargés de direction</li>
+              <li class="chip">Développement, qualité et innovation</li>
+              <li class="chip">Administration, technique et infrastructures</li>
+              <li class="chip">Accompagnement social et promotion de la santé</li>
+              <li class="chip">Ressources humaines</li>
+              <li class="chip">Service Leichte Sprache</li>
+            </ul>
+          </section>
+
+          <!-- ----------------------------------------------------------- -->
+          <section class="block" id="annexes">
+            <h2 class="block__title" data-reveal="up">Nos annexes</h2>
+            <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
+              <p>Sept annexes réparties sur le territoire.</p>
+            </div>
+
+            <div class="annexes" data-reveal-group>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/clervaux.jpg" alt="Annexe Clervaux" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Clervaux</h3>
+                  <p class="annexe__addr">11, Klatzewee<br />L-9714 Clervaux</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352920354">+352 92 03 54</a>
+                    <a href="mailto:info.annexeclervaux@cc-cdi.lu">info.annexeclervaux@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=11%2C%20Klatzewee%2C%20L-9714%20Clervaux" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/belval.jpg" alt="Annexe Kannercampus Belval" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Kannercampus Belval</h3>
+                  <p class="annexe__addr">2, Passage Pablo Picasso<br />L-4457 Belvaux</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352553246280">+352 55 32 46 - 280</a>
+                    <a href="mailto:info.annexebelval@cc-cdi.lu">info.annexebelval@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=2%2C%20Passage%20Pablo%20Picasso%2C%20L-4457%20Belvaux" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/differdange.jpg" alt="Annexe Differdange" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Differdange</h3>
+                  <p class="annexe__addr">2, rue John Castegnaro<br />L-4639 Differdange</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352587712310">+352 58 77 1 - 2310</a>
+                    <a href="mailto:info.annexedifferdange@cc-cdi.lu">info.annexedifferdange@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=2%2C%20rue%20John%20Castegnaro%2C%20L-4639%20Differdange" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/echternach.jpg" alt="Annexe Echternach" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Echternach</h3>
+                  <p class="annexe__addr">1, Place Isidore Comes<br />L-6443 Echternach</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+35228337551">+352 28 33 75 51</a>
+                    <a href="mailto:info.annexeechternach@cc-cdi.lu">info.annexeechternach@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=1%2C%20Place%20Isidore%20Comes%2C%20L-6443%20Echternach" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/luxembourg.jpg" alt="Annexe Luxembourg" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Luxembourg</h3>
+                  <p class="annexe__addr">27, avenue du Dix Septembre<br />L-2551 Luxembourg</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+35224795260">+352 24 79 52 60</a>
+                    <a href="mailto:info.annexecentre@cc-cdi.lu">info.annexecentre@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=27%2C%20avenue%20du%20Dix%20Septembre%2C%20L-2551%20Luxembourg" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/berchem.jpg" alt="Annexe Kannerinsel Berchem" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Kannerinsel Berchem</h3>
+                  <p class="annexe__addr">24, rue de Bettembourg<br />L-3320 Berchem</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+3523692329601">+352 36 92 32 96 01</a>
+                    <a href="mailto:info.annexeberchem@cc-cdi.lu">info.annexeberchem@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=24%2C%20rue%20de%20Bettembourg%2C%20L-3320%20Berchem" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/warken.jpg" alt="Annexe Warken" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Warken</h3>
+                  <p class="annexe__addr">77, rue de Welscheid<br />L-9090 Warken</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+3528175511">+352 81 75 51 - 1</a>
+                    <a href="mailto:info.annexewarken@cc-cdi.lu">info.annexewarken@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=77%2C%20rue%20de%20Welscheid%2C%20L-9090%20Warken" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+            </div>
+
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="section section--alt footer">
+      <div class="footer__inner container">
+        <div class="footer__top" data-reveal-group>
+          <div>
+            <img class="footer__logo" src="assets/svg/logo-cdi-footer.svg" alt="CDI — Centre pour le développement intellectuel" />
+          </div>
+
+          <nav class="footer__nav" aria-label="Le centre">
+            <a href="#">À propos</a>
+            <a href="#">Pour les parents</a>
+            <a href="#">Pour les professionnels</a>
+            <a href="#">Nos annexes</a>
+            <a href="#">Nos services</a>
+          </nav>
+
+          <nav class="footer__nav" aria-label="Ressources">
+            <a href="#">Centre de documentation</a>
+            <a href="#">Demande de traduction</a>
+            <a href="#">Intranet</a>
+            <a href="#">Contact</a>
+            <a href="#">Nos actualités</a>
+          </nav>
+
+          <address class="footer__contact">
+            <p class="footer__contact-row">
+              <span class="icon icon--location icon--lg" aria-hidden="true"></span>
+              <span>5, rue Thomas Edison<br />L-1445 Strassen</span>
+            </p>
+            <a class="footer__contact-row" href="tel:+35224755700">
+              <span class="icon icon--phone icon--lg" aria-hidden="true"></span>
+              <span>+352 247-55700</span>
+            </a>
+            <a class="footer__contact-row" href="mailto:info@cc-cdi.lu">
+              <span class="icon icon--mail icon--lg" aria-hidden="true"></span>
+              <span>info@cc-cdi.lu</span>
+            </a>
+
+            <div class="footer__social">
+              <a href="#" aria-label="LinkedIn"><img src="assets/icons/linkedin.svg" alt="" /></a>
+              <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.svg" alt="" /></a>
+              <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.svg" alt="" /></a>
+            </div>
+          </address>
+        </div>
+
+        <hr class="footer__divider" />
+
+        <div class="footer__bottom">
+          <p class="footer__copyright">© 2026 CDI Luxembourg. Tous droits réservés</p>
+
+          <div class="footer__legal">
+            <a href="#">Mentions légales</a>
+            <a href="#">Cookies</a>
+            <a href="#">Accessibilité</a>
+            <button class="btn btn--dark" type="button" data-action="read-aloud">
+              <span class="icon icon--speaker icon--lg" aria-hidden="true"></span>
+              Lire le texte
+            </button>
+            <button class="footer__a11y" type="button" data-action="a11y-panel">
+              <img src="assets/icons/accessibility.svg" alt="" />
+              <span class="visually-hidden">Ouvrir les options d'accessibilité</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js" type="module"></script>
+  </body>
+</html>
