@@ -482,21 +482,24 @@ const DECO_SHIFT = 26; // píxeles de recorrido, de punta a punta de la banda
  */
 function initStepper() {
   document.querySelectorAll('[data-stepper]').forEach((root) => {
-    const track = root.querySelector('[data-approach-track]');
     const tabs = [...root.querySelectorAll('[role="tab"]')];
-    const slides = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
-    if (!track || !tabs.length || slides.some((s) => !s)) return;
+    const paneles = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+    const fotos = [...root.querySelectorAll('[data-media]')];
+    if (!tabs.length || paneles.some((p) => !p)) return;
 
     const mostrar = (i, mover) => {
-      track.style.setProperty('--i', String(i));
       tabs.forEach((tab, j) => {
         const activo = i === j;
         tab.setAttribute('aria-selected', String(activo));
         tab.tabIndex = activo ? 0 : -1;
-        // `inert` y no `hidden`: la diapositiva tiene que seguir ocupando su
-        // lugar en la tira, pero sin recibir foco ni ser leída.
-        if (activo) slides[j].removeAttribute('inert');
-        else slides[j].setAttribute('inert', '');
+        // `inert` y no `hidden`: el panel tiene que seguir ocupando su celda
+        // —el alto lo fija el más largo— pero sin recibir foco ni ser leído.
+        if (activo) paneles[j].removeAttribute('inert');
+        else paneles[j].setAttribute('inert', '');
+        if (fotos[j]) {
+          fotos[j].style.opacity = activo ? '1' : '0';
+          fotos[j].toggleAttribute('aria-hidden', !activo);
+        }
       });
       if (mover) tabs[i].focus();
     };

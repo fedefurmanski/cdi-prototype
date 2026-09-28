@@ -198,6 +198,33 @@
   box-shadow: var(--shadow-card);
 }
 
+/* Las de públicos cibles llevan el filete abajo, corto y centrado, en vez del
+   de la izquierda: la tarjeta está centrada y una regla de punta a punta la
+   partía en dos. */
+.target {
+  display: flex;
+  flex-direction: column;
+  border-left: 0;
+  padding-bottom: var(--space-8);
+}
+
+/* `margin-top: auto` empuja el filete al pie: si siguiera al texto, quedaría a
+   distinta altura en cada tarjeta, porque los textos no miden lo mismo. */
+.target::after {
+  content: '';
+  width: 56px;
+  height: 4px;
+  margin: auto auto 0;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* El margen del párrafo garantiza el aire mínimo sobre el filete cuando el
+   texto es largo y el `auto` de arriba no tiene espacio que repartir. */
+.target p {
+  margin-bottom: var(--space-6);
+}
+
 .timeline__item {
   padding: var(--space-6) var(--space-8);
 }
@@ -250,46 +277,32 @@
 
 /* --------------------------------------------------------------------------
    Carrusel de la aproximación
-   Una diapositiva a la vista —foto y texto—, con los tres pasos numerados
-   abajo. Las tres diapositivas viven en una tira que se desplaza; el alto lo
-   fija la más larga, así el contenido de abajo no se mueve al cambiar de paso.
+   Foto arriba con los tres pasos encima, texto abajo. Las fotos se cruzan en
+   el mismo lugar y los textos se apilan en la misma celda de grilla, así el
+   alto lo fija el más largo y nada salta al cambiar de paso.
    -------------------------------------------------------------------------- */
 
 .approach {
   margin-top: var(--space-8);
 }
 
-.approach__viewport {
+.approach__stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-card);
   overflow: hidden;
-  border-radius: var(--r-card);
+  background: var(--c-grey-100);
 }
 
-.approach__track {
-  display: flex;
-  align-items: stretch;
-  translate: calc(var(--i, 0) * -100%);
-  transition: translate var(--dur-slow) var(--ease-out);
-}
-
-.approach__slide {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: var(--space-10);
-  flex: 0 0 100%;
-  padding: var(--space-8);
-  border-left: 4px solid var(--accent);
-  border-radius: var(--r-card);
-  background: var(--c-surface);
-  box-shadow: var(--shadow-card);
-}
-
-/* Redonda, como en el sitio actual. */
 .approach__media {
-  align-self: start;
-  width: 300px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+
+.approach__media[data-media='0'] {
+  opacity: 1;
 }
 
 .approach__media img {
@@ -298,51 +311,55 @@
   object-fit: cover;
 }
 
-/* La frase que abre cada paso, destacada: el texto es largo y necesita un
-   punto de entrada antes del cuerpo. */
-.approach__lead {
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-semibold);
-  line-height: 1.45;
-  color: var(--c-ink);
+/* Velo inferior: los números van sobre la foto y necesitan un fondo que no
+   dependa de lo que haya en la imagen. */
+.approach__stage::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 62%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0));
+  pointer-events: none;
 }
 
-.approach__body p:not(.approach__lead) {
-  margin-top: var(--space-5);
-  max-width: 58ch;
-  font-size: var(--fs-md);
-  line-height: 1.75;
-  color: var(--c-body);
-}
-
-.approach__source {
-  display: block;
-  margin-top: var(--space-5);
-  font-size: var(--fs-xs);
-  color: var(--c-muted);
-}
-
-/* --- Los controles, abajo --- */
 .approach__controls {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-5);
-  margin-top: var(--space-6);
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-10);
+  padding: var(--space-8);
 }
 
 .approach__ctrl {
-  padding-top: var(--space-4);
-  border-top: 3px solid var(--c-grey-200);
+  position: relative;
+  padding-bottom: var(--space-3);
   text-align: left;
-  transition: border-color var(--dur-hover) var(--ease-hover);
+  color: #fff;
+  opacity: 0.6;
+  transition: opacity var(--dur-hover) var(--ease-hover);
 }
 
-.approach__ctrl:hover {
-  border-top-color: color-mix(in srgb, var(--accent) 45%, var(--c-grey-200));
-}
-
+.approach__ctrl:hover,
 .approach__ctrl[aria-selected='true'] {
-  border-top-color: var(--accent);
+  opacity: 1;
+}
+
+/* El subrayado marca el paso activo. */
+.approach__ctrl::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  border-radius: 2px;
+  background: currentColor;
+  scale: 0 1;
+  transform-origin: left center;
+  transition: scale var(--dur-hover) var(--ease-hover);
+}
+
+.approach__ctrl[aria-selected='true']::after {
+  scale: 1 1;
 }
 
 .approach__num {
@@ -350,20 +367,60 @@
   font-size: var(--fs-h4);
   font-weight: var(--fw-bold);
   line-height: 1;
-  color: var(--c-grey-300);
-  transition: color var(--dur-hover) var(--ease-hover);
-}
-
-.approach__ctrl[aria-selected='true'] .approach__num {
-  color: var(--accent);
 }
 
 .approach__name {
   display: block;
   margin-top: 6px;
-  font-size: var(--fs-md);
+  font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
+}
+
+/* --- El texto, debajo --- */
+.approach__panels {
+  display: grid;
+  margin-top: var(--space-8);
+}
+
+.approach__panel {
+  grid-area: 1 / 1;
+  padding-left: var(--space-6);
+  border-left: 4px solid var(--accent);
+}
+
+.js .approach__panel[inert] {
+  visibility: hidden;
+  opacity: 0;
+  translate: 0 8px;
+}
+
+.js .approach__panel {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    translate var(--dur-base) var(--ease-out);
+}
+
+.approach__lead {
+  max-width: 62ch;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: 1.45;
   color: var(--c-ink);
+}
+
+.approach__panel p:not(.approach__lead) {
+  margin-top: var(--space-5);
+  max-width: 68ch;
+  font-size: var(--fs-md);
+  line-height: 1.75;
+  color: var(--c-body);
+}
+
+.approach__source {
+  display: block;
+  margin-top: var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
 }
 
 .tick-list {
@@ -373,7 +430,7 @@
 .tick-list li {
   position: relative;
   padding-left: var(--space-6);
-  max-width: 58ch;
+  max-width: 66ch;
   font-size: var(--fs-md);
   line-height: 1.7;
   color: var(--c-body);
@@ -613,19 +670,6 @@
   padding: var(--space-6);
 }
 
-/* El siège no tiene foto: se distingue con el filete de color. */
-.annexe--head {
-  border-left: 4px solid var(--c-teal);
-}
-
-.annexe__tag {
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--c-teal-deep);
-}
-
 .annexe__map {
   margin-top: auto;
   padding-top: var(--space-5);
@@ -703,21 +747,14 @@
   }
 }
 
-@media (max-width: 1000px) {
-  .approach__slide {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  .approach__media {
-    width: 200px;
-  }
-}
-
 @media (max-width: 760px) {
   .approach__controls {
-    grid-template-columns: 1fr;
-    gap: var(--space-3);
+    gap: var(--space-5);
+    padding: var(--space-5);
+  }
+
+  .approach__stage {
+    aspect-ratio: 4 / 3;
   }
 
   .timeline,

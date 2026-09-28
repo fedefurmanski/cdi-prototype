@@ -322,121 +322,135 @@
             </div>
 
             <div class="approach" data-stepper data-reveal="up" style="--reveal-delay: 120ms">
-              <div class="approach__viewport">
-                <div class="approach__track" data-approach-track>
+              <div class="approach__stage">
+                <figure class="approach__media" data-media="0">
+                  <img src="assets/img/news-atelier-parents.jpg" alt="" />
+                </figure>
+                <figure class="approach__media" data-media="1" aria-hidden="true">
+                  <img src="assets/img/news-ateliers-therapeutiques.jpg" alt="" loading="lazy" />
+                </figure>
+                <figure class="approach__media" data-media="2" aria-hidden="true">
+                  <img src="assets/img/formation-enseignants.jpg" alt="" loading="lazy" />
+                </figure>
+
+                <div class="approach__controls" role="tablist" aria-label="Notre approche">
+                  <button
+                    class="approach__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ap-prevention-tab"
+                    aria-controls="ap-prevention"
+                    aria-selected="true"
+                    
+                  >
+                    <span class="approach__num">01</span>
+                    <span class="approach__name">Prévention</span>
+                  </button>
+                  <button
+                    class="approach__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ap-intervention-tab"
+                    aria-controls="ap-intervention"
+                    aria-selected="false"
+                    tabindex="-1"
+                  >
+                    <span class="approach__num">02</span>
+                    <span class="approach__name">Intervention</span>
+                  </button>
+                  <button
+                    class="approach__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ap-compensation-tab"
+                    aria-controls="ap-compensation"
+                    aria-selected="false"
+                    tabindex="-1"
+                  >
+                    <span class="approach__num">03</span>
+                    <span class="approach__name">Compensation</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="approach__panels">
                 <section
-                  class="approach__slide"
+                  class="approach__panel"
                   role="tabpanel"
                   id="ap-prevention"
                   aria-labelledby="ap-prevention-tab"
                   style="--accent: var(--c-teal)"
                   
                 >
-                  <figure class="approach__media">
-                    <img src="assets/img/news-atelier-parents.jpg" alt="" loading="lazy" />
-                  </figure>
-                  <div class="approach__body">
-                    <p class="approach__lead">Informer et accompagner les parents et les professionnels le plus tôt possible reste depuis toujours un soutien primordial.</p>
-                    <p>Dès l’âge précoce, une première sensibilisation dans le domaine du handicap peut prévenir des frustrations et des échecs futurs. Quel que soit le niveau de prévention, ciblée ou universelle, le CDI s’efforce de promouvoir l’information et la sensibilisation au sujet de la psycho-pédagogie spécialisée.</p>
-                    <p>Dans le contexte de l’inclusion scolaire et sociale, le personnel assure des interventions à titre consultatif sur sollicitation et en concertation avec les parents, représentants légaux et professionnels concernés. Le CDI entend aussi contribuer aux formations initiales et continues du personnel employé dans les écoles, les lycées et les services d’éducation et d’accueil.</p>
-                  </div>
+                  <p class="approach__lead">Informer et accompagner les parents et les professionnels le plus tôt possible reste depuis toujours un soutien primordial.</p>
+                  <p>
+                    Dès l’âge précoce, une première sensibilisation dans le domaine du handicap peut
+                    prévenir des frustrations et des échecs futurs. Quel que soit le niveau de
+                    prévention, ciblée ou universelle, le CDI s’efforce de promouvoir l’information
+                    et la sensibilisation au sujet de la psycho-pédagogie spécialisée.
+                  </p>
+                  <p>
+                    Dans le contexte de l’inclusion scolaire et sociale, le personnel assure des
+                    interventions à titre consultatif sur sollicitation et en concertation avec les
+                    parents, représentants légaux et professionnels concernés. Le CDI entend aussi
+                    contribuer aux formations initiales et continues du personnel employé dans les
+                    écoles, les lycées et les services d’éducation et d’accueil.
+                  </p>
                 </section>
                 <section
-                  class="approach__slide"
+                  class="approach__panel"
                   role="tabpanel"
                   id="ap-intervention"
                   aria-labelledby="ap-intervention-tab"
                   style="--accent: var(--c-green)"
                   inert
                 >
-                  <figure class="approach__media">
-                    <img src="assets/img/news-ateliers-therapeutiques.jpg" alt="" loading="lazy" />
-                  </figure>
-                  <div class="approach__body">
-                    <p class="approach__lead">Des interventions spécialisées et adaptées favorisent l’inclusion et permettent aux enfants et jeunes de progresser.</p>
-                    <p>
-                      Selon les besoins de l’enfant ou du jeune, le CDI intervient à différents
-                      niveaux&nbsp;:
-                    </p>
-                    <ul class="tick-list">
-                      <li>
-                        Contribuer, avec les différentes prises en charge auprès de l’enfant, à
-                        améliorer constamment les réponses données aux potentiels et besoins
-                        individuels
-                      </li>
-                      <li>
-                        Conseiller et guider les familles dans les contextes de la scolarité de
-                        leur enfant et de l’éducation en général
-                      </li>
-                      <li>
-                        Collaborer avec tous les services et institutions concernés, en éducation
-                        formelle comme non-formelle, afin de préparer l’enfant et le jeune à une
-                        vie adulte et autodéterminée
-                      </li>
-                    </ul>
-                  </div>
+                  <p class="approach__lead">Des interventions spécialisées et adaptées favorisent l’inclusion et permettent aux enfants et jeunes de progresser.</p>
+                  <p>
+                    Selon les besoins de l’enfant ou du jeune, le CDI intervient à différents
+                    niveaux&nbsp;:
+                  </p>
+                  <ul class="tick-list">
+                    <li>
+                      Contribuer, avec les différentes prises en charge auprès de l’enfant, à
+                      améliorer constamment les réponses données aux potentiels et besoins
+                      individuels
+                    </li>
+                    <li>
+                      Conseiller et guider les familles dans les contextes de la scolarité de leur
+                      enfant et de l’éducation en général
+                    </li>
+                    <li>
+                      Collaborer avec tous les services et institutions concernés, en éducation
+                      formelle comme non-formelle, afin de préparer l’enfant et le jeune à une vie
+                      adulte et autodéterminée
+                    </li>
+                  </ul>
                 </section>
                 <section
-                  class="approach__slide"
+                  class="approach__panel"
                   role="tabpanel"
                   id="ap-compensation"
                   aria-labelledby="ap-compensation-tab"
                   style="--accent: var(--c-orange)"
                   inert
                 >
-                  <figure class="approach__media">
-                    <img src="assets/img/formation-enseignants.jpg" alt="" loading="lazy" />
-                  </figure>
-                  <div class="approach__body">
-                    <p class="approach__lead">La compensation des conséquences du handicap est un droit, indépendamment de l’origine et de la nature de la déficience.</p>
-                    <p>Des aménagements pédagogiques, quel que soit le lieu de scolarisation, ou le recours à des professionnels spécialisés sont mis en avant afin d’assurer une progression dans les apprentissages (Nachteilsausgleich).</p>
-                    <p>La mise en place d’adaptations permet à chaque enfant et jeune de s’intégrer dans sa situation de formation et de travail : pédagogie adaptée, analyse et organisation de l’environnement. De manière générale, la compensation des désavantages peut être définie comme « la neutralisation ou la diminution des limitations occasionnées par un handicap ».</p>
-                    <p><span class="approach__source">Jost &amp; al., 2014. <em>Nachteilsausgleich: Ein Schritt hin zur inklusiven Schule</em></span></p>
-                  </div>
+                  <p class="approach__lead">La compensation des conséquences du handicap est un droit, indépendamment de l’origine et de la nature de la déficience.</p>
+                  <p>
+                    Des aménagements pédagogiques, quel que soit le lieu de scolarisation, ou le
+                    recours à des professionnels spécialisés sont mis en avant afin d’assurer une
+                    progression dans les apprentissages&nbsp;(Nachteilsausgleich). La mise en place
+                    d’adaptations permet à chaque enfant et jeune de s’intégrer dans sa situation de
+                    formation et de travail&nbsp;: pédagogie adaptée, analyse et organisation de
+                    l’environnement.
+                  </p>
+                  <p>
+                    De manière générale, la compensation des désavantages peut être définie comme
+                    «&nbsp;la neutralisation ou la diminution des limitations occasionnées par un
+                    handicap&nbsp;».
+                    <span class="approach__source">Jost &amp; al., 2014. <em>Nachteilsausgleich: Ein Schritt hin zur inklusiven Schule</em></span>
+                  </p>
                 </section>
-                </div>
-              </div>
-
-              <div class="approach__controls" role="tablist" aria-label="Notre approche">
-                <button
-                  class="approach__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ap-prevention-tab"
-                  aria-controls="ap-prevention"
-                  aria-selected="true"
-                  
-                  style="--accent: var(--c-teal)"
-                >
-                  <span class="approach__num">01</span>
-                  <span class="approach__name">Prévention</span>
-                </button>
-                <button
-                  class="approach__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ap-intervention-tab"
-                  aria-controls="ap-intervention"
-                  aria-selected="false"
-                  tabindex="-1"
-                  style="--accent: var(--c-green)"
-                >
-                  <span class="approach__num">02</span>
-                  <span class="approach__name">Intervention</span>
-                </button>
-                <button
-                  class="approach__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ap-compensation-tab"
-                  aria-controls="ap-compensation"
-                  aria-selected="false"
-                  tabindex="-1"
-                  style="--accent: var(--c-orange)"
-                >
-                  <span class="approach__num">03</span>
-                  <span class="approach__name">Compensation</span>
-                </button>
               </div>
             </div>
           </section>
@@ -562,7 +576,7 @@
           <section class="block" id="annexes">
             <h2 class="block__title" data-reveal="up">Nos annexes</h2>
             <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
-              <p>Sept annexes réparties sur le territoire, et le siège à Strassen.</p>
+              <p>Sept annexes réparties sur le territoire.</p>
             </div>
 
             <div class="annexes" data-reveal-group>
@@ -680,21 +694,6 @@
                     <a href="mailto:info.annexewarken@cc-cdi.lu">info.annexewarken@cc-cdi.lu</a>
                   </p>
                   <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=77%2C%20rue%20de%20Welscheid%2C%20L-9090%20Warken" target="_blank" rel="noopener">
-                    Voir sur la carte
-                    <span class="icon icon--arrow" aria-hidden="true"></span>
-                  </a>
-                </div>
-              </article>
-              <article class="annexe annexe--head">
-                <div class="annexe__body">
-                  <p class="annexe__tag">Siège</p>
-                  <h3>Strassen</h3>
-                  <p class="annexe__addr">5, rue Thomas Edison<br />L-1445 Strassen</p>
-                  <p class="annexe__contact">
-                    <a href="tel:+35224755700">+352 247-55700</a>
-                    <a href="mailto:info@cc-cdi.lu">info@cc-cdi.lu</a>
-                  </p>
-                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=5%2C%20rue%20Thomas%20Edison%2C%20L-1445%20Strassen" target="_blank" rel="noopener">
                     Voir sur la carte
                     <span class="icon icon--arrow" aria-hidden="true"></span>
                   </a>
