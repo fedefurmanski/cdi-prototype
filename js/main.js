@@ -504,6 +504,15 @@ function initStepper() {
       if (mover) tabs[i].focus();
     };
 
+    // Las flechas de la foto recorren los pasos en círculo.
+    const actual = () => tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+    root.querySelectorAll('[data-approach]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const paso = btn.dataset.approach === 'next' ? 1 : -1;
+        mostrar((actual() + paso + tabs.length) % tabs.length, false);
+      });
+    });
+
     tabs.forEach((tab, i) => {
       tab.addEventListener('click', () => mostrar(i, false));
       tab.addEventListener('keydown', (e) => {

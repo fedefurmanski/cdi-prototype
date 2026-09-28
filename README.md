@@ -371,6 +371,18 @@ que la usa, no contra el documento, así que puestas en el HTML terminaban
 apuntando a `/css/assets/…` y las máscaras quedaban vacías (el icono se veía
 como un cuadrado de color).
 
+## Tres detalles del interior que vale recordar
+
+- **El filete del panel de «Notre approche» lleva `align-self: start`.** Los
+  paneles se apilan en la misma celda de grilla, así que por omisión se estiran
+  al alto del más largo y el filete sobraba por debajo del texto corto.
+- **El filete de las tarjetas de «publics cibles» va con `margin-top: auto`** y
+  la tarjeta sin relleno abajo. Si siguiera al texto quedaría a distinta altura
+  en cada una, porque los textos no miden lo mismo.
+- **Cuidado con dos reglas `.target` en la misma hoja.** La de la sección de
+  componentes y la de la sección de públicos se pisaban el `padding`: la
+  segunda volvía a poner el relleno inferior que la primera había sacado.
+
 ## Dos trampas del layout interior
 
 **`min-width: 0` en la celda de contenido.** Una celda de grilla no se encoge

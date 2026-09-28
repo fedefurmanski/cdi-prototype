@@ -49,7 +49,7 @@
 
 .subnav-wrap {
   position: sticky;
-  top: var(--space-8);
+  top: var(--space-20);
 }
 
 /* El texto se alinea con el de los ítems —3px del filete + 24px del relleno—
@@ -99,15 +99,15 @@
   font-weight: var(--fw-bold);
   line-height: 1.375;
   color: var(--c-ink);
-  transition: color var(--dur-hover) var(--ease-hover);
+  transition:
+    color var(--dur-hover) var(--ease-hover),
+    translate var(--dur-hover) var(--ease-hover);
 }
 
-.subnav a:hover {
-  color: var(--c-teal-deep);
-}
-
+.subnav a:hover,
 .subnav a[aria-current='true'] {
   color: var(--c-teal-deep);
+  translate: 6px 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -205,24 +205,26 @@
   display: flex;
   flex-direction: column;
   border-left: 0;
-  padding-bottom: var(--space-8);
+  /* Sin relleno abajo: el filete se apoya en el borde de la tarjeta. El aire
+     sobre él lo da el margen del párrafo. */
+  padding-bottom: 0;
 }
 
 /* `margin-top: auto` empuja el filete al pie: si siguiera al texto, quedaría a
    distinta altura en cada tarjeta, porque los textos no miden lo mismo. */
 .target::after {
   content: '';
-  width: 56px;
+  width: 88px;
   height: 4px;
   margin: auto auto 0;
-  border-radius: 2px;
+  border-radius: 2px 2px 0 0;
   background: var(--accent);
 }
 
 /* El margen del párrafo garantiza el aire mínimo sobre el filete cuando el
    texto es largo y el `auto` de arriba no tiene espacio que repartir. */
 .target p {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-8);
 }
 
 .timeline__item {
@@ -362,6 +364,43 @@
   scale: 1 1;
 }
 
+/* Flechas para pasar, abajo a la derecha de la foto. */
+.approach__nav {
+  position: absolute;
+  z-index: 1;
+  right: var(--space-8);
+  bottom: var(--space-8);
+  display: flex;
+  gap: var(--space-3);
+}
+
+.approach__arrow {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    border-color var(--dur-hover) var(--ease-hover);
+}
+
+.approach__arrow:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: #fff;
+}
+
+.approach__arrow .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.approach__arrow--prev .icon {
+  transform: rotate(180deg);
+}
+
 .approach__num {
   display: block;
   font-size: var(--fs-h4);
@@ -384,6 +423,9 @@
 
 .approach__panel {
   grid-area: 1 / 1;
+  /* `start` y no `stretch`: si el panel se estirara al alto de la celda —que
+     es el del texto más largo—, el filete sobraría por debajo del texto corto. */
+  align-self: start;
   padding-left: var(--space-6);
   border-left: 4px solid var(--accent);
 }
@@ -463,7 +505,9 @@
 }
 
 .target {
-  padding: var(--space-8) var(--space-6);
+  /* Sólo arriba y a los lados: el relleno inferior lo anula la regla de la
+     sección anterior, para que el filete se apoye en el borde. */
+  padding: var(--space-8) var(--space-6) 0;
   text-align: center;
 }
 
@@ -751,6 +795,12 @@
   .approach__controls {
     gap: var(--space-5);
     padding: var(--space-5);
+  }
+
+  .approach__nav {
+    right: var(--space-5);
+    bottom: auto;
+    top: var(--space-5);
   }
 
   .approach__stage {
