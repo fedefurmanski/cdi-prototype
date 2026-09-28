@@ -419,12 +419,26 @@ El alto del bloque lo fija el paso más largo —los paneles comparten celda—,
 que el índice y las flechas no se mueven al cambiar de paso.
 
 **El texto que entra se rehace línea por línea**, con la misma máscara del
-hero. `initStepper` lo relanza quitando y reponiendo `is-in`, con un reflujo
-forzado en el medio: sin él el navegador junta los dos cambios y no hay
-transición ninguna. Si el despiece todavía no está hecho —espera a que carguen
-las fuentes— no hace nada, que de eso ya se ocupa el observador de
-`initLineReveal`. Por eso el panel perdió su propio desplazamiento y sólo se
-apaga: dos gestos encimados se estorban.
+hero. Por eso el panel perdió su propio desplazamiento y sólo se apaga: dos
+gestos encimados se estorban.
+
+Relanzar una transición tiene dos trampas seguidas, y las dos dan el mismo
+síntoma —no pasa nada— así que conviene tenerlas juntas:
+
+1. **Quitar y reponer la clase con un reflujo en el medio no alcanza.** Al
+   quitarla, la línea no vuelve de un salto a su sitio de partida: arranca la
+   transición de vuelta. El reflujo la encuentra recién salida, o sea todavía
+   en cero, y reponer la clase la anima de cero a cero. Hay que **apagar** la
+   transición para que el regreso sea instantáneo y volver a encenderla antes
+   de reponer la clase; el navegador decide si anima mirando el estilo
+   *posterior* al cambio, así que alcanza con que esté puesta ahí.
+2. **Se apaga con `transition-property`, no con el atajo `transition`.** El
+   atajo resetea también el `transition-delay`, que es donde vive el escalonado
+   de línea a línea: se relanzaba bien pero las cuatro líneas entraban juntas.
+   La misma corrección hacía falta en el rearmado por `resize`.
+
+Si el despiece todavía no está hecho —espera a que carguen las fuentes— no se
+hace nada, que de eso ya se ocupa el observador de `initLineReveal`.
 
 Esto destapó una red de seguridad mal puesta en `initLineReveal`: decía «si
 **alguno** entró, el observador funciona, no hago nada», y como el título entra

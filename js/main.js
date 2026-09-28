@@ -641,14 +641,34 @@ function initStepper() {
     };
 
     // Al cambiar de paso, el texto que entra se rehace línea por línea, como el
-    // del hero. Quitar y reponer `is-in` no alcanza: hay que forzar un reflujo
-    // en el medio, o el navegador junta los dos cambios y no hay transición.
+    // del hero.
+    //
+    // Quitar y reponer `is-in` con un reflujo en el medio **no alcanza**: al
+    // quitarlo, la línea no vuelve de un salto a su sitio de partida, sino que
+    // arranca la transición de vuelta. El reflujo la encuentra recién salida,
+    // o sea todavía en cero, y reponer la clase la anima de cero a cero: no se
+    // ve nada. Hay que apagar la transición para que el regreso sea
+    // instantáneo y volver a encenderla antes de reponer la clase: el
+    // navegador decide si anima mirando el estilo *posterior* al cambio, así
+    // que alcanza con que la transición esté puesta ahí.
+    //
     // Si el despiece todavía no está hecho —espera a que carguen las fuentes—
     // no se hace nada: de eso ya se ocupa el observador de `initLineReveal`.
     const relanzarLineas = (panel) => {
       panel.querySelectorAll('[data-lines].lines-ready').forEach((bloque) => {
+        const lineas = [...bloque.querySelectorAll('.line__in')];
+        // Se apaga con `transition-property` y no con el atajo `transition`:
+        // el atajo resetea también el `transition-delay`, que es donde vive el
+        // escalonado de línea a línea, y al reponerlo se perdía —las líneas
+        // entraban todas juntas—.
+        lineas.forEach((l) => {
+          l.style.transitionProperty = 'none';
+        });
         bloque.classList.remove('is-in');
         void bloque.offsetWidth;
+        lineas.forEach((l) => {
+          l.style.transitionProperty = '';
+        });
         bloque.classList.add('is-in');
       });
     };
@@ -958,15 +978,17 @@ function initLineReveal() {
           bloque.classList.remove('is-in');
           construir(bloque);
           if (!entrado) return;
-          // Sin transición: esto es un reacomodo, no una entrada.
+          // Sin transición: esto es un reacomodo, no una entrada. Se apaga
+          // con `transition-property`, que el atajo se llevaría puesto el
+          // `transition-delay` del escalonado.
           const interiores = [...bloque.querySelectorAll('.line__in')];
           interiores.forEach((el) => {
-            el.style.transition = 'none';
+            el.style.transitionProperty = 'none';
           });
           bloque.classList.add('is-in');
           requestAnimationFrame(() => {
             interiores.forEach((el) => {
-              el.style.transition = '';
+              el.style.transitionProperty = '';
             });
           });
         });
