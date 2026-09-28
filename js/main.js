@@ -531,6 +531,44 @@ function initStepper() {
 }
 
 /**
+ * Annexes: dos vistas —fichas y mapa— y la selección compartida entre el pin
+ * del mapa y su ficha chica.
+ */
+function initAnnexes() {
+  document.querySelectorAll('[data-views]').forEach((root) => {
+    const opciones = [...root.querySelectorAll('[data-view]')];
+    const paneles = [...root.querySelectorAll('[data-view-panel]')];
+    if (!opciones.length || !paneles.length) return;
+
+    opciones.forEach((opt) => {
+      opt.addEventListener('click', () => {
+        const vista = opt.dataset.view;
+        opciones.forEach((o) => o.setAttribute('aria-selected', String(o === opt)));
+        paneles.forEach((p) => {
+          p.hidden = p.dataset.viewPanel !== vista;
+        });
+      });
+    });
+
+    // Un pin y su ficha comparten el mismo `data-annexe`: se marcan juntos.
+    const marcables = [...root.querySelectorAll('[data-annexe]')];
+    const marcar = (slug) => {
+      marcables.forEach((el) => el.classList.toggle('is-on', el.dataset.annexe === slug));
+    };
+
+    marcables.forEach((el) => {
+      el.addEventListener('click', () => marcar(el.dataset.annexe));
+      el.addEventListener('keydown', (e) => {
+        // Los pines son `<g>`, no botones: Enter y espacio hay que atenderlos.
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        marcar(el.dataset.annexe);
+      });
+    });
+  });
+}
+
+/**
  * Cifras que cuentan hacia arriba al entrar en pantalla.
  *
  * El número final ya está en el marcado: si el JS no corre, se lee igual. Acá
@@ -540,6 +578,9 @@ function initCounters() {
   const cifras = [...document.querySelectorAll('[data-count]')];
   if (!cifras.length) return;
 
+  // En modo exportación no cuenta: la captura agarraría un número a mitad de
+  // camino en vez del definitivo.
+  if (document.documentElement.classList.contains('is-export')) return;
   const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducido || !('IntersectionObserver' in window)) return;
 
@@ -1015,6 +1056,7 @@ initA11yToolbar();
 initReveal();
 initSubnav();
 initStepper();
+initAnnexes();
 initCounters();
 initLineReveal();
 initDecoReveal();

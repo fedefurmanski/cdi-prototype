@@ -371,6 +371,28 @@ que la usa, no contra el documento, así que puestas en el HTML terminaban
 apuntando a `/css/assets/…` y las máscaras quedaban vacías (el icono se veía
 como un cuadrado de color).
 
+## Annexes: las dos vistas y el mapa
+
+«Nos annexes» tiene dos vistas —fichas con foto y mapa con fichas chicas— que
+comparten la selección: un pin y su ficha llevan el mismo `data-annexe` y se
+marcan juntos, se haga clic donde se haga.
+
+**El mapa se dibuja en el sitio, no viene de un servicio externo.** En un sitio
+público un iframe de mapas arrastra cookies de terceros y consentimiento, y para
+mostrar siete puntos fijos no hace falta. El contorno sale de Natural Earth
+(dominio público, versión 50m) a través de `world-atlas`, decodificado de
+TopoJSON y proyectado con corrección por latitud —sin ella el país sale
+ensanchado, porque a 50°N un grado de longitud mide dos tercios de uno de
+latitud—. El resultado es un `path` de 46 puntos escrito directamente en el
+marcado: sin dependencias, sin red y sin cookies.
+
+**Las coordenadas de las annexes son aproximadas al pueblo**, no a la puerta. A
+escala de país la diferencia es de uno o dos píxeles, pero si alguna vez el mapa
+se amplía conviene geocodificar las direcciones de verdad.
+
+Los pines son `<g>` con `role="button"` y `tabindex="0"`: no son botones, así que
+Enter y espacio se atienden a mano.
+
 ## Tres detalles del interior que vale recordar
 
 - **El filete del panel de «Notre approche» lleva `align-self: start`.** Los

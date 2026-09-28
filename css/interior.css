@@ -827,3 +827,172 @@
     font-size: 56px;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Annexes — dos vistas
+   El mapa se dibuja acá y no con un servicio externo: en un sitio público, un
+   iframe de mapas arrastra cookies de terceros y consentimiento. El contorno
+   sale de Natural Earth (dominio público) proyectado con corrección por
+   latitud; las coordenadas de las annexes son aproximadas al pueblo.
+   -------------------------------------------------------------------------- */
+
+.views {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: var(--space-6);
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--c-surface-alt);
+}
+
+.views__opt {
+  padding: 8px var(--space-5);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--c-body);
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover);
+}
+
+.views__opt:hover {
+  color: var(--c-ink);
+}
+
+.views__opt[aria-selected='true'] {
+  background: var(--c-surface);
+  color: var(--c-teal-deep);
+  box-shadow: var(--shadow-card);
+}
+
+/* --- El mapa --- */
+.annexes-map {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: var(--space-10);
+  margin-top: var(--space-8);
+  align-items: start;
+}
+
+.annexes-map__plan svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.annexes-map__land {
+  fill: var(--c-surface-alt);
+  stroke: var(--c-grey-200);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.pin {
+  cursor: pointer;
+}
+
+.pin__halo {
+  fill: var(--c-teal);
+  opacity: 0;
+  transition: opacity var(--dur-hover) var(--ease-hover);
+}
+
+.pin__dot {
+  fill: var(--c-teal);
+  stroke: #fff;
+  stroke-width: 4;
+  transition: scale var(--dur-hover) var(--ease-hover);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.pin__label {
+  fill: var(--c-ink);
+  font-size: 40px;
+  font-weight: var(--fw-bold);
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 8;
+  opacity: 0;
+  transition: opacity var(--dur-hover) var(--ease-hover);
+}
+
+.pin:hover .pin__label,
+.pin:focus-visible .pin__label,
+.pin.is-on .pin__label {
+  opacity: 1;
+}
+
+.pin:hover .pin__dot,
+.pin.is-on .pin__dot {
+  scale: 1.25;
+}
+
+.pin.is-on .pin__halo {
+  opacity: 0.22;
+}
+
+/* --- Las fichas chicas --- */
+.annexes-mini {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mini {
+  display: block;
+  width: 100%;
+  padding: var(--space-5) var(--space-6);
+  border-left: 3px solid transparent;
+  border-radius: var(--r-card);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+  text-align: left;
+  transition:
+    border-color var(--dur-hover) var(--ease-hover),
+    transform var(--dur-hover) var(--ease-hover);
+}
+
+.mini:hover {
+  transform: translateX(4px);
+}
+
+.mini.is-on {
+  border-left-color: var(--c-teal);
+  transform: translateX(4px);
+}
+
+.mini__name {
+  display: block;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--c-ink);
+}
+
+.mini__addr {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-sm);
+  color: var(--c-body);
+}
+
+.mini__tel {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--c-teal-deep);
+}
+
+@media (max-width: 900px) {
+  .annexes-map {
+    grid-template-columns: 1fr;
+  }
+
+  .annexes-map__plan {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}

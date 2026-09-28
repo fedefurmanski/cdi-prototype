@@ -584,13 +584,22 @@
           </section>
 
           <!-- ----------------------------------------------------------- -->
-          <section class="block" id="annexes">
+          <section class="block" id="annexes" data-views>
             <h2 class="block__title" data-reveal="up">Nos annexes</h2>
             <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
               <p>Sept annexes réparties sur le territoire.</p>
             </div>
 
-            <div class="annexes" data-reveal-group>
+            <div class="views" role="tablist" aria-label="Affichage des annexes">
+              <button class="views__opt" type="button" role="tab" aria-selected="true" data-view="list">
+                Liste
+              </button>
+              <button class="views__opt" type="button" role="tab" aria-selected="false" data-view="map">
+                Carte
+              </button>
+            </div>
+
+            <div class="annexes" data-view-panel="list" data-reveal-group>
               <article class="annexe">
                 <figure class="annexe__media">
                   <img src="assets/img/annexes/clervaux.jpg" alt="Annexe Clervaux" loading="lazy" />
@@ -710,6 +719,150 @@
                   </a>
                 </div>
               </article>
+            </div>
+
+            <div class="annexes-map" data-view-panel="map" hidden>
+              <div class="annexes-map__plan">
+                <svg viewBox="0 0 1000 1459" role="img" aria-label="Carte du Luxembourg avec les sept annexes">
+                  <path class="annexes-map__land" d="M511.7 94.7L497.7 147.3L502.3 270.1L539.9 389.3L624.4 508.5L690.1 596.2L779.3 666.4L934.3 733.0L995.3 747.0L1000.0 834.7L990.6 929.4L939.0 982.0L887.3 1055.7L849.8 1146.9L812.2 1322.2L807.5 1445.0L718.3 1395.9L671.4 1360.8L591.5 1350.3L511.7 1378.3L455.4 1441.5L370.9 1459.0L305.2 1441.5L262.9 1395.9L230.0 1367.8L126.8 1339.8L84.5 1273.1L117.4 1241.6L145.5 1188.9L169.0 1122.3L201.9 1055.7L103.3 880.3L79.8 824.2L0.0 726.0L0.0 676.9L18.8 627.8L14.1 589.2L23.5 501.5L79.8 417.4L117.4 312.1L183.1 171.9L328.6 0.0L427.2 28.1L474.2 28.1L502.3 87.7L511.7 94.7Z" />
+            <g
+              class="pin"
+              data-annexe="clervaux"
+              transform="translate(395.2 228.2)"
+              role="button"
+              tabindex="0"
+              aria-label="Annexe Clervaux"
+            >
+              <circle class="pin__halo" r="34" />
+              <circle class="pin__dot" r="15" />
+              <text class="pin__label" x="0" y="-44">Clervaux</text>
+            </g>
+            <g
+              class="pin"
+              data-annexe="warken"
+              transform="translate(487.1 617.1)"
+              role="button"
+              tabindex="0"
+              aria-label="Annexe Warken"
+            >
+              <circle class="pin__halo" r="34" />
+              <circle class="pin__dot" r="15" />
+              <text class="pin__label" x="0" y="-44">Warken</text>
+            </g>
+            <g
+              class="pin"
+              data-annexe="echternach"
+              transform="translate(906.1 718.9)"
+              role="button"
+              tabindex="0"
+              aria-label="Annexe Echternach"
+            >
+              <circle class="pin__halo" r="34" />
+              <circle class="pin__dot" r="15" />
+              <text class="pin__label" x="0" y="-44">Echternach</text>
+            </g>
+            <g
+              class="pin"
+              data-annexe="luxembourg"
+              transform="translate(503.2 1126.0)"
+              role="button"
+              tabindex="0"
+              aria-label="Annexe Luxembourg"
+            >
+              <circle class="pin__halo" r="34" />
+              <circle class="pin__dot" r="15" />
+              <text class="pin__label" x="0" y="-44">Luxembourg</text>
+            </g>
+            <g
+              class="pin"
+              data-annexe="berchem"
+              transform="translate(557.4 1261.4)"
+              role="button"
+              tabindex="0"
+              aria-label="Annexe Kannerinsel Berchem"
+            >
+              <circle class="pin__halo" r="34" />
+              <circle class="pin__dot" r="15" />
+              <text class="pin__label" x="0" y="-44">Kannerinsel Berchem</text>
+            </g>
+            <g
+              class="pin"
+              data-annexe="belval"
+              transform="translate(284.2 1351.7)"
+              role="button"
+              tabindex="0"
+              aria-label="Annexe Kannercampus Belval"
+            >
+              <circle class="pin__halo" r="34" />
+              <circle class="pin__dot" r="15" />
+              <text class="pin__label" x="0" y="-44">Kannercampus Belval</text>
+            </g>
+            <g
+              class="pin"
+              data-annexe="differdange"
+              transform="translate(215.5 1300.0)"
+              role="button"
+              tabindex="0"
+              aria-label="Annexe Differdange"
+            >
+              <circle class="pin__halo" r="34" />
+              <circle class="pin__dot" r="15" />
+              <text class="pin__label" x="0" y="-44">Differdange</text>
+            </g>
+                </svg>
+              </div>
+
+              <ul class="annexes-mini">
+              <li>
+                <button class="mini" type="button" data-annexe="clervaux">
+                  <span class="mini__name">Clervaux</span>
+                  <span class="mini__addr">11, Klatzewee · L-9714 Clervaux</span>
+                  <span class="mini__tel">+352 92 03 54</span>
+                </button>
+              </li>
+              <li>
+                <button class="mini" type="button" data-annexe="warken">
+                  <span class="mini__name">Warken</span>
+                  <span class="mini__addr">77, rue de Welscheid · L-9090 Warken</span>
+                  <span class="mini__tel">+352 81 75 51 - 1</span>
+                </button>
+              </li>
+              <li>
+                <button class="mini" type="button" data-annexe="echternach">
+                  <span class="mini__name">Echternach</span>
+                  <span class="mini__addr">1, Place Isidore Comes · L-6443 Echternach</span>
+                  <span class="mini__tel">+352 28 33 75 51</span>
+                </button>
+              </li>
+              <li>
+                <button class="mini" type="button" data-annexe="luxembourg">
+                  <span class="mini__name">Luxembourg</span>
+                  <span class="mini__addr">27, avenue du Dix Septembre · L-2551 Luxembourg</span>
+                  <span class="mini__tel">+352 24 79 52 60</span>
+                </button>
+              </li>
+              <li>
+                <button class="mini" type="button" data-annexe="berchem">
+                  <span class="mini__name">Kannerinsel Berchem</span>
+                  <span class="mini__addr">24, rue de Bettembourg · L-3320 Berchem</span>
+                  <span class="mini__tel">+352 36 92 32 96 01</span>
+                </button>
+              </li>
+              <li>
+                <button class="mini" type="button" data-annexe="belval">
+                  <span class="mini__name">Kannercampus Belval</span>
+                  <span class="mini__addr">2, Passage Pablo Picasso · L-4457 Belvaux</span>
+                  <span class="mini__tel">+352 55 32 46 - 280</span>
+                </button>
+              </li>
+              <li>
+                <button class="mini" type="button" data-annexe="differdange">
+                  <span class="mini__name">Differdange</span>
+                  <span class="mini__addr">2, rue John Castegnaro · L-4639 Differdange</span>
+                  <span class="mini__tel">+352 58 77 1 - 2310</span>
+                </button>
+              </li>
+              </ul>
             </div>
           </section>
         </div>
