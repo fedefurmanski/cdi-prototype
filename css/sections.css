@@ -352,6 +352,12 @@
   transition: color var(--dur-hover) var(--ease-hover);
 }
 
+/* Mismo formato que el índice de «Les causes»: el punto es puntuación de la
+   numeración, no contenido, así que va acá y no en el marcado. */
+.dropdown__num::after {
+  content: '.';
+}
+
 .dropdown__links a:hover .dropdown__num {
   color: var(--c-teal);
 }
