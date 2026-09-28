@@ -107,14 +107,26 @@
 }
 
 .subnav a:hover,
-.subnav a[aria-current='true'] {
+.subnav a[aria-current] {
   color: var(--c-teal-deep);
   translate: 6px 0;
+}
+
+/* La página en curso se queda marcada, no sólo desplazada. */
+.subnav a[aria-current='page'] {
+  color: var(--c-teal-deep);
 }
 
 /* --------------------------------------------------------------------------
    Encabezado y ritmo del contenido
    -------------------------------------------------------------------------- */
+
+/* En las páginas de una sola sección el título ya la anuncia: el hueco de
+   `--block-gap`, pensado para separar bloques entre sí, sobra. */
+.page-head + .block,
+.page-media + .block {
+  margin-top: var(--space-12);
+}
 
 .page-title {
   font-size: var(--fs-h2);
@@ -193,9 +205,20 @@
   margin-top: var(--space-6);
   padding: var(--space-6);
   border-radius: var(--r-card);
-  /* El de arranque; a partir de ahí lo escribe el JS con el color del paso. */
+  /* Los de arranque; a partir de ahí los escribe el JS con el color del paso:
+     el fondo muy diluido y el filete a color pleno, que es lo que le da borde
+     a una caja que si no flota sobre el blanco. */
+  border: 1px solid var(--c-line);
   background-color: var(--c-surface-alt);
-  transition: background-color 520ms var(--ease-out);
+  transition:
+    background-color 520ms var(--ease-out),
+    border-color 520ms var(--ease-out);
+}
+
+/* El bloque de causas es un objeto cerrado: lo que sigue necesita despegarse
+   más que dos párrafos entre sí. */
+.steps + * {
+  margin-top: var(--space-12);
 }
 
 .steps__panels {
@@ -233,9 +256,11 @@
     color var(--dur-hover) var(--ease-hover);
 }
 
+/* En negro y no en turquesa: el color del paso ya está en el fondo, en el
+   filete y en el número, y una flecha teal se sumaba a la cuenta. */
 .steps__arrow:hover {
-  border-color: var(--c-teal);
-  color: var(--c-teal-deep);
+  border-color: var(--c-ink);
+  color: var(--c-ink);
 }
 
 .steps__arrow .icon {
@@ -313,16 +338,16 @@
   grid-area: 1 / 1;
 }
 
+/* El que sale se apaga; el que entra lo hace línea por línea —de eso se ocupa
+   `initStepper`— así que acá no lleva desplazamiento: dos gestos encimados se
+   estorban. */
 .js .steps__panel[inert] {
   visibility: hidden;
   opacity: 0;
-  translate: 0 8px;
 }
 
 .js .steps__panel {
-  transition:
-    opacity var(--dur-base) var(--ease-out),
-    translate var(--dur-base) var(--ease-out);
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 
 .steps__panel p {
@@ -357,7 +382,7 @@
 }
 
 .rule-list__item + .rule-list__item {
-  margin-top: var(--space-5);
+  margin-top: var(--space-8);
 }
 
 .rule-list__item h3 {
@@ -593,41 +618,34 @@
 
 /* --------------------------------------------------------------------------
    Públicos cibles
+   Tres filas a lo ancho, con la foto al costado. Eran tres columnas con la foto
+   redonda arriba; al quedar solas en su propia página, tres tarjetas angostas
+   en el tercio superior dejaban la página medio vacía.
    -------------------------------------------------------------------------- */
 
 .target-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-5);
   margin-top: var(--space-6);
 }
 
-/* Estas llevan el filete abajo, corto y centrado, en vez del de la izquierda:
-   la tarjeta está centrada y una regla de punta a punta la partía en dos. */
+/* La foto va dentro del relleno, con su propio redondeo, y no sangrada al
+   borde: al ras se comía la esquina redondeada de la tarjeta. Vuelve además el
+   filete de acento a la izquierda, que es el de todas las tarjetas del sitio.
+   Antes la tarjeta estaba centrada y hacía falta un filete al pie; en una fila
+   a lo ancho no. */
 .target {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-8) var(--space-6) 0;
-  border-left: 0;
-  text-align: center;
-}
-
-/* `margin-top: auto` lo empuja al pie: si siguiera al texto quedaría a distinta
-   altura en cada tarjeta, porque los textos no miden lo mismo. */
-.target::after {
-  content: '';
-  width: 88px;
-  height: 4px;
-  margin: auto auto 0;
-  border-radius: 2px 2px 0 0;
-  background: var(--accent);
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  align-items: center;
+  column-gap: var(--space-8);
+  padding: var(--space-6);
+  text-align: left;
 }
 
 .target__media {
-  width: 148px;
-  margin: 0 auto var(--space-5);
-  aspect-ratio: 1;
-  border-radius: 50%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-media);
   overflow: hidden;
 }
 
@@ -642,19 +660,21 @@
   scale: 1.08;
 }
 
+.target__body {
+  display: grid;
+  gap: var(--space-3);
+}
+
 .target h3 {
-  font-size: var(--fs-md);
+  font-size: var(--fs-h4);
   font-weight: var(--fw-bold);
   line-height: 1.3;
   color: var(--c-ink);
 }
 
 .target p {
-  margin-top: var(--space-3);
-  /* El margen del párrafo garantiza el aire mínimo sobre el filete cuando el
-     texto es largo y el `auto` de arriba no tiene espacio que repartir. */
-  margin-bottom: var(--space-8);
-  font-size: var(--fs-sm);
+  max-width: 52ch;
+  font-size: var(--fs-md);
   line-height: 1.7;
   color: var(--c-body);
 }
@@ -663,11 +683,13 @@
    Cifras
    -------------------------------------------------------------------------- */
 
+/* Tres columnas iguales y no una fila flexible: con el flex, la cifra de tres
+   dígitos y la de dos repartían el sobrante de distinta manera y las etiquetas
+   no arrancaban alineadas. */
 .figures {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--space-12) var(--space-24);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-10) var(--space-8);
   margin-top: var(--space-8);
   padding: var(--space-8);
   border-radius: var(--r-card);
@@ -686,8 +708,12 @@
   font-variant-numeric: tabular-nums;
 }
 
-.figures__num--alt {
+.figures__num--verde {
   color: var(--c-green);
+}
+
+.figures__num--naranja {
+  color: var(--c-orange);
 }
 
 .figures__label {
@@ -937,9 +963,18 @@
     aspect-ratio: 4 / 3;
   }
 
-  .target-list,
   .annexes {
     grid-template-columns: 1fr;
+  }
+
+  /* La foto vuelve arriba: a 260px de ancho fijo no queda sitio para el texto. */
+  .target {
+    grid-template-columns: 1fr;
+    row-gap: var(--space-5);
+  }
+
+  .target__media {
+    aspect-ratio: 16 / 9;
   }
 
   .bars__row {
@@ -950,6 +985,10 @@
   .bars__track {
     grid-column: 1 / -1;
     order: 3;
+  }
+
+  .figures {
+    grid-template-columns: 1fr;
   }
 
   .figures__num {

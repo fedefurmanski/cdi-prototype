@@ -540,12 +540,16 @@ const STAGGER_MS = 90;
 const STAGGER_MAX = 6;   // a partir de acá el retardo deja de crecer
 
 function initReveal() {
-  // El escalonado se calcula acá y no a mano en el marcado: agregar una
-  // tarjeta no obliga a renumerar delays.
+  // Un grupo sólo declara que sus hijos entran; el escalonado no se calcula
+  // acá sino al revelar (ver más abajo), que es cuando se sabe quiénes entran
+  // juntos.
   document.querySelectorAll('[data-reveal-group]').forEach((group) => {
-    [...group.children].forEach((child, i) => {
-      if (!child.hasAttribute('data-reveal')) child.setAttribute('data-reveal', 'up');
-      child.style.setProperty('--reveal-delay', `${Math.min(i, STAGGER_MAX) * STAGGER_MS}ms`);
+    // El valor del atributo elige el gesto de los hijos: `data-reveal-group`
+    // a secas es `up`; `data-reveal-group="rise"` los sube con un poco de
+    // escala, que es como entran las tarjetas.
+    const gesto = group.dataset.revealGroup || 'up';
+    [...group.children].forEach((child) => {
+      if (!child.hasAttribute('data-reveal')) child.setAttribute('data-reveal', gesto);
     });
   });
 
@@ -560,10 +564,22 @@ function initReveal() {
 
   const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
+      // Lo que entra en la misma tanda se escalona; lo que entra solo no
+      // espera a nadie. Calcularlo acá y no de antemano es lo que hace que una
+      // tarjeta a la que se llega scrolleando aparezca en el acto, y que las
+      // que se ven de entrada lo hagan una detrás de otra.
+      const nuevos = entries.filter((e) => e.isIntersecting).map((e) => e.target);
+      if (!nuevos.length) return;
+      nuevos.sort((a, b) =>
+        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+      );
+      nuevos.forEach((el, i) => {
+        // Un retardo escrito en el marcado manda: está puesto a propósito.
+        if (!el.style.getPropertyValue('--reveal-delay')) {
+          el.style.setProperty('--reveal-delay', `${Math.min(i, STAGGER_MAX) * STAGGER_MS}ms`);
+        }
+        el.classList.add('is-visible');
+        observer.unobserve(el);
       });
     },
     // Umbral 0: alcanza con que asome un borde. Con un umbral alto, un bloque
@@ -621,10 +637,45 @@ function initStepper() {
       const tono = tab.dataset.tint;
       if (!tiñe || !tono) return;
       root.style.backgroundColor = `${tono}14`;
+      root.style.borderColor = tono;
+    };
+
+    // Al cambiar de paso, el texto que entra se rehace línea por línea, como el
+    // del hero.
+    //
+    // Quitar y reponer `is-in` con un reflujo en el medio **no alcanza**: al
+    // quitarlo, la línea no vuelve de un salto a su sitio de partida, sino que
+    // arranca la transición de vuelta. El reflujo la encuentra recién salida,
+    // o sea todavía en cero, y reponer la clase la anima de cero a cero: no se
+    // ve nada. Hay que apagar la transición para que el regreso sea
+    // instantáneo y volver a encenderla antes de reponer la clase: el
+    // navegador decide si anima mirando el estilo *posterior* al cambio, así
+    // que alcanza con que la transición esté puesta ahí.
+    //
+    // Si el despiece todavía no está hecho —espera a que carguen las fuentes—
+    // no se hace nada: de eso ya se ocupa el observador de `initLineReveal`.
+    const relanzarLineas = (panel) => {
+      panel.querySelectorAll('[data-lines].lines-ready').forEach((bloque) => {
+        const lineas = [...bloque.querySelectorAll('.line__in')];
+        // Se apaga con `transition-property` y no con el atajo `transition`:
+        // el atajo resetea también el `transition-delay`, que es donde vive el
+        // escalonado de línea a línea, y al reponerlo se perdía —las líneas
+        // entraban todas juntas—.
+        lineas.forEach((l) => {
+          l.style.transitionProperty = 'none';
+        });
+        bloque.classList.remove('is-in');
+        void bloque.offsetWidth;
+        lineas.forEach((l) => {
+          l.style.transitionProperty = '';
+        });
+        bloque.classList.add('is-in');
+      });
     };
 
     const mostrar = (i, mover) => {
       pintar(tabs[i]);
+      relanzarLineas(paneles[i]);
       tabs.forEach((tab, j) => {
         const activo = i === j;
         tab.setAttribute('aria-selected', String(activo));
@@ -927,26 +978,35 @@ function initLineReveal() {
           bloque.classList.remove('is-in');
           construir(bloque);
           if (!entrado) return;
-          // Sin transición: esto es un reacomodo, no una entrada.
+          // Sin transición: esto es un reacomodo, no una entrada. Se apaga
+          // con `transition-property`, que el atajo se llevaría puesto el
+          // `transition-delay` del escalonado.
           const interiores = [...bloque.querySelectorAll('.line__in')];
           interiores.forEach((el) => {
-            el.style.transition = 'none';
+            el.style.transitionProperty = 'none';
           });
           bloque.classList.add('is-in');
           requestAnimationFrame(() => {
             interiores.forEach((el) => {
-              el.style.transition = '';
+              el.style.transitionProperty = '';
             });
           });
         });
       }, 180);
     });
 
-    // Misma red de seguridad que el resto de los revelados.
+    // Red de seguridad: lo que a los tres segundos sigue sin entrar se muestra
+    // igual. Antes alcanzaba con que **alguno** hubiera entrado para no hacer
+    // nada, y entonces un bloque al que el observador no llegara se quedaba
+    // enmascarado —o sea, invisible— para siempre. Con el título entrando
+    // siempre primero, la red no se disparaba nunca.
     window.setTimeout(() => {
-      if (bloques.some((b) => b.classList.contains('is-in'))) return;
-      observer.disconnect();
-      bloques.forEach(mostrar);
+      bloques
+        .filter((b) => !b.classList.contains('is-in'))
+        .forEach((b) => {
+          observer.unobserve(b);
+          mostrar(b);
+        });
     }, 3000);
   };
 

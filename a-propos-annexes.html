@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nos annexes — CDI</title>
+    <meta
+      name="description"
+      content="Sept annexes réparties sur le territoire."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // Versiones del prototipo, resueltas antes del primer pintado para que no
+      // parpadeen: manda la URL, si no la última elegida en el conmutador.
+      (function () {
+        // `js` acá y no en main.js: el módulo está diferido y se aplica recién
+        // después del primer pintado, así que los elementos que el CSS oculta
+        // para animarlos alcanzaban a verse y se desvanecían a la vista.
+        var p = new URLSearchParams(location.search);
+
+        document.documentElement.classList.add('js');
+
+        // El modo exportación también acá: aplicado desde el módulo diferido
+        // llega después del primer pintado, y las capturas agarraban las
+        // animaciones de entrada a mitad de camino.
+        var exp = p.get('export');
+        if (exp === '1' || exp === '2') {
+          document.documentElement.classList.add('is-export');
+          if (exp === '1') document.documentElement.classList.add('is-export-nodeco');
+        }
+        // El primero de cada lista es el que se muestra por defecto.
+        var ejes = { intranet: ['blue', 'pink'], profiles: ['gradient', 'cards', 'banners'] };
+        Object.keys(ejes).forEach(function (eje) {
+          var valores = ejes[eje];
+          var guardado = null;
+          try {
+            guardado = localStorage.getItem('cdi:v2-' + eje);
+          } catch (e) {
+            /* storage bloqueado: vale el valor por defecto */
+          }
+          var v = p.get(eje) || guardado;
+          document.documentElement.dataset[eje] = valores.indexOf(v) >= 0 ? v : valores[0];
+        });
+      })();
+    </script>
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/sections.css" />
+    <link rel="stylesheet" href="css/interior.css" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+    <header class="header">
+      <div class="topbar">
+        <img
+          class="topbar__gov"
+          src="assets/icons/gov-luxembourg.png"
+          alt="Le Gouvernement du Grand-Duché de Luxembourg"
+        />
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar__inner container">
+          <button class="toolbar__btn toolbar__contrast" type="button" data-action="contrast">
+            <span class="toolbar__contrast-glyph" aria-hidden="true"></span>
+            <span class="visually-hidden">Activer le contraste élevé</span>
+          </button>
+
+          <div class="toolbar__sizes">
+            <button class="toolbar__btn" type="button" data-action="font-up">
+              A<sup>+</sup><span class="visually-hidden">Augmenter la taille du texte</span>
+            </button>
+            <button class="toolbar__btn" type="button" data-action="font-down">
+              A<sup>-</sup><span class="visually-hidden">Réduire la taille du texte</span>
+            </button>
+          </div>
+
+          <nav class="toolbar__langs" aria-label="Langue">
+            <a class="toolbar__lang" href="#" aria-current="true" hreflang="fr">FR</a>
+            <a class="toolbar__lang" href="#" hreflang="de">DE</a>
+            <a class="toolbar__lang" href="#" hreflang="en">EN</a>
+          </nav>
+
+          <a class="toolbar__btn toolbar__easy" href="#">
+            <img src="assets/icons/facile-a-lire.png" alt="" />
+            Facile à lire
+          </a>
+
+          <a class="toolbar__btn toolbar__intranet" href="#">
+            <span class="toolbar__intranet-icon" aria-hidden="true">
+              <span class="icon icon--arrow-pill"></span>
+            </span>
+            Intranet
+          </a>
+        </div>
+      </div>
+
+      <div class="nav container">
+        <a href="index.html" aria-label="CDI — accueil">
+          <img class="nav__logo" src="assets/svg/logo-cdi.svg" alt="CDI" />
+        </a>
+
+        <nav id="nav-principal" aria-label="Navigation principale">
+          <ul class="nav__list">
+            <li class="nav__item" data-dropdown>
+              <a
+                class="nav__link"
+                href="a-propos-qui-sommes-nous.html" aria-current="page"
+                aria-expanded="false"
+                aria-controls="menu-a-propos"
+              >
+                À propos
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+
+              <div class="dropdown" id="menu-a-propos">
+                <div class="dropdown__inner">
+                  <div class="dropdown__intro">
+                    <p class="dropdown__eyebrow">À propos du CDI</p>
+                    <p class="dropdown__pitch">
+                      Un centre de compétences en psycho-pédagogie spécialisée qui prend en
+                      charge les enfants et les jeunes présentant des troubles du développement
+                      intellectuel.
+                    </p>
+                  </div>
+
+                  <ul class="dropdown__links">
+                    <li style="--i: 0">
+                      <a href="a-propos-qui-sommes-nous.html">
+                        <span class="dropdown__num">01</span>
+                        <span class="dropdown__label">Qui sommes-nous&nbsp;?</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 1">
+                      <a href="a-propos-trouble.html">
+                        <span class="dropdown__num">02</span>
+                        <span class="dropdown__label">Le trouble du développement intellectuel</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 2">
+                      <a href="a-propos-philosophie.html">
+                        <span class="dropdown__num">03</span>
+                        <span class="dropdown__label">Notre philosophie</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 3">
+                      <a href="a-propos-approche.html">
+                        <span class="dropdown__num">04</span>
+                        <span class="dropdown__label">Notre approche</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 4">
+                      <a href="a-propos-publics.html">
+                        <span class="dropdown__num">05</span>
+                        <span class="dropdown__label">Les publics cibles</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 5">
+                      <a href="a-propos-chiffres.html">
+                        <span class="dropdown__num">06</span>
+                        <span class="dropdown__label">Le CDI en chiffres</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 6">
+                      <a href="a-propos-equipe.html">
+                        <span class="dropdown__num">07</span>
+                        <span class="dropdown__label">Notre équipe</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 7">
+                      <a href="a-propos-annexes.html">
+                        <span class="dropdown__num">08</span>
+                        <span class="dropdown__label">Nos annexes</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li>
+              <a class="nav__link" href="#">Pour les parents
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li>
+              <a class="nav__link" href="#">Pour les professionnels
+                <span class="icon icon--chevron" aria-hidden="true"></span>
+              </a>
+            </li>
+            <li><a class="nav__link" href="#">Nos actualités</a></li>
+            <li><a class="nav__link" href="#">Contactez nous</a></li>
+          </ul>
+        </nav>
+
+        <button class="nav__search" type="button" data-action="search">
+          <span class="icon icon--search" aria-hidden="true"></span>
+          <span class="visually-hidden">Rechercher</span>
+        </button>
+
+        <button
+          class="nav__toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-principal"
+          data-action="nav-toggle"
+        >
+          <span class="nav__toggle-bars" aria-hidden="true"></span>
+          <span class="visually-hidden">Ouvrir le menu</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main" class="interior">
+      <div class="interior__inner container">
+        <!-- ===============================================================
+             Barra lateral — navegación dentro de la página
+             =============================================================== -->
+        <aside class="subnav-wrap" data-reveal="left">
+          <p class="subnav__eyebrow">
+            <span class="icon icon--arrow" aria-hidden="true"></span>
+            <strong>À propos</strong> du CDI
+          </p>
+
+          <nav class="subnav" aria-label="Sections de la page">
+            <ul>
+              <li><a href="a-propos-qui-sommes-nous.html">Qui sommes-nous&nbsp;?</a></li>
+              <li><a href="a-propos-trouble.html">Le trouble du développement intellectuel</a></li>
+              <li><a href="a-propos-philosophie.html">Notre philosophie</a></li>
+              <li><a href="a-propos-approche.html">Notre approche</a></li>
+              <li><a href="a-propos-publics.html">Les publics cibles</a></li>
+              <li><a href="a-propos-chiffres.html">Le CDI en chiffres</a></li>
+              <li><a href="a-propos-equipe.html">Notre équipe</a></li>
+              <li><a href="a-propos-annexes.html" aria-current="page">Nos annexes</a></li>
+            </ul>
+          </nav>
+        </aside>
+        <!-- ===============================================================
+             Columna principal
+             =============================================================== -->
+        <div class="interior__main">
+          <header class="page-head">
+            <h1 class="page-title" data-lines data-lines-delay="60">Nos annexes</h1>
+          </header>
+
+          <section class="block" id="annexes">
+            <div class="prose" data-reveal="up">
+              <p>Sept annexes réparties sur le territoire.</p>
+            </div>
+
+            <div class="annexes" data-reveal-group="rise">
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/clervaux.jpg" alt="Annexe Clervaux" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Clervaux</h3>
+                  <p class="annexe__addr">11, Klatzewee<br />L-9714 Clervaux</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352920354">+352 92 03 54</a>
+                    <a href="mailto:info.annexeclervaux@cc-cdi.lu">info.annexeclervaux@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=11%2C%20Klatzewee%2C%20L-9714%20Clervaux" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/belval.jpg" alt="Annexe Kannercampus Belval" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Kannercampus Belval</h3>
+                  <p class="annexe__addr">2, Passage Pablo Picasso<br />L-4457 Belvaux</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352553246280">+352 55 32 46 - 280</a>
+                    <a href="mailto:info.annexebelval@cc-cdi.lu">info.annexebelval@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=2%2C%20Passage%20Pablo%20Picasso%2C%20L-4457%20Belvaux" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/differdange.jpg" alt="Annexe Differdange" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Differdange</h3>
+                  <p class="annexe__addr">2, rue John Castegnaro<br />L-4639 Differdange</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352587712310">+352 58 77 1 - 2310</a>
+                    <a href="mailto:info.annexedifferdange@cc-cdi.lu">info.annexedifferdange@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=2%2C%20rue%20John%20Castegnaro%2C%20L-4639%20Differdange" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/echternach.jpg" alt="Annexe Echternach" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Echternach</h3>
+                  <p class="annexe__addr">1, Place Isidore Comes<br />L-6443 Echternach</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+35228337551">+352 28 33 75 51</a>
+                    <a href="mailto:info.annexeechternach@cc-cdi.lu">info.annexeechternach@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=1%2C%20Place%20Isidore%20Comes%2C%20L-6443%20Echternach" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/luxembourg.jpg" alt="Annexe Luxembourg" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Luxembourg</h3>
+                  <p class="annexe__addr">27, avenue du Dix Septembre<br />L-2551 Luxembourg</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+35224795260">+352 24 79 52 60</a>
+                    <a href="mailto:info.annexecentre@cc-cdi.lu">info.annexecentre@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=27%2C%20avenue%20du%20Dix%20Septembre%2C%20L-2551%20Luxembourg" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/berchem.jpg" alt="Annexe Kannerinsel Berchem" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Kannerinsel Berchem</h3>
+                  <p class="annexe__addr">24, rue de Bettembourg<br />L-3320 Berchem</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+3523692329601">+352 36 92 32 96 01</a>
+                    <a href="mailto:info.annexeberchem@cc-cdi.lu">info.annexeberchem@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=24%2C%20rue%20de%20Bettembourg%2C%20L-3320%20Berchem" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+              <article class="annexe">
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/warken.jpg" alt="Annexe Warken" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Warken</h3>
+                  <p class="annexe__addr">77, rue de Welscheid<br />L-9090 Warken</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+3528175511">+352 81 75 51 - 1</a>
+                    <a href="mailto:info.annexewarken@cc-cdi.lu">info.annexewarken@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=77%2C%20rue%20de%20Welscheid%2C%20L-9090%20Warken" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
+              </article>
+            </div>
+
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="section section--alt footer">
+      <div class="footer__inner container">
+        <div class="footer__top" data-reveal-group>
+          <div>
+            <img class="footer__logo" src="assets/svg/logo-cdi-footer.svg" alt="CDI — Centre pour le développement intellectuel" />
+          </div>
+
+          <nav class="footer__nav" aria-label="Le centre">
+            <a href="#">À propos</a>
+            <a href="#">Pour les parents</a>
+            <a href="#">Pour les professionnels</a>
+            <a href="#">Nos annexes</a>
+            <a href="#">Nos services</a>
+          </nav>
+
+          <nav class="footer__nav" aria-label="Ressources">
+            <a href="#">Centre de documentation</a>
+            <a href="#">Demande de traduction</a>
+            <a href="#">Intranet</a>
+            <a href="#">Contact</a>
+            <a href="#">Nos actualités</a>
+          </nav>
+
+          <address class="footer__contact">
+            <p class="footer__contact-row">
+              <span class="icon icon--location icon--lg" aria-hidden="true"></span>
+              <span>5, rue Thomas Edison<br />L-1445 Strassen</span>
+            </p>
+            <a class="footer__contact-row" href="tel:+35224755700">
+              <span class="icon icon--phone icon--lg" aria-hidden="true"></span>
+              <span>+352 247-55700</span>
+            </a>
+            <a class="footer__contact-row" href="mailto:info@cc-cdi.lu">
+              <span class="icon icon--mail icon--lg" aria-hidden="true"></span>
+              <span>info@cc-cdi.lu</span>
+            </a>
+
+            <div class="footer__social">
+              <a href="#" aria-label="LinkedIn"><img src="assets/icons/linkedin.svg" alt="" /></a>
+              <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.svg" alt="" /></a>
+              <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.svg" alt="" /></a>
+            </div>
+          </address>
+        </div>
+
+        <hr class="footer__divider" />
+
+        <div class="footer__bottom">
+          <p class="footer__copyright">© 2026 CDI Luxembourg. Tous droits réservés</p>
+
+          <div class="footer__legal">
+            <a href="#">Mentions légales</a>
+            <a href="#">Cookies</a>
+            <a href="#">Accessibilité</a>
+            <button class="btn btn--dark" type="button" data-action="read-aloud">
+              <span class="icon icon--speaker icon--lg" aria-hidden="true"></span>
+              Lire le texte
+            </button>
+            <button class="footer__a11y" type="button" data-action="a11y-panel">
+              <img src="assets/icons/accessibility.svg" alt="" />
+              <span class="visually-hidden">Ouvrir les options d'accessibilité</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js" type="module"></script>
+  </body>
+</html>
