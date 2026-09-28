@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>À propos — CDI</title>
+    <title>Le trouble du développement intellectuel — CDI</title>
     <meta
       name="description"
-      content="Qui sommes-nous, notre philosophie, notre approche, le CDI en chiffres et nos annexes."
+      content="Ce qu’il est, ses causes et ce qu’il implique au quotidien."
     />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -247,7 +247,7 @@
           <nav class="subnav" aria-label="Sections de la page">
             <ul>
               <li><a href="a-propos-qui-sommes-nous.html">Qui sommes-nous&nbsp;?</a></li>
-              <li><a href="a-propos-trouble.html">Le trouble du développement intellectuel</a></li>
+              <li><a href="a-propos-trouble.html" aria-current="page">Le trouble du développement intellectuel</a></li>
               <li><a href="a-propos-philosophie.html">Notre philosophie</a></li>
               <li><a href="a-propos-approche.html">Notre approche</a></li>
               <li><a href="a-propos-publics.html">Les publics cibles</a></li>
@@ -262,102 +262,155 @@
              =============================================================== -->
         <div class="interior__main">
           <header class="page-head">
-            <h1 class="page-title" data-lines data-lines-delay="60">À propos</h1>
-            <p class="page-lead" data-lines data-lines-delay="220">
-              Un centre de compétences en psycho-pédagogie spécialisée qui prend en charge les
-              enfants et les jeunes présentant des troubles du développement intellectuel.
-            </p>
+            <h1 class="page-title" data-lines data-lines-delay="60">Le trouble du développement intellectuel</h1>
           </header>
 
-          <figure class="page-media" data-reveal="zoom">
-            <img src="assets/img/profil-professionnels-focus.jpg" alt="" loading="lazy" />
-          </figure>
+          <section class="block" id="trouble">
 
-          <section class="block">
-            <h2 class="block__title" data-reveal="up">Dans cette section</h2>
+            <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
+              <p>
+                Les troubles du développement intellectuel englobent diverses maladies d’étiologie
+                différente, apparaissant en phase développementale. Elles se caractérisent par des
+                fonctions intellectuelles significativement inférieures à la moyenne et par un
+                comportement adaptatif (CIM-11).
+              </p>
+            </div>
 
-            <ul class="index-list" data-reveal-group>
-              <li>
-                <a href="a-propos-qui-sommes-nous.html">
-                  <span class="index-list__num">01</span>
-                  <span class="index-list__body">
-                    <span class="index-list__title">Qui sommes-nous&nbsp;?</span>
-                    <span class="index-list__text">Un centre de compétences du réseau national, au service des enfants et des jeunes.</span>
-                  </span>
+
+            <h3 class="block__subtitle" data-reveal="up">Les causes</h3>
+            <div class="steps" data-stepper data-tint-bg data-reveal="up" style="--reveal-delay: 80ms">
+              <div class="steps__panels">
+                <section
+                  class="steps__panel"
+                  role="tabpanel"
+                  id="ca-conception"
+                  aria-labelledby="ca-conception-tab"
+                  style="--accent: var(--c-teal)"
+                  
+                >
+                  <p>Maladies génétiques, aberrations chromosomiques — trisomie, syndrome de l’X fragile —, incompatibilité de groupe sanguin, etc.</p>
+                </section>
+                <section
+                  class="steps__panel"
+                  role="tabpanel"
+                  id="ca-grossesse"
+                  aria-labelledby="ca-grossesse-tab"
+                  style="--accent: var(--c-green)"
+                  inert
+                >
+                  <p>Rayonnements ionisants, virus, médicaments, parasites, alcool, tabagisme, etc.</p>
+                </section>
+                <section
+                  class="steps__panel"
+                  role="tabpanel"
+                  id="ca-naissance"
+                  aria-labelledby="ca-naissance-tab"
+                  style="--accent: var(--c-orange)"
+                  inert
+                >
+                  <p>Maladies cérébrales du nouveau-né, prématurité, etc.</p>
+                </section>
+                <section
+                  class="steps__panel"
+                  role="tabpanel"
+                  id="ca-apres"
+                  aria-labelledby="ca-apres-tab"
+                  style="--accent: var(--c-coral)"
+                  inert
+                >
+                  <p>Maladies infectieuses, virales ou métaboliques, intoxications, traumatismes crâniens, accidents du travail ou de la circulation, noyade, asphyxie, problèmes neurologiques, accidents domestiques, etc.</p>
+                </section>
+              </div>
+
+              <div class="steps__index">
+                <div class="steps__ctrls" role="tablist" aria-label="Les causes">
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-conception-tab"
+                    aria-controls="ca-conception"
+                    data-tint="#2AB7C8"
+                    aria-selected="true"
+                    style="--accent: var(--c-teal)"
+                  >
+                    <span class="steps__num">01</span>
+                    <span class="visually-hidden">À la conception</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-grossesse-tab"
+                    aria-controls="ca-grossesse"
+                    data-tint="#ADCB47"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-green)"
+                  >
+                    <span class="steps__num">02</span>
+                    <span class="visually-hidden">Pendant la grossesse</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-naissance-tab"
+                    aria-controls="ca-naissance"
+                    data-tint="#F7A827"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-orange)"
+                  >
+                    <span class="steps__num">03</span>
+                    <span class="visually-hidden">À la naissance</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-apres-tab"
+                    aria-controls="ca-apres"
+                    data-tint="#E9503E"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-coral)"
+                  >
+                    <span class="steps__num">04</span>
+                    <span class="visually-hidden">Après la naissance</span>
+                  </button>
+                </div>
+
+                <p class="steps__names" aria-hidden="true">
+                  <span class="steps__name is-on" data-name>À la conception</span>
+                  <span class="steps__name" data-name>Pendant la grossesse</span>
+                  <span class="steps__name" data-name>À la naissance</span>
+                  <span class="steps__name" data-name>Après la naissance</span>
+                </p>
+              </div>
+
+              <div class="steps__nav">
+                <button class="steps__arrow steps__arrow--prev" type="button" data-approach="prev">
                   <span class="icon icon--arrow" aria-hidden="true"></span>
-                </a>
-              </li>
-              <li>
-                <a href="a-propos-trouble.html">
-                  <span class="index-list__num">02</span>
-                  <span class="index-list__body">
-                    <span class="index-list__title">Le trouble du développement intellectuel</span>
-                    <span class="index-list__text">Ce qu’il est, ses causes et ce qu’il implique au quotidien.</span>
-                  </span>
+                  <span class="visually-hidden">Cause précédente</span>
+                </button>
+                <button class="steps__arrow steps__arrow--next" type="button" data-approach="next">
                   <span class="icon icon--arrow" aria-hidden="true"></span>
-                </a>
-              </li>
-              <li>
-                <a href="a-propos-philosophie.html">
-                  <span class="index-list__num">03</span>
-                  <span class="index-list__body">
-                    <span class="index-list__title">Notre philosophie</span>
-                    <span class="index-list__text">Les principes qui guident chaque prise en charge.</span>
-                  </span>
-                  <span class="icon icon--arrow" aria-hidden="true"></span>
-                </a>
-              </li>
-              <li>
-                <a href="a-propos-approche.html">
-                  <span class="index-list__num">04</span>
-                  <span class="index-list__body">
-                    <span class="index-list__title">Notre approche</span>
-                    <span class="index-list__text">Prévention, diagnostic et intervention.</span>
-                  </span>
-                  <span class="icon icon--arrow" aria-hidden="true"></span>
-                </a>
-              </li>
-              <li>
-                <a href="a-propos-publics.html">
-                  <span class="index-list__num">05</span>
-                  <span class="index-list__body">
-                    <span class="index-list__title">Les publics cibles</span>
-                    <span class="index-list__text">Parents, personnel pédagogique et partenaires externes.</span>
-                  </span>
-                  <span class="icon icon--arrow" aria-hidden="true"></span>
-                </a>
-              </li>
-              <li>
-                <a href="a-propos-chiffres.html">
-                  <span class="index-list__num">06</span>
-                  <span class="index-list__body">
-                    <span class="index-list__title">Le CDI en chiffres</span>
-                    <span class="index-list__text">Ce que représente le centre aujourd’hui.</span>
-                  </span>
-                  <span class="icon icon--arrow" aria-hidden="true"></span>
-                </a>
-              </li>
-              <li>
-                <a href="a-propos-equipe.html">
-                  <span class="index-list__num">07</span>
-                  <span class="index-list__body">
-                    <span class="index-list__title">Notre équipe</span>
-                    <span class="index-list__text">Les services et les métiers qui composent le centre.</span>
-                  </span>
-                  <span class="icon icon--arrow" aria-hidden="true"></span>
-                </a>
-              </li>
-              <li>
-                <a href="a-propos-annexes.html">
-                  <span class="index-list__num">08</span>
-                  <span class="index-list__body">
-                    <span class="index-list__title">Nos annexes</span>
-                    <span class="index-list__text">Sept annexes réparties sur le territoire.</span>
-                  </span>
-                  <span class="icon icon--arrow" aria-hidden="true"></span>
-                </a>
-              </li>
-            </ul>
+                  <span class="visually-hidden">Cause suivante</span>
+                </button>
+              </div>
+
+            </div>
+
+            <div class="prose" data-reveal="up">
+              <p>
+                Quelle que soit la cause, la personne demeure porteuse permanente d’une déficience
+                intellectuelle. Les personnes concernées peuvent nécessiter un soutien et un
+                accompagnement pour développer leur indépendance, leurs capacités individuelles et
+                leurs interactions sociales dans divers environnements&nbsp;: domicile, école,
+                travail, communauté.
+              </p>
+            </div>
           </section>
         </div>
       </div>

@@ -483,19 +483,50 @@ agarraban las animaciones de entrada a mitad de camino —elementos en opacidad
 0,4 o directamente invisibles—, que parecía un error de maquetado y no lo era.
 Es el mismo problema que ya había pasado con la clase `js`.
 
-## Páginas interiores — `a-propos.html`
+## Páginas interiores — la sección «À propos»
 
 La grilla sale del Figma «Diagnostique spécialisé»: 292px de barra lateral,
 145px de calle y 835px de contenido, dentro del mismo contenedor de 1272px de
 la home. Los estilos propios están en `css/interior.css`; la cabecera y el pie
 se copiaron del `index.html` tal cual.
 
+### Una página por item de la barra lateral
+
+Al principio era una sola página larga con ocho secciones y anclas. El
+programador del cliente va a servir **cada item como una página propia**, así
+que están partidas:
+
+| Archivo | Sección |
+| --- | --- |
+| `a-propos.html` | portada de la sección: título, foto e índice de las ocho |
+| `a-propos-qui-sommes-nous.html` | Qui sommes-nous ? |
+| `a-propos-trouble.html` | Le trouble du développement intellectuel |
+| `a-propos-philosophie.html` | Notre philosophie |
+| `a-propos-approche.html` | Notre approche |
+| `a-propos-publics.html` | Les publics cibles |
+| `a-propos-chiffres.html` | Le CDI en chiffres |
+| `a-propos-equipe.html` | Notre équipe |
+| `a-propos-annexes.html` | Nos annexes |
+
+**Nombres planos y no una carpeta `a-propos/`**, para que las rutas de
+`assets/`, `css/` y `js/` sigan siendo las mismas en todos los archivos. Sin
+paso de compilación, una carpeta obligaría a `../` en cada enlace de cada
+página y a recordarlo cada vez que se toca una.
+
+El `<h2 class="block__title">` de cada sección pasó a ser el `<h1>` de su
+página; el `<section class="block">` se mantiene, con su `id`, para no tocar
+ningún estilo. Las ocho páginas se generaron con un script a partir de la
+página larga (`scratchpad/separar.py` en su momento); **si hay que volver a
+partir algo, ojo con los `<section>` anidados** —los paneles de los `tablist`
+de «Les causes» y «Notre approche» lo son— porque una expresión regular
+perezosa corta en el cierre del hijo y se lleva media sección.
+
 La barra lateral reproduce la tarjeta del Figma, con dos diferencias: el filete
-es del turquesa de marca y no naranja, y **se queda fija al scrollear**
-marcando en qué sección está el lector (`initSubnav()`), porque el contenido es
-mucho más largo que el de la maqueta original. La franja activa es el tercio
-superior de la pantalla, y se marca la sección visible **más arriba** —no la
-última que entró—, que si no al subir queda señalada la de abajo.
+es del turquesa de marca y no naranja, y **se queda fija al scrollear**. Ahora
+enlaza entre páginas y la página en curso lleva `aria-current="page"`.
+`initSubnav()` —el scroll-spy de cuando era una sola página— sigue en el JS
+pero no hace nada: sale por la puerta de atrás si no encuentra enlaces a
+anclas. Está por si alguna página vuelve a crecer y necesita su propio índice.
 
 **Componentes.** Todas las cajas comparten el estilo de las tarjetas del resto
 del sitio —blanco, redondeo, sombra y filete de acento a la izquierda— para que
