@@ -336,16 +336,16 @@
   grid-area: 1 / 1;
 }
 
+/* El que sale se apaga; el que entra lo hace línea por línea —de eso se ocupa
+   `initStepper`— así que acá no lleva desplazamiento: dos gestos encimados se
+   estorban. */
 .js .steps__panel[inert] {
   visibility: hidden;
   opacity: 0;
-  translate: 0 8px;
 }
 
 .js .steps__panel {
-  transition:
-    opacity var(--dur-base) var(--ease-out),
-    translate var(--dur-base) var(--ease-out);
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 
 .steps__panel p {

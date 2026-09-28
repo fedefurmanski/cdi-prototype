@@ -640,8 +640,22 @@ function initStepper() {
       root.style.borderColor = tono;
     };
 
+    // Al cambiar de paso, el texto que entra se rehace línea por línea, como el
+    // del hero. Quitar y reponer `is-in` no alcanza: hay que forzar un reflujo
+    // en el medio, o el navegador junta los dos cambios y no hay transición.
+    // Si el despiece todavía no está hecho —espera a que carguen las fuentes—
+    // no se hace nada: de eso ya se ocupa el observador de `initLineReveal`.
+    const relanzarLineas = (panel) => {
+      panel.querySelectorAll('[data-lines].lines-ready').forEach((bloque) => {
+        bloque.classList.remove('is-in');
+        void bloque.offsetWidth;
+        bloque.classList.add('is-in');
+      });
+    };
+
     const mostrar = (i, mover) => {
       pintar(tabs[i]);
+      relanzarLineas(paneles[i]);
       tabs.forEach((tab, j) => {
         const activo = i === j;
         tab.setAttribute('aria-selected', String(activo));
@@ -959,11 +973,18 @@ function initLineReveal() {
       }, 180);
     });
 
-    // Misma red de seguridad que el resto de los revelados.
+    // Red de seguridad: lo que a los tres segundos sigue sin entrar se muestra
+    // igual. Antes alcanzaba con que **alguno** hubiera entrado para no hacer
+    // nada, y entonces un bloque al que el observador no llegara se quedaba
+    // enmascarado —o sea, invisible— para siempre. Con el título entrando
+    // siempre primero, la red no se disparaba nunca.
     window.setTimeout(() => {
-      if (bloques.some((b) => b.classList.contains('is-in'))) return;
-      observer.disconnect();
-      bloques.forEach(mostrar);
+      bloques
+        .filter((b) => !b.classList.contains('is-in'))
+        .forEach((b) => {
+          observer.unobserve(b);
+          mostrar(b);
+        });
     }, 3000);
   };
 

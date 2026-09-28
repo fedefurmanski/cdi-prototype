@@ -418,6 +418,21 @@ de versiones.
 El alto del bloque lo fija el paso más largo —los paneles comparten celda—, así
 que el índice y las flechas no se mueven al cambiar de paso.
 
+**El texto que entra se rehace línea por línea**, con la misma máscara del
+hero. `initStepper` lo relanza quitando y reponiendo `is-in`, con un reflujo
+forzado en el medio: sin él el navegador junta los dos cambios y no hay
+transición ninguna. Si el despiece todavía no está hecho —espera a que carguen
+las fuentes— no hace nada, que de eso ya se ocupa el observador de
+`initLineReveal`. Por eso el panel perdió su propio desplazamiento y sólo se
+apaga: dos gestos encimados se estorban.
+
+Esto destapó una red de seguridad mal puesta en `initLineReveal`: decía «si
+**alguno** entró, el observador funciona, no hago nada», y como el título entra
+siempre primero, nunca se disparaba. Un bloque al que el observador no llegara
+—los paneles del carrusel, que comparten celda y arrancan ocultos— se quedaba
+enmascarado, o sea invisible, para siempre. Ahora la red muestra **cada** bloque
+que a los tres segundos siga sin entrar.
+
 ## El menú desplegable de «À propos»
 
 El item de la nav abre un panel con las ocho secciones de la página, numeradas,
