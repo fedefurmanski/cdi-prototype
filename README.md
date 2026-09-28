@@ -389,14 +389,24 @@ superior de la pantalla, y se marca la sección visible **más arriba** —no la
 del sitio —blanco, redondeo, sombra y filete de acento a la izquierda— para que
 la página no se sienta de otro sitio. Además:
 
-- `.stepper` — tres pasos numerados, uno a la vista. Es un `tablist` de verdad,
-  con flechas, Inicio y Fin, y **no** un carrusel automático: el contenido es
-  largo y no corresponde cambiarlo mientras alguien lee. Los paneles se apilan
-  en la misma celda de grilla, así el alto lo fija el más largo y el contenido
-  de abajo no salta al cambiar de paso.
+- `.approach` — el carrusel de «Notre approche»: una diapositiva a la vista
+  —foto redonda y texto— con los tres pasos numerados abajo. Cada paso abre con
+  una frase destacada, porque el cuerpo es largo y necesita un punto de entrada.
+  Es un `tablist` de verdad, con flechas, Inicio y Fin, y **no** avanza solo: no
+  corresponde cambiar el contenido mientras alguien lee. Las tres diapositivas
+  viven en una tira que se desplaza, así el alto lo fija la más larga y el
+  contenido de abajo no salta. Las que no están a la vista llevan `inert` y no
+  `hidden`, porque tienen que seguir ocupando su lugar en la tira.
 - `.bars` — barras de proporción que crecen al entrar en pantalla.
 - `initCounters()` — las cifras cuentan hacia arriba. El número final está en el
   marcado: si el JS no corre, se lee igual.
+
+**Las fotos** salen del sitio actual del cliente (cdi.lu), recortadas y
+optimizadas: las tres de «publics cibles» —circulares, como allá— y las siete de
+las annexes. En cdi.lu las de las annexes van como `background-image`, por eso no
+aparecen buscando `<img>`. Las ilustraciones de «Notre approche» de ese sitio
+resultaron ser formas de color planas, así que ahí se usan fotos del propio
+proyecto. Conviene confirmar con el cliente que son las definitivas.
 
 **Sobre el contenido.** «Les publics cibles» son sólo tres frases: en cdi.lu
 aparecen cuatro veces porque un slider repite el título, pero no hay más texto.

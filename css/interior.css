@@ -242,74 +242,33 @@
 }
 
 /* --------------------------------------------------------------------------
-   Componente numerado — la aproximación
-   Tres pasos, uno a la vista. Las pestañas llevan el número bien grande y el
-   panel cambia sin saltos de alto: el contenedor se queda con el alto del
-   panel más largo, así el contenido de abajo no se mueve al cambiar de paso.
+   Carrusel de la aproximación
+   Una diapositiva a la vista —foto y texto—, con los tres pasos numerados
+   abajo. Las tres diapositivas viven en una tira que se desplaza; el alto lo
+   fija la más larga, así el contenido de abajo no se mueve al cambiar de paso.
    -------------------------------------------------------------------------- */
 
-.stepper {
+.approach {
   margin-top: var(--space-8);
 }
 
-.stepper__tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-5);
-}
-
-.stepper__tab {
-  display: block;
-  padding: var(--space-5) var(--space-6);
+.approach__viewport {
+  overflow: hidden;
   border-radius: var(--r-card);
-  border-left: 4px solid var(--c-grey-200);
-  background: var(--c-surface);
-  box-shadow: var(--shadow-card);
-  text-align: left;
-  transition:
-    border-color var(--dur-hover) var(--ease-hover),
-    transform var(--dur-hover) var(--ease-hover),
-    box-shadow var(--dur-hover) var(--ease-hover);
 }
 
-.stepper__tab:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14);
+.approach__track {
+  display: flex;
+  align-items: stretch;
+  translate: calc(var(--i, 0) * -100%);
+  transition: translate var(--dur-slow) var(--ease-out);
 }
 
-.stepper__tab[aria-selected='true'] {
-  border-left-color: var(--accent);
-}
-
-.stepper__num {
-  display: block;
-  font-size: var(--fs-h3);
-  font-weight: var(--fw-bold);
-  line-height: 1;
-  color: var(--c-grey-300);
-  transition: color var(--dur-hover) var(--ease-hover);
-}
-
-.stepper__tab[aria-selected='true'] .stepper__num {
-  color: var(--accent);
-}
-
-.stepper__name {
-  display: block;
-  margin-top: var(--space-2);
-  font-size: var(--fs-md);
-  font-weight: var(--fw-bold);
-  color: var(--c-ink);
-}
-
-.stepper__panels {
-  /* Los paneles se apilan en la misma celda: el alto lo fija el más largo. */
+.approach__slide {
   display: grid;
-  margin-top: var(--space-5);
-}
-
-.stepper__panel {
-  grid-area: 1 / 1;
+  grid-template-columns: 300px 1fr;
+  gap: var(--space-10);
+  flex: 0 0 100%;
   padding: var(--space-8);
   border-left: 4px solid var(--accent);
   border-radius: var(--r-card);
@@ -317,38 +276,87 @@
   box-shadow: var(--shadow-card);
 }
 
-.js .stepper__panel[hidden] {
-  /* Sigue ocupando su celda —para que el alto no cambie— pero no se ve ni
-     recibe el foco. `display: none` haría saltar el contenido de abajo. */
-  display: block;
-  visibility: hidden;
-  opacity: 0;
-  translate: 0 8px;
-  pointer-events: none;
+/* Redonda, como en el sitio actual. */
+.approach__media {
+  align-self: start;
+  width: 300px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
-.js .stepper__panel {
-  transition:
-    opacity var(--dur-base) var(--ease-out),
-    translate var(--dur-base) var(--ease-out);
+.approach__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.stepper__panel p {
-  max-width: 64ch;
+/* La frase que abre cada paso, destacada: el texto es largo y necesita un
+   punto de entrada antes del cuerpo. */
+.approach__lead {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: 1.45;
+  color: var(--c-ink);
+}
+
+.approach__body p:not(.approach__lead) {
+  margin-top: var(--space-5);
+  max-width: 58ch;
   font-size: var(--fs-md);
   line-height: 1.75;
   color: var(--c-body);
 }
 
-.stepper__panel p + p,
-.stepper__panel .tick-list + p {
+.approach__source {
+  display: block;
   margin-top: var(--space-5);
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
 }
 
-.stepper__source {
-  margin-top: var(--space-5);
-  font-size: var(--fs-xs) !important;
-  color: var(--c-muted) !important;
+/* --- Los controles, abajo --- */
+.approach__controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.approach__ctrl {
+  padding-top: var(--space-4);
+  border-top: 3px solid var(--c-grey-200);
+  text-align: left;
+  transition: border-color var(--dur-hover) var(--ease-hover);
+}
+
+.approach__ctrl:hover {
+  border-top-color: color-mix(in srgb, var(--accent) 45%, var(--c-grey-200));
+}
+
+.approach__ctrl[aria-selected='true'] {
+  border-top-color: var(--accent);
+}
+
+.approach__num {
+  display: block;
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  color: var(--c-grey-300);
+  transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.approach__ctrl[aria-selected='true'] .approach__num {
+  color: var(--accent);
+}
+
+.approach__name {
+  display: block;
+  margin-top: 6px;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--c-ink);
 }
 
 .tick-list {
@@ -358,7 +366,7 @@
 .tick-list li {
   position: relative;
   padding-left: var(--space-6);
-  max-width: 62ch;
+  max-width: 58ch;
   font-size: var(--fs-md);
   line-height: 1.7;
   color: var(--c-body);
@@ -392,6 +400,26 @@
 
 .target {
   padding: var(--space-8) var(--space-6);
+  text-align: center;
+}
+
+.target__media {
+  width: 148px;
+  margin: 0 auto var(--space-5);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.target__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 620ms var(--ease-out);
+}
+
+.target:hover .target__media img {
+  scale: 1.08;
 }
 
 .target h3 {
@@ -547,14 +575,54 @@
 }
 
 .annexe {
-  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
   border-radius: var(--r-card);
   background: var(--c-surface);
   box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
+.annexe__media {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.annexe__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 620ms var(--ease-out);
+}
+
+.annexe:hover .annexe__media img {
+  scale: 1.07;
+}
+
+.annexe__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--space-6);
+}
+
+/* El siège no tiene foto: se distingue con el filete de color. */
 .annexe--head {
   border-left: 4px solid var(--c-teal);
+}
+
+.annexe__tag {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-teal-deep);
+}
+
+.annexe__map {
+  margin-top: auto;
+  padding-top: var(--space-5);
+  font-size: var(--fs-sm);
 }
 
 .annexe h3 {
@@ -628,8 +696,19 @@
   }
 }
 
+@media (max-width: 1000px) {
+  .approach__slide {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  .approach__media {
+    width: 200px;
+  }
+}
+
 @media (max-width: 760px) {
-  .stepper__tabs {
+  .approach__controls {
     grid-template-columns: 1fr;
     gap: var(--space-3);
   }

@@ -473,24 +473,30 @@ function initReveal() {
 const DECO_SHIFT = 26; // píxeles de recorrido, de punta a punta de la banda
 
 /**
- * Componente numerado: tres pasos, uno a la vista.
+ * Carrusel de la aproximación: una diapositiva a la vista, con los pasos
+ * numerados abajo.
  *
  * Es un `tablist` de verdad —flechas para moverse, Inicio y Fin para los
- * extremos— y no un carrusel automático: el contenido es largo y nadie quiere
- * que se lo cambien mientras lee.
+ * extremos— y no avanza solo: el contenido es largo y nadie quiere que se lo
+ * cambien mientras lee.
  */
 function initStepper() {
   document.querySelectorAll('[data-stepper]').forEach((root) => {
+    const track = root.querySelector('[data-approach-track]');
     const tabs = [...root.querySelectorAll('[role="tab"]')];
-    const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
-    if (!tabs.length || panels.some((p) => !p)) return;
+    const slides = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+    if (!track || !tabs.length || slides.some((s) => !s)) return;
 
     const mostrar = (i, mover) => {
+      track.style.setProperty('--i', String(i));
       tabs.forEach((tab, j) => {
         const activo = i === j;
         tab.setAttribute('aria-selected', String(activo));
         tab.tabIndex = activo ? 0 : -1;
-        panels[j].hidden = !activo;
+        // `inert` y no `hidden`: la diapositiva tiene que seguir ocupando su
+        // lugar en la tira, pero sin recibir foco ni ser leída.
+        if (activo) slides[j].removeAttribute('inert');
+        else slides[j].setAttribute('inert', '');
       });
       if (mover) tabs[i].focus();
     };

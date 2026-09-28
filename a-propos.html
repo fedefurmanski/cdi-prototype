@@ -312,138 +312,122 @@
               </p>
             </div>
 
-            <div class="stepper" data-stepper data-reveal="up" style="--reveal-delay: 120ms">
-              <div class="stepper__tabs" role="tablist" aria-label="Notre approche">
-                <button
-                  class="stepper__tab"
-                  type="button"
-                  role="tab"
-                  id="ap-1-tab"
-                  aria-controls="ap-1"
-                  aria-selected="true"
+            <div class="approach" data-stepper data-reveal="up" style="--reveal-delay: 120ms">
+              <div class="approach__viewport">
+                <div class="approach__track" data-approach-track>
+                <section
+                  class="approach__slide"
+                  role="tabpanel"
+                  id="ap-prevention"
+                  aria-labelledby="ap-prevention-tab"
                   style="--accent: var(--c-teal)"
+                  
                 >
-                  <span class="stepper__num">01</span>
-                  <span class="stepper__name">Prévention</span>
-                </button>
-                <button
-                  class="stepper__tab"
-                  type="button"
-                  role="tab"
-                  id="ap-2-tab"
-                  aria-controls="ap-2"
-                  aria-selected="false"
-                  tabindex="-1"
+                  <figure class="approach__media">
+                    <img src="assets/img/news-atelier-parents.jpg" alt="" loading="lazy" />
+                  </figure>
+                  <div class="approach__body">
+                    <p class="approach__lead">Informer et accompagner les parents et les professionnels le plus tôt possible reste depuis toujours un soutien primordial.</p>
+                    <p>Dès l’âge précoce, une première sensibilisation dans le domaine du handicap peut prévenir des frustrations et des échecs futurs. Quel que soit le niveau de prévention, ciblée ou universelle, le CDI s’efforce de promouvoir l’information et la sensibilisation au sujet de la psycho-pédagogie spécialisée.</p>
+                    <p>Dans le contexte de l’inclusion scolaire et sociale, le personnel assure des interventions à titre consultatif sur sollicitation et en concertation avec les parents, représentants légaux et professionnels concernés. Le CDI entend aussi contribuer aux formations initiales et continues du personnel employé dans les écoles, les lycées et les services d’éducation et d’accueil.</p>
+                  </div>
+                </section>
+                <section
+                  class="approach__slide"
+                  role="tabpanel"
+                  id="ap-intervention"
+                  aria-labelledby="ap-intervention-tab"
                   style="--accent: var(--c-green)"
+                  inert
                 >
-                  <span class="stepper__num">02</span>
-                  <span class="stepper__name">Intervention</span>
-                </button>
-                <button
-                  class="stepper__tab"
-                  type="button"
-                  role="tab"
-                  id="ap-3-tab"
-                  aria-controls="ap-3"
-                  aria-selected="false"
-                  tabindex="-1"
+                  <figure class="approach__media">
+                    <img src="assets/img/news-ateliers-therapeutiques.jpg" alt="" loading="lazy" />
+                  </figure>
+                  <div class="approach__body">
+                    <p class="approach__lead">Des interventions spécialisées et adaptées favorisent l’inclusion et permettent aux enfants et jeunes de progresser.</p>
+                    <p>
+                      Selon les besoins de l’enfant ou du jeune, le CDI intervient à différents
+                      niveaux&nbsp;:
+                    </p>
+                    <ul class="tick-list">
+                      <li>
+                        Contribuer, avec les différentes prises en charge auprès de l’enfant, à
+                        améliorer constamment les réponses données aux potentiels et besoins
+                        individuels
+                      </li>
+                      <li>
+                        Conseiller et guider les familles dans les contextes de la scolarité de
+                        leur enfant et de l’éducation en général
+                      </li>
+                      <li>
+                        Collaborer avec tous les services et institutions concernés, en éducation
+                        formelle comme non-formelle, afin de préparer l’enfant et le jeune à une
+                        vie adulte et autodéterminée
+                      </li>
+                    </ul>
+                  </div>
+                </section>
+                <section
+                  class="approach__slide"
+                  role="tabpanel"
+                  id="ap-compensation"
+                  aria-labelledby="ap-compensation-tab"
                   style="--accent: var(--c-orange)"
+                  inert
                 >
-                  <span class="stepper__num">03</span>
-                  <span class="stepper__name">Compensation</span>
-                </button>
+                  <figure class="approach__media">
+                    <img src="assets/img/formation-enseignants.jpg" alt="" loading="lazy" />
+                  </figure>
+                  <div class="approach__body">
+                    <p class="approach__lead">La compensation des conséquences du handicap est un droit, indépendamment de l’origine et de la nature de la déficience.</p>
+                    <p>Des aménagements pédagogiques, quel que soit le lieu de scolarisation, ou le recours à des professionnels spécialisés sont mis en avant afin d’assurer une progression dans les apprentissages (Nachteilsausgleich).</p>
+                    <p>La mise en place d’adaptations permet à chaque enfant et jeune de s’intégrer dans sa situation de formation et de travail : pédagogie adaptée, analyse et organisation de l’environnement. De manière générale, la compensation des désavantages peut être définie comme « la neutralisation ou la diminution des limitations occasionnées par un handicap ».</p>
+                    <p><span class="approach__source">Jost &amp; al., 2014. <em>Nachteilsausgleich: Ein Schritt hin zur inklusiven Schule</em></span></p>
+                  </div>
+                </section>
+                </div>
               </div>
 
-              <div class="stepper__panels">
-                <section
-                  class="stepper__panel"
-                  role="tabpanel"
-                  id="ap-1"
-                  aria-labelledby="ap-1-tab"
-                  tabindex="0"
+              <div class="approach__controls" role="tablist" aria-label="Notre approche">
+                <button
+                  class="approach__ctrl"
+                  type="button"
+                  role="tab"
+                  id="ap-prevention-tab"
+                  aria-controls="ap-prevention"
+                  aria-selected="true"
+                  
                   style="--accent: var(--c-teal)"
                 >
-                  <p>
-                    Dès l’âge précoce, une première sensibilisation dans le domaine du handicap peut
-                    prévenir des frustrations et des échecs futurs. Quel que soit le niveau de
-                    prévention, ciblée ou universelle, le CDI s’efforce de promouvoir l’information
-                    et la sensibilisation au sujet de la psycho-pédagogie spécialisée.
-                  </p>
-                  <p>
-                    Dans le contexte de l’inclusion scolaire et sociale, le personnel du CDI assure
-                    des interventions à titre consultatif sur sollicitation et en concertation avec
-                    les parents, représentants légaux et professionnels concernés de l’enfant et du
-                    jeune. Informer et accompagner les parents et les professionnels concernés le
-                    plus tôt possible reste depuis toujours un soutien primordial.
-                  </p>
-                  <p>
-                    En outre, le CDI entend contribuer aux formations initiales et continues en
-                    matière de psycho-pédagogie spécialisée du personnel employé dans les écoles et
-                    lycées ainsi que dans les services d’éducation et d’accueil pour enfants.
-                  </p>
-                </section>
-
-                <section
-                  class="stepper__panel"
-                  role="tabpanel"
-                  id="ap-2"
-                  aria-labelledby="ap-2-tab"
-                  tabindex="0"
+                  <span class="approach__num">01</span>
+                  <span class="approach__name">Prévention</span>
+                </button>
+                <button
+                  class="approach__ctrl"
+                  type="button"
+                  role="tab"
+                  id="ap-intervention-tab"
+                  aria-controls="ap-intervention"
+                  aria-selected="false"
+                  tabindex="-1"
                   style="--accent: var(--c-green)"
-                  hidden
                 >
-                  <p>
-                    Des interventions spécialisées et adaptées favorisent l’inclusion, permettant aux
-                    enfants et jeunes à besoins spécifiques de progresser grâce à des stratégies et
-                    des méthodes issues de la pédagogie spécialisée. Selon les besoins de l’enfant ou
-                    du jeune en question, le CDI intervient à différents niveaux&nbsp;:
-                  </p>
-                  <ul class="tick-list">
-                    <li>
-                      Contribuer, avec les différentes prises en charge auprès de l’enfant, à
-                      améliorer constamment les réponses données aux potentiels et besoins
-                      individuels
-                    </li>
-                    <li>
-                      Conseiller et guider les familles dans les contextes de la scolarité de leur
-                      enfant et de l’éducation en général
-                    </li>
-                    <li>
-                      Collaborer avec tous les services et institutions concernés, que ce soit au
-                      niveau de l’éducation formelle ou non-formelle, afin de préparer l’enfant et le
-                      jeune à une vie adulte et autodéterminée
-                    </li>
-                  </ul>
-                </section>
-
-                <section
-                  class="stepper__panel"
-                  role="tabpanel"
-                  id="ap-3"
-                  aria-labelledby="ap-3-tab"
-                  tabindex="0"
+                  <span class="approach__num">02</span>
+                  <span class="approach__name">Intervention</span>
+                </button>
+                <button
+                  class="approach__ctrl"
+                  type="button"
+                  role="tab"
+                  id="ap-compensation-tab"
+                  aria-controls="ap-compensation"
+                  aria-selected="false"
+                  tabindex="-1"
                   style="--accent: var(--c-orange)"
-                  hidden
                 >
-                  <p>
-                    La compensation des conséquences du handicap est un droit, indépendamment de
-                    l’origine et de la nature de la déficience. Des aménagements pédagogiques, quel
-                    que soit le lieu de scolarisation, ou le recours à des professionnels spécialisés
-                    sont mis en avant afin d’assurer une progression dans les
-                    apprentissages&nbsp;(Nachteilsausgleich).
-                  </p>
-                  <p>
-                    La mise en place d’adaptations permet à chaque enfant et jeune de s’intégrer dans
-                    sa situation de formation et de travail&nbsp;: pédagogie adaptée, analyse et
-                    organisation de l’environnement.
-                  </p>
-                  <p>
-                    De manière générale, la compensation des désavantages peut être définie comme
-                    «&nbsp;la neutralisation ou la diminution des limitations occasionnées par un
-                    handicap&nbsp;».
-                  </p>
-                  <p class="stepper__source">Jost &amp; al., 2014. <em>Nachteilsausgleich: Ein Schritt hin zur inklusiven Schule</em></p>
-                </section>
+                  <span class="approach__num">03</span>
+                  <span class="approach__name">Compensation</span>
+                </button>
               </div>
             </div>
           </section>
@@ -453,25 +437,25 @@
             <h2 class="block__title" data-reveal="up">Les publics cibles</h2>
             <div class="target-list" data-reveal-group>
               <article class="target" style="--accent: var(--c-teal)">
+                <figure class="target__media">
+                  <img src="assets/img/public-parents.jpg" alt="" loading="lazy" />
+                </figure>
                 <h3>Parents et tuteurs</h3>
-                <p>
-                  Ou le jeune majeur lui-même, souhaitant des conseils dans le contexte des troubles
-                  du développement intellectuel.
-                </p>
+                <p>Ou le jeune majeur lui-même, souhaitant avoir des conseils dans le contexte des troubles du développement intellectuel.</p>
               </article>
               <article class="target" style="--accent: var(--c-green)">
+                <figure class="target__media">
+                  <img src="assets/img/public-pedagogique.jpg" alt="" loading="lazy" />
+                </figure>
                 <h3>Personnel pédagogique</h3>
-                <p>
-                  Des écoles et lycées, souhaitant obtenir un diagnostic spécialisé ou des conseils
-                  sur des stratégies d’intervention appropriées.
-                </p>
+                <p>Des écoles et lycées, souhaitant obtenir un diagnostic spécialisé ou des conseils sur des stratégies d’intervention appropriées.</p>
               </article>
               <article class="target" style="--accent: var(--c-orange)">
+                <figure class="target__media">
+                  <img src="assets/img/public-partenaires.jpg" alt="" loading="lazy" />
+                </figure>
                 <h3>Partenaires externes</h3>
-                <p>
-                  Demandeurs de formations continues ou d’hospitalisations dans le contexte des
-                  troubles du développement intellectuel.
-                </p>
+                <p>Demandeurs de formations continues ou d’hospitations dans le contexte des troubles du développement intellectuel.</p>
               </article>
             </div>
           </section>
@@ -574,68 +558,138 @@
 
             <div class="annexes" data-reveal-group>
               <article class="annexe">
-                <h3>Clervaux</h3>
-                <p class="annexe__addr">11, Klatzewee<br />L-9714 Clervaux</p>
-                <p class="annexe__contact">
-                  <a href="tel:+3529203 54">+352 92 03 54</a>
-                  <a href="mailto:info.annexeclervaux@cc-cdi.lu">info.annexeclervaux@cc-cdi.lu</a>
-                </p>
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/clervaux.jpg" alt="Annexe Clervaux" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Clervaux</h3>
+                  <p class="annexe__addr">11, Klatzewee<br />L-9714 Clervaux</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352920354">+352 92 03 54</a>
+                    <a href="mailto:info.annexeclervaux@cc-cdi.lu">info.annexeclervaux@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=11%2C%20Klatzewee%2C%20L-9714%20Clervaux" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
               </article>
               <article class="annexe">
-                <h3>Kannercampus Belval</h3>
-                <p class="annexe__addr">2, Passage Pablo Picasso<br />L-4457 Belvaux</p>
-                <p class="annexe__contact">
-                  <a href="tel:+35255324 6280">+352 55 32 46 - 280</a>
-                  <a href="mailto:info.annexebelval@cc-cdi.lu">info.annexebelval@cc-cdi.lu</a>
-                </p>
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/belval.jpg" alt="Annexe Kannercampus Belval" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Kannercampus Belval</h3>
+                  <p class="annexe__addr">2, Passage Pablo Picasso<br />L-4457 Belvaux</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352553246280">+352 55 32 46 - 280</a>
+                    <a href="mailto:info.annexebelval@cc-cdi.lu">info.annexebelval@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=2%2C%20Passage%20Pablo%20Picasso%2C%20L-4457%20Belvaux" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
               </article>
               <article class="annexe">
-                <h3>Differdange</h3>
-                <p class="annexe__addr">2, rue John Castegnaro<br />L-4639 Differdange</p>
-                <p class="annexe__contact">
-                  <a href="tel:+3525877 12310">+352 58 77 1 - 2310</a>
-                  <a href="mailto:info.annexedifferdange@cc-cdi.lu">info.annexedifferdange@cc-cdi.lu</a>
-                </p>
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/differdange.jpg" alt="Annexe Differdange" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Differdange</h3>
+                  <p class="annexe__addr">2, rue John Castegnaro<br />L-4639 Differdange</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+352587712310">+352 58 77 1 - 2310</a>
+                    <a href="mailto:info.annexedifferdange@cc-cdi.lu">info.annexedifferdange@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=2%2C%20rue%20John%20Castegnaro%2C%20L-4639%20Differdange" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
               </article>
               <article class="annexe">
-                <h3>Echternach</h3>
-                <p class="annexe__addr">1, Place Isidore Comes<br />L-6443 Echternach</p>
-                <p class="annexe__contact">
-                  <a href="tel:+3522833 7551">+352 28 33 75 51</a>
-                  <a href="mailto:info.annexeechternach@cc-cdi.lu">info.annexeechternach@cc-cdi.lu</a>
-                </p>
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/echternach.jpg" alt="Annexe Echternach" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Echternach</h3>
+                  <p class="annexe__addr">1, Place Isidore Comes<br />L-6443 Echternach</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+35228337551">+352 28 33 75 51</a>
+                    <a href="mailto:info.annexeechternach@cc-cdi.lu">info.annexeechternach@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=1%2C%20Place%20Isidore%20Comes%2C%20L-6443%20Echternach" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
               </article>
               <article class="annexe">
-                <h3>Luxembourg</h3>
-                <p class="annexe__addr">27, avenue du Dix Septembre<br />L-2551 Luxembourg</p>
-                <p class="annexe__contact">
-                  <a href="tel:+3522479 5260">+352 24 79 52 60</a>
-                  <a href="mailto:info.annexecentre@cc-cdi.lu">info.annexecentre@cc-cdi.lu</a>
-                </p>
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/luxembourg.jpg" alt="Annexe Luxembourg" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Luxembourg</h3>
+                  <p class="annexe__addr">27, avenue du Dix Septembre<br />L-2551 Luxembourg</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+35224795260">+352 24 79 52 60</a>
+                    <a href="mailto:info.annexecentre@cc-cdi.lu">info.annexecentre@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=27%2C%20avenue%20du%20Dix%20Septembre%2C%20L-2551%20Luxembourg" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
               </article>
               <article class="annexe">
-                <h3>Kannerinsel Berchem</h3>
-                <p class="annexe__addr">24, rue de Bettembourg<br />L-3320 Berchem</p>
-                <p class="annexe__contact">
-                  <a href="tel:+35236923 29601">+352 36 92 32 96 01</a>
-                  <a href="mailto:info.annexeberchem@cc-cdi.lu">info.annexeberchem@cc-cdi.lu</a>
-                </p>
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/berchem.jpg" alt="Annexe Kannerinsel Berchem" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Kannerinsel Berchem</h3>
+                  <p class="annexe__addr">24, rue de Bettembourg<br />L-3320 Berchem</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+3523692329601">+352 36 92 32 96 01</a>
+                    <a href="mailto:info.annexeberchem@cc-cdi.lu">info.annexeberchem@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=24%2C%20rue%20de%20Bettembourg%2C%20L-3320%20Berchem" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
               </article>
               <article class="annexe">
-                <h3>Warken</h3>
-                <p class="annexe__addr">77, rue de Welscheid<br />L-9090 Warken</p>
-                <p class="annexe__contact">
-                  <a href="tel:+3528175 511">+352 81 75 51 - 1</a>
-                  <a href="mailto:info.annexewarken@cc-cdi.lu">info.annexewarken@cc-cdi.lu</a>
-                </p>
+                <figure class="annexe__media">
+                  <img src="assets/img/annexes/warken.jpg" alt="Annexe Warken" loading="lazy" />
+                </figure>
+                <div class="annexe__body">
+                  <h3>Warken</h3>
+                  <p class="annexe__addr">77, rue de Welscheid<br />L-9090 Warken</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+3528175511">+352 81 75 51 - 1</a>
+                    <a href="mailto:info.annexewarken@cc-cdi.lu">info.annexewarken@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=77%2C%20rue%20de%20Welscheid%2C%20L-9090%20Warken" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
               </article>
               <article class="annexe annexe--head">
-                <h3>Siège</h3>
-                <p class="annexe__addr">5, rue Thomas Edison<br />L-1445 Strassen</p>
-                <p class="annexe__contact">
-                  <a href="tel:+35224755700">+352 247-55700</a>
-                  <a href="mailto:info@cc-cdi.lu">info@cc-cdi.lu</a>
-                </p>
+                <div class="annexe__body">
+                  <p class="annexe__tag">Siège</p>
+                  <h3>Strassen</h3>
+                  <p class="annexe__addr">5, rue Thomas Edison<br />L-1445 Strassen</p>
+                  <p class="annexe__contact">
+                    <a href="tel:+35224755700">+352 247-55700</a>
+                    <a href="mailto:info@cc-cdi.lu">info@cc-cdi.lu</a>
+                  </p>
+                  <a class="annexe__map link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=5%2C%20rue%20Thomas%20Edison%2C%20L-1445%20Strassen" target="_blank" rel="noopener">
+                    Voir sur la carte
+                    <span class="icon icon--arrow" aria-hidden="true"></span>
+                  </a>
+                </div>
               </article>
             </div>
           </section>
