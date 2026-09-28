@@ -115,10 +115,92 @@
 
         <nav id="nav-principal" aria-label="Navigation principale">
           <ul class="nav__list">
-            <li>
-              <a class="nav__link" href="a-propos.html">À propos
+            <li class="nav__item" data-dropdown>
+              <a
+                class="nav__link"
+                href="a-propos.html"
+                aria-expanded="false"
+                aria-controls="menu-a-propos"
+              >
+                À propos
                 <span class="icon icon--chevron" aria-hidden="true"></span>
               </a>
+
+              <div class="dropdown" id="menu-a-propos">
+                <div class="dropdown__inner">
+                  <div class="dropdown__intro">
+                    <p class="dropdown__eyebrow">À propos du CDI</p>
+                    <p class="dropdown__pitch">
+                      Un centre de compétences en psycho-pédagogie spécialisée qui prend en
+                      charge les enfants et les jeunes présentant des troubles du développement
+                      intellectuel.
+                    </p>
+                    <a class="dropdown__cta link-arrow" href="a-propos.html">
+                      Voir la page
+                      <span class="icon icon--arrow" aria-hidden="true"></span>
+                    </a>
+                  </div>
+
+                  <ul class="dropdown__links">
+                    <li style="--i: 0">
+                      <a href="a-propos.html#qui-sommes-nous">
+                        <span class="dropdown__num">01</span>
+                        <span class="dropdown__label">Qui sommes-nous&nbsp;?</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 1">
+                      <a href="a-propos.html#trouble">
+                        <span class="dropdown__num">02</span>
+                        <span class="dropdown__label">Le trouble du développement intellectuel</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 2">
+                      <a href="a-propos.html#philosophie">
+                        <span class="dropdown__num">03</span>
+                        <span class="dropdown__label">Notre philosophie</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 3">
+                      <a href="a-propos.html#approche">
+                        <span class="dropdown__num">04</span>
+                        <span class="dropdown__label">Notre approche</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 4">
+                      <a href="a-propos.html#publics">
+                        <span class="dropdown__num">05</span>
+                        <span class="dropdown__label">Les publics cibles</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 5">
+                      <a href="a-propos.html#chiffres">
+                        <span class="dropdown__num">06</span>
+                        <span class="dropdown__label">Le CDI en chiffres</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 6">
+                      <a href="a-propos.html#equipe">
+                        <span class="dropdown__num">07</span>
+                        <span class="dropdown__label">Notre équipe</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 7">
+                      <a href="a-propos.html#annexes">
+                        <span class="dropdown__num">08</span>
+                        <span class="dropdown__label">Nos annexes</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </li>
             <li>
               <a class="nav__link" href="#">Pour les parents

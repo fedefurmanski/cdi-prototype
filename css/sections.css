@@ -196,6 +196,149 @@
   transform: rotate(180deg);
 }
 
+/* --- Menú desplegable de «À propos» ---------------------------------------
+   El panel se ancla al contenedor de la nav —`.nav` es el único ascendiente
+   posicionado— así que cae alineado a la grilla de la página y no colgando del
+   item, que está pegado al borde derecho.
+
+   Cerrado no lleva `hidden` ni `display: none`: los dos cortan la transición.
+   Va con `visibility` retrasada, que sí anima y a la vez lo saca del foco y del
+   lector de pantalla. */
+.nav__item {
+  position: static;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  border-radius: var(--r-card);
+  background: var(--c-surface);
+  box-shadow: 0 24px 60px rgba(17, 32, 43, 0.16);
+  opacity: 0;
+  visibility: hidden;
+  translate: 0 -10px;
+  transition:
+    opacity 260ms var(--ease-out),
+    translate 260ms var(--ease-out),
+    visibility 0s linear 260ms;
+}
+
+.nav__item.is-open .dropdown {
+  opacity: 1;
+  visibility: visible;
+  translate: 0 0;
+  transition-delay: 0s, 0s, 0s;
+}
+
+.nav__item.is-open > .nav__link .icon {
+  transform: rotate(180deg);
+}
+
+.dropdown__inner {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--space-12);
+  padding: var(--space-10);
+}
+
+.dropdown__eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-teal-deep);
+}
+
+.dropdown__pitch {
+  margin-top: var(--space-3);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--c-body);
+}
+
+.dropdown__cta {
+  margin-top: var(--space-5);
+}
+
+/* Se llena hacia abajo y no de lado: la primera columna lleva 01–04 y la
+   segunda 05–08, que es como se lee un índice. */
+.dropdown__links {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, auto);
+  grid-auto-columns: 1fr;
+  column-gap: var(--space-10);
+}
+
+/* Los items entran escalonados. El orden lo lleva `--i` en el marcado: es
+   posición, no estado, y así no hace falta que el JS reparta retardos. */
+.dropdown__links li {
+  opacity: 0;
+  translate: 0 8px;
+  transition:
+    opacity 320ms var(--ease-out),
+    translate 320ms var(--ease-out);
+}
+
+.nav__item.is-open .dropdown__links li {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: calc(60ms + var(--i, 0) * 28ms);
+}
+
+.dropdown__links a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--c-line);
+  color: var(--c-ink);
+  transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.dropdown__links a:hover {
+  color: var(--c-teal-deep);
+}
+
+.dropdown__num {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--c-grey-300);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.dropdown__links a:hover .dropdown__num {
+  color: var(--c-teal);
+}
+
+.dropdown__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: 1.4;
+}
+
+/* La flecha sólo aparece en hover, y entra desde la izquierda. */
+.dropdown__links .icon {
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+  flex: none;
+  opacity: 0;
+  translate: -6px 0;
+  transition:
+    opacity var(--dur-hover) var(--ease-hover),
+    translate var(--dur-hover) var(--ease-hover);
+}
+
+.dropdown__links a:hover .icon {
+  opacity: 1;
+  translate: 0 0;
+}
+
 /* Botón de menú: oculto mientras la nav horizontal entre (ver breakpoints). */
 .nav__toggle {
   display: none;
@@ -876,6 +1019,46 @@
     padding: 14px 0;
     border-bottom: 1px solid var(--c-line);
     font-size: var(--fs-md);
+  }
+
+  /* Apilada, el panel no cuelga: se despliega en el sitio como un acordeón.
+     El alto se anima con `grid-template-rows` de 0fr a 1fr —con `overflow`
+     en el hijo— porque `height: auto` no es animable. */
+  .dropdown {
+    position: static;
+    display: grid;
+    grid-template-rows: 0fr;
+    border-radius: 0;
+    box-shadow: none;
+    opacity: 1;
+    visibility: visible;
+    translate: none;
+    transition: grid-template-rows 320ms var(--ease-out);
+  }
+
+  .nav__item.is-open .dropdown {
+    grid-template-rows: 1fr;
+  }
+
+  .dropdown__inner {
+    overflow: hidden;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+
+  /* La bajada y el «voir la page» sobran acá: el propio item es el enlace. */
+  .dropdown__intro {
+    display: none;
+  }
+
+  .dropdown__links {
+    grid-auto-flow: row;
+    grid-template-rows: none;
+  }
+
+  .dropdown__links a {
+    padding: 12px 0 12px var(--space-4);
   }
 
   .profiles__grid {

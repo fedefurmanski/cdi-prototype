@@ -113,10 +113,92 @@
 
         <nav id="nav-principal" aria-label="Navigation principale">
           <ul class="nav__list">
-            <li>
-              <a class="nav__link" href="a-propos.html" aria-current="page">À propos
+            <li class="nav__item" data-dropdown>
+              <a
+                class="nav__link"
+                href="a-propos.html" aria-current="page"
+                aria-expanded="false"
+                aria-controls="menu-a-propos"
+              >
+                À propos
                 <span class="icon icon--chevron" aria-hidden="true"></span>
               </a>
+
+              <div class="dropdown" id="menu-a-propos">
+                <div class="dropdown__inner">
+                  <div class="dropdown__intro">
+                    <p class="dropdown__eyebrow">À propos du CDI</p>
+                    <p class="dropdown__pitch">
+                      Un centre de compétences en psycho-pédagogie spécialisée qui prend en
+                      charge les enfants et les jeunes présentant des troubles du développement
+                      intellectuel.
+                    </p>
+                    <a class="dropdown__cta link-arrow" href="a-propos.html">
+                      Voir la page
+                      <span class="icon icon--arrow" aria-hidden="true"></span>
+                    </a>
+                  </div>
+
+                  <ul class="dropdown__links">
+                    <li style="--i: 0">
+                      <a href="a-propos.html#qui-sommes-nous">
+                        <span class="dropdown__num">01</span>
+                        <span class="dropdown__label">Qui sommes-nous&nbsp;?</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 1">
+                      <a href="a-propos.html#trouble">
+                        <span class="dropdown__num">02</span>
+                        <span class="dropdown__label">Le trouble du développement intellectuel</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 2">
+                      <a href="a-propos.html#philosophie">
+                        <span class="dropdown__num">03</span>
+                        <span class="dropdown__label">Notre philosophie</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 3">
+                      <a href="a-propos.html#approche">
+                        <span class="dropdown__num">04</span>
+                        <span class="dropdown__label">Notre approche</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 4">
+                      <a href="a-propos.html#publics">
+                        <span class="dropdown__num">05</span>
+                        <span class="dropdown__label">Les publics cibles</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 5">
+                      <a href="a-propos.html#chiffres">
+                        <span class="dropdown__num">06</span>
+                        <span class="dropdown__label">Le CDI en chiffres</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 6">
+                      <a href="a-propos.html#equipe">
+                        <span class="dropdown__num">07</span>
+                        <span class="dropdown__label">Notre équipe</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                    <li style="--i: 7">
+                      <a href="a-propos.html#annexes">
+                        <span class="dropdown__num">08</span>
+                        <span class="dropdown__label">Nos annexes</span>
+                        <span class="icon icon--arrow" aria-hidden="true"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </li>
             <li>
               <a class="nav__link" href="#">Pour les parents
@@ -224,73 +306,7 @@
 
 
             <h3 class="block__subtitle" data-reveal="up">Les causes</h3>
-            <div class="steps" data-stepper data-reveal="up" style="--reveal-delay: 80ms">
-              <div class="steps__ctrls" role="tablist" aria-label="Les causes">
-                <button
-                  class="steps__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ca-conception-tab"
-                  aria-controls="ca-conception"
-                  aria-selected="true"
-                  
-                  style="--accent: var(--c-teal)"
-                >
-                  <span class="steps__num">01</span>
-                  <span class="steps__name">À la conception</span>
-                </button>
-                <button
-                  class="steps__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ca-grossesse-tab"
-                  aria-controls="ca-grossesse"
-                  aria-selected="false"
-                  tabindex="-1"
-                  style="--accent: var(--c-green)"
-                >
-                  <span class="steps__num">02</span>
-                  <span class="steps__name">Pendant la grossesse</span>
-                </button>
-                <button
-                  class="steps__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ca-naissance-tab"
-                  aria-controls="ca-naissance"
-                  aria-selected="false"
-                  tabindex="-1"
-                  style="--accent: var(--c-orange)"
-                >
-                  <span class="steps__num">03</span>
-                  <span class="steps__name">À la naissance</span>
-                </button>
-                <button
-                  class="steps__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ca-apres-tab"
-                  aria-controls="ca-apres"
-                  aria-selected="false"
-                  tabindex="-1"
-                  style="--accent: var(--c-coral)"
-                >
-                  <span class="steps__num">04</span>
-                  <span class="steps__name">Après la naissance</span>
-                </button>
-              </div>
-
-              <div class="steps__nav">
-                <button class="steps__arrow steps__arrow--prev" type="button" data-approach="prev">
-                  <span class="icon icon--arrow" aria-hidden="true"></span>
-                  <span class="visually-hidden">Cause précédente</span>
-                </button>
-                <button class="steps__arrow steps__arrow--next" type="button" data-approach="next">
-                  <span class="icon icon--arrow" aria-hidden="true"></span>
-                  <span class="visually-hidden">Cause suivante</span>
-                </button>
-              </div>
-
+            <div class="steps" data-stepper data-tint-bg data-reveal="up" style="--reveal-delay: 80ms">
               <div class="steps__panels">
                 <section
                   class="steps__panel"
@@ -332,6 +348,76 @@
                 >
                   <p>Maladies infectieuses, virales ou métaboliques, intoxications, traumatismes crâniens, accidents du travail ou de la circulation, noyade, asphyxie, problèmes neurologiques, accidents domestiques, etc.</p>
                 </section>
+              </div>
+
+              <div class="steps__ctrls" role="tablist" aria-label="Les causes">
+                <button
+                  class="steps__ctrl"
+                  type="button"
+                  role="tab"
+                  id="ca-conception-tab"
+                  aria-controls="ca-conception"
+                  data-tint="#2AB7C8"
+                  aria-selected="true"
+                  
+                  style="--accent: var(--c-teal)"
+                >
+                  <span class="steps__num">01</span>
+                  <span class="steps__name">À la conception</span>
+                </button>
+                <button
+                  class="steps__ctrl"
+                  type="button"
+                  role="tab"
+                  id="ca-grossesse-tab"
+                  aria-controls="ca-grossesse"
+                  data-tint="#ADCB47"
+                  aria-selected="false"
+                  tabindex="-1"
+                  style="--accent: var(--c-green)"
+                >
+                  <span class="steps__num">02</span>
+                  <span class="steps__name">Pendant la grossesse</span>
+                </button>
+                <button
+                  class="steps__ctrl"
+                  type="button"
+                  role="tab"
+                  id="ca-naissance-tab"
+                  aria-controls="ca-naissance"
+                  data-tint="#F7A827"
+                  aria-selected="false"
+                  tabindex="-1"
+                  style="--accent: var(--c-orange)"
+                >
+                  <span class="steps__num">03</span>
+                  <span class="steps__name">À la naissance</span>
+                </button>
+                <button
+                  class="steps__ctrl"
+                  type="button"
+                  role="tab"
+                  id="ca-apres-tab"
+                  aria-controls="ca-apres"
+                  data-tint="#E9503E"
+                  aria-selected="false"
+                  tabindex="-1"
+                  style="--accent: var(--c-coral)"
+                >
+                  <span class="steps__num">04</span>
+                  <span class="steps__name">Après la naissance</span>
+                </button>
+              </div>
+
+              <div class="steps__nav">
+                <button class="steps__arrow steps__arrow--prev" type="button" data-approach="prev">
+                  <span class="icon icon--arrow" aria-hidden="true"></span>
+                  <span class="visually-hidden">Cause précédente</span>
+                </button>
+                <button class="steps__arrow steps__arrow--next" type="button" data-approach="next">
+                  <span class="icon icon--arrow" aria-hidden="true"></span>
+                  <span class="visually-hidden">Cause suivante</span>
+                </button>
               </div>
 
             </div>
@@ -666,22 +752,13 @@
           </section>
 
           <!-- ----------------------------------------------------------- -->
-          <section class="block" id="annexes" data-views>
+          <section class="block" id="annexes">
             <h2 class="block__title" data-reveal="up">Nos annexes</h2>
             <div class="prose" data-reveal="up" style="--reveal-delay: 80ms">
               <p>Sept annexes réparties sur le territoire.</p>
             </div>
 
-            <div class="views" role="tablist" aria-label="Affichage des annexes">
-              <button class="views__opt" type="button" role="tab" aria-selected="true" data-view="list">
-                Liste
-              </button>
-              <button class="views__opt" type="button" role="tab" aria-selected="false" data-view="map">
-                Carte
-              </button>
-            </div>
-
-            <div class="annexes" data-view-panel="list" data-reveal-group>
+            <div class="annexes" data-reveal-group>
               <article class="annexe">
                 <figure class="annexe__media">
                   <img src="assets/img/annexes/clervaux.jpg" alt="Annexe Clervaux" loading="lazy" />
@@ -803,227 +880,6 @@
               </article>
             </div>
 
-            <div class="annexes-map" data-view-panel="map" hidden>
-              <div class="annexes-map__plan">
-                <svg viewBox="0 0 1000 1459" role="img" aria-label="Carte du Luxembourg avec les sept annexes">
-                  <path class="annexes-map__land" d="M511.7 94.7L497.7 147.3L502.3 270.1L539.9 389.3L624.4 508.5L690.1 596.2L779.3 666.4L934.3 733.0L995.3 747.0L1000.0 834.7L990.6 929.4L939.0 982.0L887.3 1055.7L849.8 1146.9L812.2 1322.2L807.5 1445.0L718.3 1395.9L671.4 1360.8L591.5 1350.3L511.7 1378.3L455.4 1441.5L370.9 1459.0L305.2 1441.5L262.9 1395.9L230.0 1367.8L126.8 1339.8L84.5 1273.1L117.4 1241.6L145.5 1188.9L169.0 1122.3L201.9 1055.7L103.3 880.3L79.8 824.2L0.0 726.0L0.0 676.9L18.8 627.8L14.1 589.2L23.5 501.5L79.8 417.4L117.4 312.1L183.1 171.9L328.6 0.0L427.2 28.1L474.2 28.1L502.3 87.7L511.7 94.7Z" />
-            <g
-              class="pin"
-              data-annexe="clervaux"
-              transform="translate(395.2 228.2)"
-              role="button"
-              tabindex="0"
-              aria-label="Annexe Clervaux"
-            >
-              <circle class="pin__halo" r="34" />
-              <circle class="pin__dot" r="15" />
-              <text class="pin__label" x="0" y="-44">Clervaux</text>
-            </g>
-            <g
-              class="pin"
-              data-annexe="warken"
-              transform="translate(487.1 617.1)"
-              role="button"
-              tabindex="0"
-              aria-label="Annexe Warken"
-            >
-              <circle class="pin__halo" r="34" />
-              <circle class="pin__dot" r="15" />
-              <text class="pin__label" x="0" y="-44">Warken</text>
-            </g>
-            <g
-              class="pin"
-              data-annexe="echternach"
-              transform="translate(906.1 718.9)"
-              role="button"
-              tabindex="0"
-              aria-label="Annexe Echternach"
-            >
-              <circle class="pin__halo" r="34" />
-              <circle class="pin__dot" r="15" />
-              <text class="pin__label" x="0" y="-44">Echternach</text>
-            </g>
-            <g
-              class="pin is-on"
-              data-annexe="luxembourg"
-              transform="translate(503.2 1126.0)"
-              role="button"
-              tabindex="0"
-              aria-label="Annexe Luxembourg"
-            >
-              <circle class="pin__halo" r="34" />
-              <circle class="pin__dot" r="15" />
-              <text class="pin__label" x="0" y="-44">Luxembourg</text>
-            </g>
-            <g
-              class="pin"
-              data-annexe="berchem"
-              transform="translate(557.4 1261.4)"
-              role="button"
-              tabindex="0"
-              aria-label="Annexe Kannerinsel Berchem"
-            >
-              <circle class="pin__halo" r="34" />
-              <circle class="pin__dot" r="15" />
-              <text class="pin__label" x="0" y="-44">Kannerinsel Berchem</text>
-            </g>
-            <g
-              class="pin"
-              data-annexe="belval"
-              transform="translate(284.2 1351.7)"
-              role="button"
-              tabindex="0"
-              aria-label="Annexe Kannercampus Belval"
-            >
-              <circle class="pin__halo" r="34" />
-              <circle class="pin__dot" r="15" />
-              <text class="pin__label" x="0" y="-44">Kannercampus Belval</text>
-            </g>
-            <g
-              class="pin"
-              data-annexe="differdange"
-              transform="translate(215.5 1300.0)"
-              role="button"
-              tabindex="0"
-              aria-label="Annexe Differdange"
-            >
-              <circle class="pin__halo" r="34" />
-              <circle class="pin__dot" r="15" />
-              <text class="pin__label" x="0" y="-44">Differdange</text>
-            </g>
-                </svg>
-
-                <div class="chip-row">
-                  <button class="chip-btn" type="button" data-annexe="clervaux">Clervaux</button>
-                  <button class="chip-btn" type="button" data-annexe="warken">Warken</button>
-                  <button class="chip-btn" type="button" data-annexe="echternach">Echternach</button>
-                  <button class="chip-btn is-on" type="button" data-annexe="luxembourg">Luxembourg</button>
-                  <button class="chip-btn" type="button" data-annexe="berchem">Kannerinsel Berchem</button>
-                  <button class="chip-btn" type="button" data-annexe="belval">Kannercampus Belval</button>
-                  <button class="chip-btn" type="button" data-annexe="differdange">Differdange</button>
-                </div>
-              </div>
-
-                <article class="detail" data-annexe="clervaux" hidden>
-                  <figure class="detail__media">
-                    <img src="assets/img/annexes/clervaux.jpg" alt="Annexe Clervaux" loading="lazy" />
-                  </figure>
-                  <div class="detail__body">
-                    <h3>Clervaux</h3>
-                    <p class="detail__addr">11, Klatzewee<br />L-9714 Clervaux</p>
-                    <p class="detail__contact">
-                      <a href="tel:+352920354">+352 92 03 54</a>
-                      <a href="mailto:info.annexeclervaux@cc-cdi.lu">info.annexeclervaux@cc-cdi.lu</a>
-                    </p>
-                    <a class="detail__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=11%2C%20Klatzewee%2C%20L-9714%20Clervaux" target="_blank" rel="noopener">
-                      Voir sur la carte
-                      <span class="icon icon--arrow" aria-hidden="true"></span>
-                    </a>
-                  </div>
-                </article>
-                <article class="detail" data-annexe="warken" hidden>
-                  <figure class="detail__media">
-                    <img src="assets/img/annexes/warken.jpg" alt="Annexe Warken" loading="lazy" />
-                  </figure>
-                  <div class="detail__body">
-                    <h3>Warken</h3>
-                    <p class="detail__addr">77, rue de Welscheid<br />L-9090 Warken</p>
-                    <p class="detail__contact">
-                      <a href="tel:+3528175511">+352 81 75 51 - 1</a>
-                      <a href="mailto:info.annexewarken@cc-cdi.lu">info.annexewarken@cc-cdi.lu</a>
-                    </p>
-                    <a class="detail__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=77%2C%20rue%20de%20Welscheid%2C%20L-9090%20Warken" target="_blank" rel="noopener">
-                      Voir sur la carte
-                      <span class="icon icon--arrow" aria-hidden="true"></span>
-                    </a>
-                  </div>
-                </article>
-                <article class="detail" data-annexe="echternach" hidden>
-                  <figure class="detail__media">
-                    <img src="assets/img/annexes/echternach.jpg" alt="Annexe Echternach" loading="lazy" />
-                  </figure>
-                  <div class="detail__body">
-                    <h3>Echternach</h3>
-                    <p class="detail__addr">1, Place Isidore Comes<br />L-6443 Echternach</p>
-                    <p class="detail__contact">
-                      <a href="tel:+35228337551">+352 28 33 75 51</a>
-                      <a href="mailto:info.annexeechternach@cc-cdi.lu">info.annexeechternach@cc-cdi.lu</a>
-                    </p>
-                    <a class="detail__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=1%2C%20Place%20Isidore%20Comes%2C%20L-6443%20Echternach" target="_blank" rel="noopener">
-                      Voir sur la carte
-                      <span class="icon icon--arrow" aria-hidden="true"></span>
-                    </a>
-                  </div>
-                </article>
-                <article class="detail" data-annexe="luxembourg">
-                  <figure class="detail__media">
-                    <img src="assets/img/annexes/luxembourg.jpg" alt="Annexe Luxembourg" loading="lazy" />
-                  </figure>
-                  <div class="detail__body">
-                    <h3>Luxembourg</h3>
-                    <p class="detail__addr">27, avenue du Dix Septembre<br />L-2551 Luxembourg</p>
-                    <p class="detail__contact">
-                      <a href="tel:+35224795260">+352 24 79 52 60</a>
-                      <a href="mailto:info.annexecentre@cc-cdi.lu">info.annexecentre@cc-cdi.lu</a>
-                    </p>
-                    <a class="detail__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=27%2C%20avenue%20du%20Dix%20Septembre%2C%20L-2551%20Luxembourg" target="_blank" rel="noopener">
-                      Voir sur la carte
-                      <span class="icon icon--arrow" aria-hidden="true"></span>
-                    </a>
-                  </div>
-                </article>
-                <article class="detail" data-annexe="berchem" hidden>
-                  <figure class="detail__media">
-                    <img src="assets/img/annexes/berchem.jpg" alt="Annexe Kannerinsel Berchem" loading="lazy" />
-                  </figure>
-                  <div class="detail__body">
-                    <h3>Kannerinsel Berchem</h3>
-                    <p class="detail__addr">24, rue de Bettembourg<br />L-3320 Berchem</p>
-                    <p class="detail__contact">
-                      <a href="tel:+3523692329601">+352 36 92 32 96 01</a>
-                      <a href="mailto:info.annexeberchem@cc-cdi.lu">info.annexeberchem@cc-cdi.lu</a>
-                    </p>
-                    <a class="detail__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=24%2C%20rue%20de%20Bettembourg%2C%20L-3320%20Berchem" target="_blank" rel="noopener">
-                      Voir sur la carte
-                      <span class="icon icon--arrow" aria-hidden="true"></span>
-                    </a>
-                  </div>
-                </article>
-                <article class="detail" data-annexe="belval" hidden>
-                  <figure class="detail__media">
-                    <img src="assets/img/annexes/belval.jpg" alt="Annexe Kannercampus Belval" loading="lazy" />
-                  </figure>
-                  <div class="detail__body">
-                    <h3>Kannercampus Belval</h3>
-                    <p class="detail__addr">2, Passage Pablo Picasso<br />L-4457 Belvaux</p>
-                    <p class="detail__contact">
-                      <a href="tel:+352553246280">+352 55 32 46 - 280</a>
-                      <a href="mailto:info.annexebelval@cc-cdi.lu">info.annexebelval@cc-cdi.lu</a>
-                    </p>
-                    <a class="detail__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=2%2C%20Passage%20Pablo%20Picasso%2C%20L-4457%20Belvaux" target="_blank" rel="noopener">
-                      Voir sur la carte
-                      <span class="icon icon--arrow" aria-hidden="true"></span>
-                    </a>
-                  </div>
-                </article>
-                <article class="detail" data-annexe="differdange" hidden>
-                  <figure class="detail__media">
-                    <img src="assets/img/annexes/differdange.jpg" alt="Annexe Differdange" loading="lazy" />
-                  </figure>
-                  <div class="detail__body">
-                    <h3>Differdange</h3>
-                    <p class="detail__addr">2, rue John Castegnaro<br />L-4639 Differdange</p>
-                    <p class="detail__contact">
-                      <a href="tel:+352587712310">+352 58 77 1 - 2310</a>
-                      <a href="mailto:info.annexedifferdange@cc-cdi.lu">info.annexedifferdange@cc-cdi.lu</a>
-                    </p>
-                    <a class="detail__map link-arrow" href="https://www.google.com/maps/search/?api=1&query=2%2C%20rue%20John%20Castegnaro%2C%20L-4639%20Differdange" target="_blank" rel="noopener">
-                      Voir sur la carte
-                      <span class="icon icon--arrow" aria-hidden="true"></span>
-                    </a>
-                  </div>
-                </article>
-            </div>
           </section>
         </div>
       </div>

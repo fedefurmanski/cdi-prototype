@@ -371,39 +371,70 @@ que la usa, no contra el documento, así que puestas en el HTML terminaban
 apuntando a `/css/assets/…` y las máscaras quedaban vacías (el icono se veía
 como un cuadrado de color).
 
-## Annexes: las dos vistas y el mapa
+## Annexes
 
-«Nos annexes» tiene dos vistas: fichas con foto, y un **localizador** —mapa
-grande a la izquierda y, a la derecha, una sola ficha con la foto del anexo
-elegido—. Con la lista de siete al costado el mapa quedaba chico y las dos
-columnas competían. Debajo del mapa hay una fila de nombres, para poder recorrer
-los siete sin adivinar cuál es cada punto. Pin, nombre y ficha llevan el mismo
-`data-annexe` y se marcan juntos, se haga clic donde se haga.
+«Nos annexes» es una grilla de fichas con foto, dirección y contacto, y nada
+más. Hubo una segunda vista —un localizador con un mapa de Luxemburgo dibujado
+a mano desde Natural Earth— que se sacó por pedido del cliente: para siete
+direcciones fijas el mapa no aportaba y desbalanceaba el bloque. Si alguna vez
+vuelve, está en el historial (`37ae889`); la nota de por qué no se usó un iframe
+de Google Maps sigue valiendo: en un sitio público arrastra cookies de terceros
+y consentimiento.
 
-**El mapa se dibuja en el sitio, no viene de un servicio externo.** En un sitio
-público un iframe de mapas arrastra cookies de terceros y consentimiento, y para
-mostrar siete puntos fijos no hace falta. El contorno sale de Natural Earth
-(dominio público, versión 50m) a través de `world-atlas`, decodificado de
-TopoJSON y proyectado con corrección por latitud —sin ella el país sale
-ensanchado, porque a 50°N un grado de longitud mide dos tercios de uno de
-latitud—. El resultado es un `path` de 46 puntos escrito directamente en el
-marcado: sin dependencias, sin red y sin cookies.
+Las fotos vienen del sitio actual. **La de Warken traía 14px de blanco pegados
+al borde derecho**: se recortó y se reescaló a los mismos 640×440 que las otras.
+Si se vuelven a bajar assets del sitio del cliente, conviene revisar los bordes
+antes de meterlos en una tarjeta con `object-fit: cover`, porque el blanco no se
+va solo.
 
-**Las coordenadas de las annexes son aproximadas al pueblo**, no a la puerta. A
-escala de país la diferencia es de uno o dos píxeles, pero si alguna vez el mapa
-se amplía conviene geocodificar las direcciones de verdad.
-
-Los pines son `<g>` con `role="button"` y `tabindex="0"`: no son botones, así que
-Enter y espacio se atienden a mano.
-
-## «Les causes»: por qué no lleva flechas ni subrayados
+## «Les causes»: el texto primero, el índice abajo
 
 Es el mismo mecanismo que el carrusel de «Notre approche» —`tablist`, paneles
-apilados en una celda de grilla— pero con otra piel: un panel gris con los
-números en columna haciendo de riel y el texto al lado. La primera versión tenía
-cuatro subrayados, el filete del texto y dos flechas, y el bloque se llenaba de
-líneas. Acá el control son los números: el activo va sobre una pastilla blanca y
-no hace falta nada más.
+apilados en una celda de grilla— pero con otra piel. Pasó por tres versiones:
+primero cuatro subrayados con filete y flechas (demasiadas líneas), después un
+riel de números a la izquierda, y al final esto: **el texto arranca arriba a la
+izquierda y ocupa el ancho, abajo a la izquierda va el índice del paso —`01. À
+la conception`— y abajo a la derecha las flechas.**
+
+El índice sigue siendo el `tablist`: las cuatro pestañas están superpuestas en
+la misma celda y sólo se ve la activa (`opacity` + `pointer-events: none` en las
+demás, con el `tabindex` rotatorio que ya tenían). Así el marcado sigue siendo
+un `tablist` de verdad aunque visualmente sea un solo rótulo.
+
+**El fondo toma el color del paso, al 8%.** El color va como valor literal en
+`data-tint` y no como variable: una propiedad en transición no se re-evalúa
+cuando cambia la custom property de la que depende, y el fondo se quedaba en el
+primer color. Es la misma trampa de Chrome que ya había mordido en el conmutador
+de versiones.
+
+El alto del bloque lo fija el paso más largo —los paneles comparten celda—, así
+que el índice y las flechas no se mueven al cambiar de paso.
+
+## El menú desplegable de «À propos»
+
+El item de la nav abre un panel con las ocho secciones de la página, numeradas,
+más una bajada y un «voir la page» a la izquierda. Tres cosas que no son obvias:
+
+- **El panel se ancla a `.nav`, no al `<li>`.** `.nav` es el único ascendiente
+  posicionado, así que el panel cae alineado a la grilla de la página en vez de
+  colgar del item, que está pegado al borde derecho. El `<li>` lleva
+  `position: static` escrito a propósito para que siga siendo así.
+- **Cerrado no lleva `hidden` ni `display: none`**: los dos cortan la
+  transición. Va con `visibility` retrasada —que sí anima— y el JS le pone
+  `inert`, que lo saca del foco y del lector sin tocar el render.
+- **Con ratón abre al pasar por encima y cierra con 120 ms de respiro**, para
+  que el recorrido diagonal hasta el panel no lo apague a mitad de camino. Sin
+  hover —táctil, o la nav apilada— el primer toque abre y el segundo navega.
+
+Los items entran escalonados con `--i` escrito en el marcado: es posición, no
+estado, así que el retardo sale de CSS y el JS no reparte nada.
+
+Apilado (≤1080px) el panel no cuelga: se despliega en el sitio como acordeón,
+animando `grid-template-rows` de `0fr` a `1fr` con `overflow: hidden` en el
+hijo, porque `height: auto` no es animable. **Ojo al verificarlo en el panel del
+navegador de la app: congela las transiciones y devuelve el valor de arranque
+—`0px`— aunque el acordeón funcione.** Con `transition: none` forzado se lee el
+valor final.
 
 ## Tres detalles del interior que vale recordar
 

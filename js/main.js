@@ -144,6 +144,77 @@ function initNav() {
   });
 }
 
+/**
+ * Menú desplegable de la navegación.
+ *
+ * Con ratón abre al pasar por encima y cierra con un respiro de 120 ms, para
+ * que el recorrido diagonal hasta el panel no lo apague a mitad de camino. Sin
+ * hover —táctil, o la nav apilada— el primer toque abre y el segundo navega.
+ *
+ * El panel cerrado no se oculta con `hidden`: eso cortaría la transición. Lo
+ * saca de foco y del lector `inert`, y de la vista el `visibility` del CSS.
+ */
+function initDropdown() {
+  const items = [...document.querySelectorAll('[data-dropdown]')];
+  if (!items.length) return;
+
+  const ancha = window.matchMedia('(min-width: 1081px)');
+  const conRaton = window.matchMedia('(hover: hover)');
+
+  items.forEach((item) => {
+    const enlace = item.querySelector('.nav__link');
+    const panel = item.querySelector('.dropdown');
+    if (!enlace || !panel) return;
+
+    let cierre;
+    const abrir = (v) => {
+      clearTimeout(cierre);
+      item.classList.toggle('is-open', v);
+      enlace.setAttribute('aria-expanded', String(v));
+      panel.toggleAttribute('inert', !v);
+    };
+
+    abrir(false);
+
+    item.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse' && ancha.matches) abrir(true);
+    });
+
+    item.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse' || !ancha.matches) return;
+      clearTimeout(cierre);
+      cierre = setTimeout(() => abrir(false), 120);
+    });
+
+    enlace.addEventListener('click', (e) => {
+      if (ancha.matches && conRaton.matches) return;
+      if (item.classList.contains('is-open')) return;
+      e.preventDefault();
+      abrir(true);
+    });
+
+    // El foco por teclado abre; al salir del item, cierra. `relatedTarget` es
+    // quien recibe el foco: en `focusout`, `activeElement` todavía es el viejo.
+    item.addEventListener('focusin', () => {
+      if (ancha.matches) abrir(true);
+    });
+
+    item.addEventListener('focusout', (e) => {
+      if (!item.contains(e.relatedTarget)) abrir(false);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!item.contains(e.target)) abrir(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !item.classList.contains('is-open')) return;
+      abrir(false);
+      enlace.focus();
+    });
+  });
+}
+
 /* --------------------------------------------------------------------------
    Vídeo y botones de play
    El vídeo del hero pesa ~6 MB: sólo se descarga si vale la pena. En pantallas
@@ -487,7 +558,19 @@ function initStepper() {
     const fotos = [...root.querySelectorAll('[data-media]')];
     if (!tabs.length || paneles.some((p) => !p)) return;
 
+    // El fondo toma el color del paso activo, muy diluido. El color va como
+    // valor literal en `data-tint` y no como variable: una propiedad en
+    // transición no se re-evalúa cuando cambia la custom property de la que
+    // depende, y el fondo se quedaría en el primer color.
+    const tiñe = root.hasAttribute('data-tint-bg');
+    const pintar = (tab) => {
+      const tono = tab.dataset.tint;
+      if (!tiñe || !tono) return;
+      root.style.backgroundColor = `${tono}14`;
+    };
+
     const mostrar = (i, mover) => {
+      pintar(tabs[i]);
       tabs.forEach((tab, j) => {
         const activo = i === j;
         tab.setAttribute('aria-selected', String(activo));
@@ -513,6 +596,9 @@ function initStepper() {
       });
     });
 
+    const inicial = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+    pintar(tabs[inicial >= 0 ? inicial : 0]);
+
     tabs.forEach((tab, i) => {
       tab.addEventListener('click', () => mostrar(i, false));
       tab.addEventListener('keydown', (e) => {
@@ -525,50 +611,6 @@ function initStepper() {
         if (destino === null) return;
         e.preventDefault();
         mostrar(destino, true);
-      });
-    });
-  });
-}
-
-/**
- * Annexes: dos vistas —fichas y mapa— y la selección compartida entre el pin
- * del mapa y su ficha chica.
- */
-function initAnnexes() {
-  document.querySelectorAll('[data-views]').forEach((root) => {
-    const opciones = [...root.querySelectorAll('[data-view]')];
-    const paneles = [...root.querySelectorAll('[data-view-panel]')];
-    if (!opciones.length || !paneles.length) return;
-
-    opciones.forEach((opt) => {
-      opt.addEventListener('click', () => {
-        const vista = opt.dataset.view;
-        opciones.forEach((o) => o.setAttribute('aria-selected', String(o === opt)));
-        paneles.forEach((p) => {
-          p.hidden = p.dataset.viewPanel !== vista;
-        });
-      });
-    });
-
-    // Un pin y su ficha comparten el mismo `data-annexe`: se marcan juntos.
-    const marcables = [...root.querySelectorAll('[data-annexe]')];
-    const marcar = (slug) => {
-      marcables.forEach((el) => {
-        const activo = el.dataset.annexe === slug;
-        el.classList.toggle('is-on', activo);
-        // La ficha grande es la única que se oculta: pines y nombres sólo se
-        // marcan.
-        if (el.classList.contains('detail')) el.hidden = !activo;
-      });
-    };
-
-    marcables.forEach((el) => {
-      el.addEventListener('click', () => marcar(el.dataset.annexe));
-      el.addEventListener('keydown', (e) => {
-        // Los pines son `<g>`, no botones: Enter y espacio hay que atenderlos.
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        e.preventDefault();
-        marcar(el.dataset.annexe);
       });
     });
   });
@@ -1055,6 +1097,7 @@ function initDecoParallax() {
 const news = document.querySelector('.news');
 if (news) initNewsCarousel(news);
 initNav();
+initDropdown();
 initVideo();
 initEventPopup();
 initVersionSwitch();
@@ -1062,7 +1105,6 @@ initA11yToolbar();
 initReveal();
 initSubnav();
 initStepper();
-initAnnexes();
 initCounters();
 initLineReveal();
 initDecoReveal();
