@@ -347,7 +347,9 @@
 .dropdown__num {
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
-  color: var(--c-grey-300);
+  /* Claro a propósito: la numeración ordena, no compite con el rótulo. Al
+     pasar el puntero pasa a teal, que es cuando cuenta. */
+  color: color-mix(in srgb, var(--c-grey-300) 50%, #fff);
   font-variant-numeric: tabular-nums;
   transition: color var(--dur-hover) var(--ease-hover);
 }
