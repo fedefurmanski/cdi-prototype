@@ -36,6 +36,13 @@
   align-items: start;
 }
 
+/* `min-width: 0` en la celda de contenido: por omisión una celda de grilla no
+   se encoge por debajo del ancho de lo que contiene, y la tira del carrusel
+   —que mide 300%— empujaba la columna hasta romper el contenedor. */
+.interior__main {
+  min-width: 0;
+}
+
 /* --------------------------------------------------------------------------
    Barra lateral
    -------------------------------------------------------------------------- */

@@ -371,6 +371,20 @@ que la usa, no contra el documento, así que puestas en el HTML terminaban
 apuntando a `/css/assets/…` y las máscaras quedaban vacías (el icono se veía
 como un cuadrado de color).
 
+## Dos trampas del layout interior
+
+**`min-width: 0` en la celda de contenido.** Una celda de grilla no se encoge
+por debajo del ancho de lo que contiene (`min-width: auto` es el valor por
+omisión). La tira del carrusel mide 300%, así que empujaba la columna hasta
+desbordar el contenedor y meter scroll horizontal en toda la página. Vale para
+cualquier cosa que se desplace dentro de una grilla.
+
+**El modo exportación va en el script del `<head>`.** Estaba en `main.js`, que
+es un módulo diferido: se aplicaba después del primer pintado y las capturas
+agarraban las animaciones de entrada a mitad de camino —elementos en opacidad
+0,4 o directamente invisibles—, que parecía un error de maquetado y no lo era.
+Es el mismo problema que ya había pasado con la clase `js`.
+
 ## Páginas interiores — `a-propos.html`
 
 La grilla sale del Figma «Diagnostique spécialisé»: 292px de barra lateral,

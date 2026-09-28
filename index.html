@@ -23,9 +23,18 @@
         // `js` acá y no en main.js: el módulo está diferido y se aplica recién
         // después del primer pintado, así que los elementos que el CSS oculta
         // para animarlos alcanzaban a verse y se desvanecían a la vista.
+        var p = new URLSearchParams(location.search);
+
         document.documentElement.classList.add('js');
 
-        var p = new URLSearchParams(location.search);
+        // El modo exportación también acá: aplicado desde el módulo diferido
+        // llega después del primer pintado, y las capturas agarraban las
+        // animaciones de entrada a mitad de camino.
+        var exp = p.get('export');
+        if (exp === '1' || exp === '2') {
+          document.documentElement.classList.add('is-export');
+          if (exp === '1') document.documentElement.classList.add('is-export-nodeco');
+        }
         // El primero de cada lista es el que se muestra por defecto.
         var ejes = { intranet: ['blue', 'pink'], profiles: ['gradient', 'cards', 'banners'] };
         Object.keys(ejes).forEach(function (eje) {
