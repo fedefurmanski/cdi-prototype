@@ -396,10 +396,14 @@ riel de números a la izquierda, y al final esto: **el texto arranca arriba a la
 izquierda y ocupa el ancho, abajo a la izquierda va el índice del paso —`01. À
 la conception`— y abajo a la derecha las flechas.**
 
-El índice sigue siendo el `tablist`: las cuatro pestañas están superpuestas en
-la misma celda y sólo se ve la activa (`opacity` + `pointer-events: none` en las
-demás, con el `tabindex` rotatorio que ya tenían). Así el marcado sigue siendo
-un `tablist` de verdad aunque visualmente sea un solo rótulo.
+El índice es el `tablist`: **los cuatro números se ven siempre** —el activo en
+el color de su paso, los otros tres en gris claro, para que se note que hay más
+estados y que se puede saltar a cualquiera— y después de un filete vertical va
+el nombre del paso. Los cuatro nombres viven apilados en la misma celda de
+grilla y sólo se ve el activo, así el filete no se corre de sitio al cambiar:
+el ancho lo fija el nombre más largo. El rótulo está fuera del botón, así que
+el JS lo marca por posición (igual que las fotos de «Notre approche») y cada
+botón lleva el nombre repetido en `visually-hidden` para el lector de pantalla.
 
 **El fondo toma el color del paso, al 8%.** El color va como valor literal en
 `data-tint` y no como variable: una propiedad en transición no se re-evalúa
@@ -426,8 +430,17 @@ más una bajada y un «voir la page» a la izquierda. Tres cosas que no son obvi
   que el recorrido diagonal hasta el panel no lo apague a mitad de camino. Sin
   hover —táctil, o la nav apilada— el primer toque abre y el segundo navega.
 
+La columna de la izquierda —foto, título, bajada y «voir la page»— es **un solo
+enlace**: es como se lee, y evita tres blancos de clic pegados. Por eso el «voir
+la page» es un `<span>` y no un `<a>`: un enlace dentro de otro no es marcado
+válido.
+
 Los items entran escalonados con `--i` escrito en el marcado: es posición, no
 estado, así que el retardo sale de CSS y el JS no reparte nada.
+
+La rejilla de enlaces lleva `align-content: center`. Sin eso las cuatro filas se
+reparten el alto de la columna de la foto —las pistas `auto` crecen cuando sobra
+sitio— y el índice queda desparramado.
 
 Apilado (≤1080px) el panel no cuelga: se despliega en el sitio como acordeón,
 animando `grid-template-rows` de `0fr` a `1fr` con `overflow: hidden` en el
@@ -530,10 +543,51 @@ No corre en modo exportación ni con movimiento reducido.
 
 ## Los estados de hover
 
-Las cinco superficies que se levantan al pasar el puntero —botones, tarjetas de
-servicio, de perfil, de actualidad y bandeaux— usan `--dur-hover` (460ms) y
-`--ease-hover`, no `--ease-out`. `--ease-out` es una curva que arranca muy
-rápido, y con ella el levantarse y la aparición de la sombra se sentían secos.
+Todo lo que responde al puntero usa `--dur-hover` (520ms) y `--ease-hover`,
+nunca `--ease-out`: levantamientos, sombras, flechas, iconos y zooms de foto.
+**`--ease-out` es una curva que gana el 90% del recorrido en el primer cuarto
+del tiempo**; con ella el gesto se siente seco por más que se alargue la
+duración, porque el problema es la curva y no el reloj. `--ease-hover` sale
+despacio, glisa y aterriza blando.
+
+### La transición del hover la borraba el revelado
+
+El síntoma era que las tarjetas se levantaban de golpe por más que el
+componente declarara su transición. La causa: `.js [data-reveal]` tiene
+especificidad (0,2,0) y la regla del componente (0,1,0), así que **la lista de
+`transition` no se suma: se reemplaza entera.** Como casi toda tarjeta es
+objetivo de revelado, se quedaba con `opacity, translate, scale` y perdía su
+`transform` y su `box-shadow`: duración cero.
+
+Por eso las dos propiedades están declaradas en la regla del revelado
+(`css/base.css`), aunque el revelado no las use. Lo mismo en las dos reglas que
+la pisan a su vez: `[data-reveal="banner"]` y la del `.profile-banner__arrow`.
+Los retardos del escalonado van **dentro del atajo**, no en un
+`transition-delay` aparte, porque ése se aplicaría también al hover y lo dejaría
+esperando 360ms antes de arrancar.
+
+Regla práctica: **si una regla de revelado declara `transition`, tiene que
+repetir las propiedades del hover del elemento.** Para comprobarlo, leer
+`getComputedStyle(el).transitionProperty` en el elemento real, no fiarse de lo
+que dice el archivo del componente.
+
+### El círculo con flecha crece, no se desplaza
+
+En los bandeaux de perfiles y en las tarjetas de perfil el círculo se movía 4px
+al pasar el puntero. Con un disco de 40-46px el desplazamiento tironea del ojo y
+se lee más el recorrido que el gesto. Ahora escala a 1.12. Va con `scale` y no
+con `transform` por la trampa de siempre: el `transform: none` del revelado le
+ganaría por especificidad.
+
+Las flechas de texto —«En savoir plus», «Lire la suite», los botones— siguen
+desplazándose, que ahí sí funciona: acompañan a una línea de texto.
+
+### La sombra
+
+`--shadow-card-hover` (`0 12px 26px / 0.16`) reemplaza al `0 14px 28px / 0.18`
+que estaba escrito a mano en cuatro sitios. El salto desde la de reposo
+(`0 4px 12px / 0.25`) era demasiado recorrido para el tiempo que dura y se leía
+como un golpe.
 
 Las fotos que hacen zoom al pasar el puntero necesitan que **su propio marco**
 recorte, no sólo la tarjeta: `.news-card__media` no tenía `overflow: hidden` y

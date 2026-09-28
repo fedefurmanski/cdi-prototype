@@ -126,18 +126,21 @@
 
               <div class="dropdown" id="menu-a-propos">
                 <div class="dropdown__inner">
-                  <div class="dropdown__intro">
+                  <a class="dropdown__intro" href="a-propos.html">
+                    <figure class="dropdown__media">
+                      <img src="assets/img/profil-professionnels-focus.jpg" alt="" loading="lazy" />
+                    </figure>
                     <p class="dropdown__eyebrow">À propos du CDI</p>
                     <p class="dropdown__pitch">
                       Un centre de compétences en psycho-pédagogie spécialisée qui prend en
                       charge les enfants et les jeunes présentant des troubles du développement
                       intellectuel.
                     </p>
-                    <a class="dropdown__cta link-arrow" href="a-propos.html">
+                    <span class="dropdown__cta link-arrow">
                       Voir la page
                       <span class="icon icon--arrow" aria-hidden="true"></span>
-                    </a>
-                  </div>
+                    </span>
+                  </a>
 
                   <ul class="dropdown__links">
                     <li style="--i: 0">
@@ -350,63 +353,71 @@
                 </section>
               </div>
 
-              <div class="steps__ctrls" role="tablist" aria-label="Les causes">
-                <button
-                  class="steps__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ca-conception-tab"
-                  aria-controls="ca-conception"
-                  data-tint="#2AB7C8"
-                  aria-selected="true"
-                  
-                  style="--accent: var(--c-teal)"
-                >
-                  <span class="steps__num">01</span>
-                  <span class="steps__name">À la conception</span>
-                </button>
-                <button
-                  class="steps__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ca-grossesse-tab"
-                  aria-controls="ca-grossesse"
-                  data-tint="#ADCB47"
-                  aria-selected="false"
-                  tabindex="-1"
-                  style="--accent: var(--c-green)"
-                >
-                  <span class="steps__num">02</span>
-                  <span class="steps__name">Pendant la grossesse</span>
-                </button>
-                <button
-                  class="steps__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ca-naissance-tab"
-                  aria-controls="ca-naissance"
-                  data-tint="#F7A827"
-                  aria-selected="false"
-                  tabindex="-1"
-                  style="--accent: var(--c-orange)"
-                >
-                  <span class="steps__num">03</span>
-                  <span class="steps__name">À la naissance</span>
-                </button>
-                <button
-                  class="steps__ctrl"
-                  type="button"
-                  role="tab"
-                  id="ca-apres-tab"
-                  aria-controls="ca-apres"
-                  data-tint="#E9503E"
-                  aria-selected="false"
-                  tabindex="-1"
-                  style="--accent: var(--c-coral)"
-                >
-                  <span class="steps__num">04</span>
-                  <span class="steps__name">Après la naissance</span>
-                </button>
+              <div class="steps__index">
+                <div class="steps__ctrls" role="tablist" aria-label="Les causes">
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-conception-tab"
+                    aria-controls="ca-conception"
+                    data-tint="#2AB7C8"
+                    aria-selected="true"
+                    style="--accent: var(--c-teal)"
+                  >
+                    <span class="steps__num">01</span>
+                    <span class="visually-hidden">À la conception</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-grossesse-tab"
+                    aria-controls="ca-grossesse"
+                    data-tint="#ADCB47"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-green)"
+                  >
+                    <span class="steps__num">02</span>
+                    <span class="visually-hidden">Pendant la grossesse</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-naissance-tab"
+                    aria-controls="ca-naissance"
+                    data-tint="#F7A827"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-orange)"
+                  >
+                    <span class="steps__num">03</span>
+                    <span class="visually-hidden">À la naissance</span>
+                  </button>
+                  <button
+                    class="steps__ctrl"
+                    type="button"
+                    role="tab"
+                    id="ca-apres-tab"
+                    aria-controls="ca-apres"
+                    data-tint="#E9503E"
+                    aria-selected="false"
+                    tabindex="-1"
+                    style="--accent: var(--c-coral)"
+                  >
+                    <span class="steps__num">04</span>
+                    <span class="visually-hidden">Après la naissance</span>
+                  </button>
+                </div>
+
+                <p class="steps__names" aria-hidden="true">
+                  <span class="steps__name is-on" data-name>À la conception</span>
+                  <span class="steps__name" data-name>Pendant la grossesse</span>
+                  <span class="steps__name" data-name>À la naissance</span>
+                  <span class="steps__name" data-name>Après la naissance</span>
+                </p>
               </div>
 
               <div class="steps__nav">

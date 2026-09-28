@@ -556,6 +556,9 @@ function initStepper() {
     const tabs = [...root.querySelectorAll('[role="tab"]')];
     const paneles = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
     const fotos = [...root.querySelectorAll('[data-media]')];
+    // Los rótulos del índice viven fuera del botón —el control es el número—
+    // así que se marcan por posición, igual que las fotos.
+    const nombres = [...root.querySelectorAll('[data-name]')];
     if (!tabs.length || paneles.some((p) => !p)) return;
 
     // El fondo toma el color del paso activo, muy diluido. El color va como
@@ -583,6 +586,7 @@ function initStepper() {
           fotos[j].style.opacity = activo ? '1' : '0';
           fotos[j].toggleAttribute('aria-hidden', !activo);
         }
+        if (nombres[j]) nombres[j].classList.toggle('is-on', activo);
       });
       if (mover) tabs[i].focus();
     };
