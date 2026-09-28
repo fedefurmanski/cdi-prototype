@@ -371,6 +371,41 @@ que la usa, no contra el documento, así que puestas en el HTML terminaban
 apuntando a `/css/assets/…` y las máscaras quedaban vacías (el icono se veía
 como un cuadrado de color).
 
+## Páginas interiores — `a-propos.html`
+
+La grilla sale del Figma «Diagnostique spécialisé»: 292px de barra lateral,
+145px de calle y 835px de contenido, dentro del mismo contenedor de 1272px de
+la home. Los estilos propios están en `css/interior.css`; la cabecera y el pie
+se copiaron del `index.html` tal cual.
+
+La barra lateral reproduce la tarjeta del Figma, con dos diferencias: el filete
+es del turquesa de marca y no naranja, y **se queda fija al scrollear**
+marcando en qué sección está el lector (`initSubnav()`), porque el contenido es
+mucho más largo que el de la maqueta original. La franja activa es el tercio
+superior de la pantalla, y se marca la sección visible **más arriba** —no la
+última que entró—, que si no al subir queda señalada la de abajo.
+
+**Componentes.** Todas las cajas comparten el estilo de las tarjetas del resto
+del sitio —blanco, redondeo, sombra y filete de acento a la izquierda— para que
+la página no se sienta de otro sitio. Además:
+
+- `.stepper` — tres pasos numerados, uno a la vista. Es un `tablist` de verdad,
+  con flechas, Inicio y Fin, y **no** un carrusel automático: el contenido es
+  largo y no corresponde cambiarlo mientras alguien lee. Los paneles se apilan
+  en la misma celda de grilla, así el alto lo fija el más largo y el contenido
+  de abajo no salta al cambiar de paso.
+- `.bars` — barras de proporción que crecen al entrar en pantalla.
+- `initCounters()` — las cifras cuentan hacia arriba. El número final está en el
+  marcado: si el JS no corre, se lee igual.
+
+**Sobre el contenido.** «Les publics cibles» son sólo tres frases: en cdi.lu
+aparecen cuatro veces porque un slider repite el título, pero no hay más texto.
+Lo que sí es largo es «Notre approche» —el `#section2` del sitio—, y por eso es
+la sección que se armó con el componente numerado.
+
+`Notre équipe` está apenas esbozada a la espera de referencias; hay un `TODO` en
+el marcado. Los nombres completos están en el contenido original de cdi.lu.
+
 ## El video del hero al scrollear
 
 `initHeroParallax()` le hace un acercamiento —hasta 30%— con una deriva hacia

@@ -1,0 +1,656 @@
+/* ==========================================================================
+   CDI — Páginas interiores
+   Layout de dos columnas —barra lateral + contenido— y los componentes que
+   hacen legible un texto largo: citas, listas con regla, pasos numerados,
+   barras de proporción y fichas de contacto.
+
+   La grilla sale del Figma "Diagnostique spécialisé": 292px de barra lateral,
+   145px de calle y 835px de contenido, dentro del mismo contenedor de 1272px
+   que usa la home.
+   ========================================================================== */
+
+:root {
+  --side-col: 292px;
+  --side-gap: 145px;
+  --block-gap: 96px;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+
+.interior {
+  position: relative;
+  /* Sin `overflow: hidden`: convertiría la página en un contenedor de scroll
+     y la barra lateral dejaría de quedar fija. */
+  padding-top: var(--space-16);
+  padding-bottom: var(--section-pb);
+}
+
+.interior__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: var(--side-col) 1fr;
+  column-gap: var(--side-gap);
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   Barra lateral
+   -------------------------------------------------------------------------- */
+
+.subnav-wrap {
+  position: sticky;
+  top: var(--space-8);
+}
+
+/* El texto se alinea con el de los ítems —3px del filete + 24px del relleno—
+   y la flecha queda colgando a su izquierda, como en el Figma. */
+.subnav__eyebrow {
+  position: relative;
+  margin-bottom: var(--space-5);
+  padding-left: 27px;
+  font-size: var(--fs-md);
+  line-height: 1.4;
+  color: var(--c-ink);
+}
+
+.subnav__eyebrow .icon {
+  position: absolute;
+  left: 0;
+  top: 0.28em;
+  color: var(--c-teal);
+}
+
+.subnav__eyebrow strong {
+  font-weight: var(--fw-bold);
+}
+
+.subnav {
+  /* El filete de color sigue la curva de la tarjeta: es un borde, no una barra
+     aparte, que en las esquinas se vería recto contra el redondeo. */
+  border-left: 3px solid var(--c-teal);
+  border-radius: 20px;
+  background: var(--c-surface);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.subnav ul {
+  padding: var(--space-2) var(--space-6);
+}
+
+.subnav li + li {
+  border-top: 1px solid var(--c-grey-200);
+}
+
+.subnav a {
+  display: block;
+  padding: var(--space-5) 0;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  line-height: 1.375;
+  color: var(--c-ink);
+  transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.subnav a:hover {
+  color: var(--c-teal-deep);
+}
+
+.subnav a[aria-current='true'] {
+  color: var(--c-teal-deep);
+}
+
+/* --------------------------------------------------------------------------
+   Encabezado y ritmo del contenido
+   -------------------------------------------------------------------------- */
+
+.page-title {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  color: var(--c-ink);
+}
+
+.page-lead {
+  margin-top: var(--space-5);
+  max-width: 62ch;
+  font-size: var(--fs-lg);
+  line-height: 1.5;
+  color: var(--c-body);
+}
+
+.page-media {
+  margin-top: var(--space-10);
+  border-radius: 30px;
+  overflow: hidden;
+  aspect-ratio: 835 / 513;
+}
+
+.page-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.block {
+  margin-top: var(--block-gap);
+  scroll-margin-top: var(--space-16);
+}
+
+.block__title {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
+  color: var(--c-ink);
+}
+
+.block__subtitle {
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-5);
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  color: var(--c-ink);
+}
+
+.prose {
+  margin-top: var(--space-6);
+  max-width: 68ch;
+  font-size: var(--fs-md);
+  line-height: 1.75;
+  color: var(--c-body);
+}
+
+.prose p + p {
+  margin-top: var(--space-5);
+}
+
+/* --------------------------------------------------------------------------
+   Causas — cuatro momentos, en dos columnas
+   -------------------------------------------------------------------------- */
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+}
+
+/* Todas las cajas de la página comparten el estilo de las tarjetas del resto
+   del sitio: fondo blanco, redondeo, sombra y un filete del color de acento a
+   la izquierda. */
+.timeline__item,
+.rule-list__item,
+.target {
+  padding: var(--space-6);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--r-card);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.timeline__item {
+  padding: var(--space-6) var(--space-8);
+}
+
+.timeline__when {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.timeline__what {
+  margin-top: var(--space-3);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--c-body);
+}
+
+/* --------------------------------------------------------------------------
+   Lista con regla de color — la filosofía
+   -------------------------------------------------------------------------- */
+
+.rule-list {
+  margin-top: var(--space-6);
+}
+
+.rule-list__item {
+  padding: var(--space-8);
+}
+
+.rule-list__item + .rule-list__item {
+  margin-top: var(--space-5);
+}
+
+.rule-list__item h3 {
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  color: var(--c-ink);
+}
+
+.rule-list__item p {
+  margin-top: var(--space-4);
+  max-width: 64ch;
+  font-size: var(--fs-md);
+  line-height: 1.75;
+  color: var(--c-body);
+}
+
+/* --------------------------------------------------------------------------
+   Componente numerado — la aproximación
+   Tres pasos, uno a la vista. Las pestañas llevan el número bien grande y el
+   panel cambia sin saltos de alto: el contenedor se queda con el alto del
+   panel más largo, así el contenido de abajo no se mueve al cambiar de paso.
+   -------------------------------------------------------------------------- */
+
+.stepper {
+  margin-top: var(--space-8);
+}
+
+.stepper__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+.stepper__tab {
+  display: block;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--r-card);
+  border-left: 4px solid var(--c-grey-200);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+  text-align: left;
+  transition:
+    border-color var(--dur-hover) var(--ease-hover),
+    transform var(--dur-hover) var(--ease-hover),
+    box-shadow var(--dur-hover) var(--ease-hover);
+}
+
+.stepper__tab:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14);
+}
+
+.stepper__tab[aria-selected='true'] {
+  border-left-color: var(--accent);
+}
+
+.stepper__num {
+  display: block;
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  color: var(--c-grey-300);
+  transition: color var(--dur-hover) var(--ease-hover);
+}
+
+.stepper__tab[aria-selected='true'] .stepper__num {
+  color: var(--accent);
+}
+
+.stepper__name {
+  display: block;
+  margin-top: var(--space-2);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--c-ink);
+}
+
+.stepper__panels {
+  /* Los paneles se apilan en la misma celda: el alto lo fija el más largo. */
+  display: grid;
+  margin-top: var(--space-5);
+}
+
+.stepper__panel {
+  grid-area: 1 / 1;
+  padding: var(--space-8);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--r-card);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.js .stepper__panel[hidden] {
+  /* Sigue ocupando su celda —para que el alto no cambie— pero no se ve ni
+     recibe el foco. `display: none` haría saltar el contenido de abajo. */
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  translate: 0 8px;
+  pointer-events: none;
+}
+
+.js .stepper__panel {
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    translate var(--dur-base) var(--ease-out);
+}
+
+.stepper__panel p {
+  max-width: 64ch;
+  font-size: var(--fs-md);
+  line-height: 1.75;
+  color: var(--c-body);
+}
+
+.stepper__panel p + p,
+.stepper__panel .tick-list + p {
+  margin-top: var(--space-5);
+}
+
+.stepper__source {
+  margin-top: var(--space-5);
+  font-size: var(--fs-xs) !important;
+  color: var(--c-muted) !important;
+}
+
+.tick-list {
+  margin-top: var(--space-5);
+}
+
+.tick-list li {
+  position: relative;
+  padding-left: var(--space-6);
+  max-width: 62ch;
+  font-size: var(--fs-md);
+  line-height: 1.7;
+  color: var(--c-body);
+}
+
+.tick-list li + li {
+  margin-top: var(--space-4);
+}
+
+.tick-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   Públicos cibles
+   -------------------------------------------------------------------------- */
+
+.target-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.target {
+  padding: var(--space-8) var(--space-6);
+}
+
+.target h3 {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  color: var(--c-ink);
+}
+
+.target p {
+  margin-top: var(--space-3);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--c-body);
+}
+
+/* --------------------------------------------------------------------------
+   Cifras
+   -------------------------------------------------------------------------- */
+
+.figures {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-12) var(--space-24);
+  margin-top: var(--space-8);
+  padding: var(--space-8);
+  border-radius: var(--r-card);
+  background: var(--c-surface-alt);
+}
+
+.figures__num {
+  display: block;
+  font-size: 88px;
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--c-teal-deep);
+  /* Ancho estable mientras corre el contador, para que la etiqueta de al lado
+     no se mueva a cada cifra. */
+  font-variant-numeric: tabular-nums;
+}
+
+.figures__num--alt {
+  color: var(--c-green);
+}
+
+.figures__label {
+  display: block;
+  margin-top: var(--space-3);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--c-body);
+}
+
+.bars {
+  margin-top: var(--space-2);
+}
+
+.bars__row {
+  display: grid;
+  grid-template-columns: 240px 1fr 48px;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-4) 0;
+}
+
+.bars__row + .bars__row {
+  border-top: 1px solid var(--c-grey-200);
+}
+
+.bars__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: 1.4;
+  color: var(--c-ink);
+}
+
+.bars__label span {
+  display: block;
+  font-weight: var(--fw-regular);
+  color: var(--c-muted);
+}
+
+.bars__track {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--c-grey-100);
+  overflow: hidden;
+}
+
+.bars__fill {
+  display: block;
+  width: var(--part);
+  height: 100%;
+  border-radius: 5px;
+  background: var(--accent);
+}
+
+/* Crece al entrar en pantalla. El estado plegado se declara sólo con JS: si
+   fallara, las barras se ven completas en vez de vacías. */
+.js .bars__fill {
+  transform-origin: left center;
+  scale: 0 1;
+  transition: scale 900ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal].is-visible .bars__fill {
+  scale: 1 1;
+}
+
+.is-export .bars__fill {
+  scale: none !important;
+}
+
+.bars__value {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  text-align: right;
+  color: var(--c-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Equipo — provisional, a la espera de referencias
+   -------------------------------------------------------------------------- */
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.chip {
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--r-pill);
+  background: var(--c-surface-alt);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--c-body);
+}
+
+/* --------------------------------------------------------------------------
+   Annexes
+   -------------------------------------------------------------------------- */
+
+.annexes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-8);
+}
+
+.annexe {
+  padding: var(--space-6);
+  border-radius: var(--r-card);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.annexe--head {
+  border-left: 4px solid var(--c-teal);
+}
+
+.annexe h3 {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--c-ink);
+}
+
+.annexe__addr {
+  margin-top: var(--space-3);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--c-body);
+}
+
+.annexe__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: var(--space-4);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.annexe__contact a {
+  color: var(--c-teal-deep);
+  font-weight: var(--fw-semibold);
+  width: fit-content;
+}
+
+.annexe__contact a:hover {
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Angosto
+   OJO: igual que en la home, de 1080px para abajo son decisiones propias y no
+   diseño validado.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+  :root {
+    --side-col: 248px;
+    --side-gap: 64px;
+  }
+
+  .bars__row {
+    grid-template-columns: 190px 1fr 44px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .interior__inner {
+    grid-template-columns: 1fr;
+    row-gap: var(--space-10);
+  }
+
+  /* Apilada, la barra lateral deja de ser una columna: no tiene sentido fijarla. */
+  .subnav-wrap {
+    position: static;
+  }
+
+  .subnav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-6);
+  }
+
+  .subnav li + li {
+    border-top: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .stepper__tabs {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .timeline,
+  .target-list,
+  .annexes {
+    grid-template-columns: 1fr;
+  }
+
+  .bars__row {
+    grid-template-columns: 1fr 44px;
+    row-gap: var(--space-3);
+  }
+
+  .bars__track {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+
+  .figures__num {
+    font-size: 56px;
+  }
+}

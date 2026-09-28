@@ -472,6 +472,135 @@ function initReveal() {
 
 const DECO_SHIFT = 26; // píxeles de recorrido, de punta a punta de la banda
 
+/**
+ * Componente numerado: tres pasos, uno a la vista.
+ *
+ * Es un `tablist` de verdad —flechas para moverse, Inicio y Fin para los
+ * extremos— y no un carrusel automático: el contenido es largo y nadie quiere
+ * que se lo cambien mientras lee.
+ */
+function initStepper() {
+  document.querySelectorAll('[data-stepper]').forEach((root) => {
+    const tabs = [...root.querySelectorAll('[role="tab"]')];
+    const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+    if (!tabs.length || panels.some((p) => !p)) return;
+
+    const mostrar = (i, mover) => {
+      tabs.forEach((tab, j) => {
+        const activo = i === j;
+        tab.setAttribute('aria-selected', String(activo));
+        tab.tabIndex = activo ? 0 : -1;
+        panels[j].hidden = !activo;
+      });
+      if (mover) tabs[i].focus();
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => mostrar(i, false));
+      tab.addEventListener('keydown', (e) => {
+        const ultimo = tabs.length - 1;
+        let destino = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') destino = i === ultimo ? 0 : i + 1;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') destino = i === 0 ? ultimo : i - 1;
+        if (e.key === 'Home') destino = 0;
+        if (e.key === 'End') destino = ultimo;
+        if (destino === null) return;
+        e.preventDefault();
+        mostrar(destino, true);
+      });
+    });
+  });
+}
+
+/**
+ * Cifras que cuentan hacia arriba al entrar en pantalla.
+ *
+ * El número final ya está en el marcado: si el JS no corre, se lee igual. Acá
+ * sólo se reemplaza mientras dura la animación.
+ */
+function initCounters() {
+  const cifras = [...document.querySelectorAll('[data-count]')];
+  if (!cifras.length) return;
+
+  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducido || !('IntersectionObserver' in window)) return;
+
+  const contar = (el) => {
+    const destino = Number(el.dataset.count);
+    if (!Number.isFinite(destino)) return;
+    const duracion = 1100;
+    const inicio = performance.now();
+
+    const paso = (ahora) => {
+      const t = Math.min(1, (ahora - inicio) / duracion);
+      // Desacelera al final, igual que el resto de las animaciones.
+      const suave = 1 - Math.pow(1 - t, 3);
+      el.textContent = String(Math.round(destino * suave));
+      if (t < 1) requestAnimationFrame(paso);
+    };
+
+    el.textContent = '0';
+    requestAnimationFrame(paso);
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        contar(entry.target);
+        observer.unobserve(entry.target);
+      });
+    },
+    { rootMargin: '0px 0px -20% 0px', threshold: 0 }
+  );
+
+  cifras.forEach((el) => observer.observe(el));
+}
+
+/**
+ * Barra lateral de las páginas interiores: marca en qué sección está el lector.
+ *
+ * Se queda con la sección visible que esté más arriba, y no con la última que
+ * entró: al scrollear hacia arriba, si no, queda marcada la de abajo.
+ */
+function initSubnav() {
+  const nav = document.querySelector('.subnav');
+  if (!nav || !('IntersectionObserver' in window)) return;
+
+  const enlaces = [...nav.querySelectorAll('a[href^="#"]')];
+  const secciones = enlaces
+    .map((a) => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+  if (!secciones.length) return;
+
+  const visibles = new Set();
+
+  const marcar = () => {
+    if (!visibles.size) return;
+    const arriba = [...visibles].sort((a, b) => a.offsetTop - b.offsetTop)[0];
+    enlaces.forEach((a) => {
+      const activo = a.getAttribute('href') === `#${arriba.id}`;
+      if (activo) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) visibles.add(entry.target);
+        else visibles.delete(entry.target);
+      });
+      marcar();
+    },
+    // La franja activa es el tercio superior de la pantalla: es donde está
+    // mirando quien lee, no el centro ni el borde.
+    { rootMargin: '0px 0px -67% 0px', threshold: 0 }
+  );
+
+  secciones.forEach((s) => observer.observe(s));
+}
+
 const LINE_STEP = 120; // ms entre una línea y la siguiente
 
 /**
@@ -866,6 +995,9 @@ initEventPopup();
 initVersionSwitch();
 initA11yToolbar();
 initReveal();
+initSubnav();
+initStepper();
+initCounters();
 initLineReveal();
 initDecoReveal();
 initDecoParallax();
