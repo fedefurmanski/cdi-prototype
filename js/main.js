@@ -1085,10 +1085,14 @@ function initDecoReveal() {
   // animada no se re-evaluaría.
   const todas = [];
   capas.forEach((capa) => {
+    // El escalonado se puede acortar por capa con `data-deco-step`: en las
+    // páginas interiores hay siete piezas y con el paso de la home la última
+    // arrancaba casi un segundo después de la primera.
+    const paso = Number(capa.dataset.decoStep) || DECO_IN_STEP;
     let i = 0;
     [...capa.children].forEach((hijo) => {
       piezasDe(hijo).forEach((el) => {
-        el.style.transitionDelay = `${i * DECO_IN_STEP}ms`;
+        el.style.transitionDelay = `${i * paso}ms`;
         i += 1;
         todas.push(el);
       });

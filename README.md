@@ -530,6 +530,11 @@ apiladas, aspa, chevrones y anillo— exportadas a `assets/svg/deco-side-*.svg`.
 Traen su propio gris (`#E9EAEC`, el anillo `#EDEEF0`), que no es el
 `--c-deco` del resto del sitio.
 
+Las formas **entran rápido**: `--dur-deco` baja a 420ms y el escalonado a 60ms
+por pieza, con `data-deco-step` en la capa. Con los valores de la home —800ms y
+150ms— las siete piezas tardaban 1,7s en terminar de armarse, que para una
+decoración de margen es una eternidad.
+
 La capa va al **78% de opacidad** en estas páginas: acompañan a una columna de
 texto largo y no a una portada. Se gradúa con `--deco-op`, que `.deco` lee.
 Va como variable y no como valor suelto porque la atenuación de pantallas
@@ -560,12 +565,14 @@ donde empieza el pie de página, y anclarlo abajo hace que eso se cumpla sea
 cual sea el largo de la página. De paso entran desde abajo, que es lo que el
 JS deduce del anclaje.
 
-**`.interior` lleva `min-height: 1350px`** por encima de 1000px de ancho. La
-columna mide 676px y la tarjeta de la barra lateral termina a 650px del tope:
-por debajo de la suma, las formas se meten detrás de la tarjeta y se pierde
-media composición —en «Notre équipe», que mide 778px, quedaban a la vista sólo
-el anillo y un gajo de los chevrones—. Es, además, el alto que el Figma le da a
-la sección.
+**`.interior` lleva `min-height: 1150px`** por encima de 1000px de ancho. Es un
+equilibrio: la columna de formas mide 675px y la tarjeta de la barra lateral
+termina a 650px del tope, así que para que no se toquen harían falta 1350 —y
+con eso la página quedaba con un campo blanco enorme debajo del contenido en
+las páginas cortas—. A 1150 el grupo sube 200px: lo único que queda detrás de
+la tarjeta es una tajada del anillo, que se lee como profundidad. Por eso **el
+anillo va solo en la fila de arriba en las dos combinaciones**: es la única
+pieza que puede permitirse quedar a medias.
 
 El de la derecha se ancla arriba y al canto (`is-right`), porque su sitio lo
 da la foto y no el pie.

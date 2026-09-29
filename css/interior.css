@@ -24,6 +24,9 @@
   /* Un punto por debajo del resto del sitio: acá las formas acompañan a una
      columna de texto largo y no a una portada. */
   --deco-op: 0.78;
+  /* Y entran más rápido: son siete piezas y a 800ms cada una la composición
+     tardaba una eternidad en armarse. */
+  --dur-deco: 420ms;
   /* Sin `overflow: hidden`: convertiría la página en un contenedor de scroll
      y la barra lateral dejaría de quedar fija. */
   padding-top: var(--space-16);
@@ -37,7 +40,7 @@
    Sólo vale cuando hay dos columnas: apilado no hay margen que decorar. */
 @media (min-width: 1001px) {
   .interior {
-    min-height: 1350px;
+    min-height: 1150px;
   }
 }
 
