@@ -27,6 +27,17 @@
   padding-bottom: var(--section-pb);
 }
 
+/* La columna de formas del margen mide 676px y se ancla al pie de la sección;
+   la tarjeta de la barra lateral termina a 650px del tope. Por debajo de la
+   suma de las dos, las formas se meten detrás de la tarjeta y la mitad de la
+   composición se pierde. Es, además, el alto que el Figma le da a la sección.
+   Sólo vale cuando hay dos columnas: apilado no hay margen que decorar. */
+@media (min-width: 1001px) {
+  .interior {
+    min-height: 1350px;
+  }
+}
+
 .interior__inner {
   position: relative;
   z-index: 1;

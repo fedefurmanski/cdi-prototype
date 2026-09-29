@@ -230,16 +230,18 @@
     </header>
 
     <main id="main" class="interior">
-      <!-- Tira B de formas de marca. Las piezas van pegadas entre sí, así
-           que viven en un `.deco-cluster`: el grupo se ancla una vez y ellas se
-           colocan en coordenadas locales, sin separarse al cambiar el ancho.
-           Las dos tiras se alternan página por página. -->
+      <!-- Formas del artboard «test claude» del Figma. Van pegadas entre sí, así
+           que viven en un `.deco-cluster`: el grupo se ancla una vez —al pie de
+           la sección, que es donde las deja el diseño, justo encima del pie de
+           página— y las piezas se colocan en coordenadas locales.
+           Combinación B; la sección alterna entre las dos. -->
       <div class="deco" aria-hidden="true">
-        <div class="deco-cluster" style="--x: -45px; --y: 0px; --w: 164px; --h: 782px">
-          <img src="assets/svg/deco-grey-x2.svg" alt="" style="--x: 0px; --y: 0px; --w: 164px; --h: 167px" />
-          <img src="assets/svg/deco-grey-checkers2.svg" alt="" style="--x: 0px; --y: 167px; --w: 162px; --h: 162px" />
-          <img src="assets/svg/deco-grey-leaves-left.svg" alt="" style="--x: 0px; --y: 329px; --w: 145px; --h: 292px" />
-          <img src="assets/svg/deco-grey-x3.svg" alt="" style="--x: 0px; --y: 621px; --w: 160px; --h: 161px" />
+        <div class="deco-cluster is-bottom" style="--x: 0px; --b: 0px; --w: 348px; --h: 676px">
+          <img src="assets/svg/deco-side-ring.svg" alt="" style="--x: 167px; --y: 0px; --w: 173px; --h: 173px" />
+          <img src="assets/svg/deco-side-chevrons.svg" alt="" style="--x: 0px; --y: 176px; --w: 173px; --h: 323px" />
+          <img src="assets/svg/deco-side-stripes.svg" alt="" style="--x: 175px; --y: 176px; --w: 173px; --h: 173px" />
+          <img src="assets/svg/deco-side-cross.svg" alt="" style="--x: 175px; --y: 352px; --w: 164px; --h: 164px" />
+          <img src="assets/svg/deco-side-ellipses.svg" alt="" style="--x: 0px; --y: 499px; --w: 175px; --h: 177px" />
         </div>
       </div>
 

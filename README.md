@@ -524,29 +524,36 @@ se copiaron del `index.html` tal cual.
 
 ### Las formas del margen izquierdo
 
-Son **dos tiras** de formas grises que se alternan página por página: la A en
-«Qui sommes-nous», «Notre philosophie», «Les publics cibles» y «Notre équipe»;
-la B en las otras cuatro. Cada tira es una columna continua pegada al borde
-izquierdo de la ventana y cortada por él.
+Salen del artboard **«test claude»** del Figma (`node-id=786-395`), que es la
+maqueta de la página interior. Son cinco piezas —rayas diagonales, elipses
+apiladas, aspa, chevrones y anillo— exportadas a `assets/svg/deco-side-*.svg`.
+Traen su propio gris (`#E9EAEC`, el anillo `#EDEEF0`), que no es el
+`--c-deco` del resto del sitio.
 
-Las piezas van **pegadas una debajo de la otra**, sin huecos, así que viven en
-un `.deco-cluster`: el grupo se ancla una sola vez y ellas se colocan en
-coordenadas locales. Se reusan las piezas de la home
-(`assets/svg/deco-grey-*.svg`) y la capa `.deco`, así que heredan gratis la
-entrada escalonada desde la izquierda y el parallax.
+Se arman en **dos combinaciones que la sección alterna**: la A repite el orden
+del Figma y la B recoloca las mismas cinco piezas. A en «Qui sommes-nous»,
+«Notre philosophie», «Les publics cibles» y «Notre équipe»; B en las otras
+cuatro.
 
-Dos medidas a respetar si se cambian las piezas:
+Las piezas se encastran entre sí, así que viven en un `.deco-cluster` y se
+colocan en coordenadas locales. **El grupo se ancla al pie de la sección**
+(`is-bottom`, `--b: 0`) y no al tope: en el Figma la última pieza termina justo
+donde empieza el pie de página, y anclarlo abajo hace que eso se cumpla sea
+cual sea el largo de la página. De paso entran desde abajo, que es lo que el
+JS deduce del anclaje.
 
-- **La tira no pasa de x=120**, que es el canto de la tarjeta de la barra
-  lateral a 1512px. Va con `--x: -45px` y 165px de ancho: asoma 120px justos y
-  el resto queda fuera de la ventana.
-- **La tira arranca en el tope de `.interior` y no puede pasar de 778px**, que
-  es lo que mide la página más corta —«Notre équipe»—. Si crece, se sale por
-  abajo y entra en el pie.
+**`.interior` lleva `min-height: 1350px`** por encima de 1000px de ancho. La
+columna mide 676px y la tarjeta de la barra lateral termina a 650px del tope:
+por debajo de la suma, las formas se meten detrás de la tarjeta y se pierde
+media composición —en «Notre équipe», que mide 778px, quedaban a la vista sólo
+el anillo y un gajo de los chevrones—. Es, además, el alto que el Figma le da a
+la sección.
 
-**Pendiente:** las piezas son las más parecidas del juego de la home, no las
-exactas del Figma. Falta al menos una —un zigzag de contorno que aparece en las
-dos tiras— que no está entre las exportadas.
+**Al exportar, Figma mete dos rectángulos que hay que sacar**: el fondo
+`#1E1E1E` del tamaño del propio SVG y el rectángulo blanco de 1512×2036 del
+artboard entero. El `clipPath` de los chevrones **no** se toca: es el que
+recorta la pieza en el borde del artboard, que es justo como el diseño la
+muestra, cortada por el canto de la ventana.
 
 ### Una página por item de la barra lateral
 
