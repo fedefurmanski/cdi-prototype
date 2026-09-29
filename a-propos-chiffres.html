@@ -230,14 +230,17 @@
     </header>
 
     <main id="main" class="interior">
-      <!-- Formas de marca: acompañan a la barra lateral por el borde izquierdo,
-           cortadas por el canto de la ventana como en el Figma. Cada página
-           lleva su propio juego y su propio orden, así la sección cambia de
-           compañía al moverse por la barra lateral. -->
+      <!-- Tira B de formas de marca. Las piezas van pegadas entre sí, así
+           que viven en un `.deco-cluster`: el grupo se ancla una vez y ellas se
+           colocan en coordenadas locales, sin separarse al cambiar el ancho.
+           Las dos tiras se alternan página por página. -->
       <div class="deco" aria-hidden="true">
-        <img src="assets/svg/deco-grey-x.svg" alt="" style="--x: -46px; --y: 16%; --w: 160px; --h: 160px" />
-        <img src="assets/svg/deco-grey-circle.svg" alt="" style="--x: -50px; --y: 47%; --w: 158px; --h: 158px" />
-        <img src="assets/svg/deco-grey-ring.svg" alt="" style="--x: -50px; --y: 75%; --w: 167px; --h: 167px" />
+        <div class="deco-cluster" style="--x: -45px; --y: 0px; --w: 164px; --h: 782px">
+          <img src="assets/svg/deco-grey-x2.svg" alt="" style="--x: 0px; --y: 0px; --w: 164px; --h: 167px" />
+          <img src="assets/svg/deco-grey-checkers2.svg" alt="" style="--x: 0px; --y: 167px; --w: 162px; --h: 162px" />
+          <img src="assets/svg/deco-grey-leaves-left.svg" alt="" style="--x: 0px; --y: 329px; --w: 145px; --h: 292px" />
+          <img src="assets/svg/deco-grey-x3.svg" alt="" style="--x: 0px; --y: 621px; --w: 160px; --h: 161px" />
+        </div>
       </div>
 
       <div class="interior__inner container">

@@ -524,25 +524,29 @@ se copiaron del `index.html` tal cual.
 
 ### Las formas del margen izquierdo
 
-Cada página de la sección lleva su propio juego de formas grises —tres, cuatro
-en «Nos annexes»— pegadas al borde izquierdo de la ventana y cortadas por él,
-como en el Figma. **El juego y el orden cambian en cada página**, así moverse
-por la barra lateral cambia también la compañía del margen.
+Son **dos tiras** de formas grises que se alternan página por página: la A en
+«Qui sommes-nous», «Notre philosophie», «Les publics cibles» y «Notre équipe»;
+la B en las otras cuatro. Cada tira es una columna continua pegada al borde
+izquierdo de la ventana y cortada por él.
 
-Se reusan las mismas piezas de la home (`assets/svg/deco-grey-*.svg`) y la
-misma capa `.deco`, así que heredan gratis la entrada escalonada desde la
-izquierda y el parallax.
+Las piezas van **pegadas una debajo de la otra**, sin huecos, así que viven en
+un `.deco-cluster`: el grupo se ancla una sola vez y ellas se colocan en
+coordenadas locales. Se reusan las piezas de la home
+(`assets/svg/deco-grey-*.svg`) y la capa `.deco`, así que heredan gratis la
+entrada escalonada desde la izquierda y el parallax.
 
-Dos medidas a respetar si se agregan o se mueven:
+Dos medidas a respetar si se cambian las piezas:
 
-- **Nada debe pasar de x=120**, que es el canto de la tarjeta de la barra
-  lateral a 1512px. Por eso todas van con un `--x` negativo y se eligen las
-  piezas angostas (145–167px): asoman unos 110px y el resto queda fuera de la
-  ventana. Tres llegaban a 123 y se metían por detrás de la tarjeta.
-- **La posición vertical va en porcentaje**, no en píxeles, porque las ocho
-  páginas miden distinto —de 778px a 2421px—. Ojo con las piezas altas: los
-  `chevrons` (323px) a 74% se salían por abajo de la página más corta y
-  entraban en el pie.
+- **La tira no pasa de x=120**, que es el canto de la tarjeta de la barra
+  lateral a 1512px. Va con `--x: -45px` y 165px de ancho: asoma 120px justos y
+  el resto queda fuera de la ventana.
+- **La tira arranca en el tope de `.interior` y no puede pasar de 778px**, que
+  es lo que mide la página más corta —«Notre équipe»—. Si crece, se sale por
+  abajo y entra en el pie.
+
+**Pendiente:** las piezas son las más parecidas del juego de la home, no las
+exactas del Figma. Falta al menos una —un zigzag de contorno que aparece en las
+dos tiras— que no está entre las exportadas.
 
 ### Una página por item de la barra lateral
 
