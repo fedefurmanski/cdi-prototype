@@ -565,14 +565,21 @@ donde empieza el pie de página, y anclarlo abajo hace que eso se cumpla sea
 cual sea el largo de la página. De paso entran desde abajo, que es lo que el
 JS deduce del anclaje.
 
-**`.interior` lleva `min-height: 1150px`** por encima de 1000px de ancho. Es un
-equilibrio: la columna de formas mide 675px y la tarjeta de la barra lateral
-termina a 650px del tope, así que para que no se toquen harían falta 1350 —y
-con eso la página quedaba con un campo blanco enorme debajo del contenido en
-las páginas cortas—. A 1150 el grupo sube 200px: lo único que queda detrás de
-la tarjeta es una tajada del anillo, que se lee como profundidad. Por eso **el
-anillo va solo en la fila de arriba en las dos combinaciones**: es la única
-pieza que puede permitirse quedar a medias.
+**`.interior` lleva `min-height: 1080px`** por encima de 1000px de ancho, y el
+número no es arbitrario. La columna de formas mide 675px y la tarjeta de la
+barra lateral termina a 650px del tope: para que no se tocaran harían falta
+1350, y con eso las páginas cortas quedaban con un campo blanco enorme debajo
+del contenido.
+
+El punto delicado no es que se solapen sino **cuánto**. A 1150 la segunda fila
+de formas arrancaba a 1px del pie de la tarjeta: se rozaban, y un roce se lee
+como un error de alineación. A 1080 esa fila entra 70px por detrás, que ya se
+lee como profundidad. **La regla es solaparse con ganas o no solaparse**; lo
+que no se puede es besar el borde.
+
+Por eso también **el anillo va solo en la fila de arriba en las dos
+combinaciones**: queda entero dentro de la banda de la tarjeta y asoma sólo por
+su izquierda, que es el gesto más limpio de los tres posibles.
 
 El de la derecha se ancla arriba y al canto (`is-right`), porque su sitio lo
 da la foto y no el pie.

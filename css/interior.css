@@ -40,7 +40,7 @@
    Sólo vale cuando hay dos columnas: apilado no hay margen que decorar. */
 @media (min-width: 1001px) {
   .interior {
-    min-height: 1150px;
+    min-height: 1080px;
   }
 }
 
