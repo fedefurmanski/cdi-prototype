@@ -522,6 +522,28 @@ La grilla sale del Figma «Diagnostique spécialisé»: 292px de barra lateral,
 la home. Los estilos propios están en `css/interior.css`; la cabecera y el pie
 se copiaron del `index.html` tal cual.
 
+### Las formas del margen izquierdo
+
+Cada página de la sección lleva su propio juego de formas grises —tres, cuatro
+en «Nos annexes»— pegadas al borde izquierdo de la ventana y cortadas por él,
+como en el Figma. **El juego y el orden cambian en cada página**, así moverse
+por la barra lateral cambia también la compañía del margen.
+
+Se reusan las mismas piezas de la home (`assets/svg/deco-grey-*.svg`) y la
+misma capa `.deco`, así que heredan gratis la entrada escalonada desde la
+izquierda y el parallax.
+
+Dos medidas a respetar si se agregan o se mueven:
+
+- **Nada debe pasar de x=120**, que es el canto de la tarjeta de la barra
+  lateral a 1512px. Por eso todas van con un `--x` negativo y se eligen las
+  piezas angostas (145–167px): asoman unos 110px y el resto queda fuera de la
+  ventana. Tres llegaban a 123 y se metían por detrás de la tarjeta.
+- **La posición vertical va en porcentaje**, no en píxeles, porque las ocho
+  páginas miden distinto —de 778px a 2421px—. Ojo con las piezas altas: los
+  `chevrons` (323px) a 74% se salían por abajo de la página más corta y
+  entraban en el pie.
+
 ### Una página por item de la barra lateral
 
 Al principio era una sola página larga con ocho secciones y anclas. El
