@@ -530,13 +530,19 @@ apiladas, aspa, chevrones y anillo— exportadas a `assets/svg/deco-side-*.svg`.
 Traen su propio gris (`#E9EAEC`, el anillo `#EDEEF0`), que no es el
 `--c-deco` del resto del sitio.
 
-Se arman en **dos combinaciones que la sección alterna**: la A repite el orden
-del Figma y la B recoloca las mismas cinco piezas. A en «Qui sommes-nous»,
-«Notre philosophie», «Les publics cibles» y «Notre équipe»; B en las otras
-cuatro.
+En el **margen derecho** hay otras dos —un zigzag de contorno y una Z maciza,
+`deco-side-arrows.svg` y `deco-side-zigzag.svg`— pegadas al canto de la ventana
+y cortadas por él. Arrancan a 161px del tope de la sección, que es donde el
+Figma las pone, al costado de la foto.
 
-Las piezas se encastran entre sí, así que viven en un `.deco-cluster` y se
-colocan en coordenadas locales. **El grupo se ancla al pie de la sección**
+Todo se arma en **dos combinaciones que la sección alterna**: la A repite el
+orden del Figma y la B recoloca las mismas piezas, a los dos lados. A en «Qui
+sommes-nous», «Notre philosophie», «Les publics cibles» y «Notre équipe»; B en
+las otras cuatro.
+
+Las piezas se encastran entre sí, así que cada lado vive en un
+`.deco-cluster` y se colocan en coordenadas locales. **El grupo de la izquierda
+se ancla al pie de la sección**
 (`is-bottom`, `--b: 0`) y no al tope: en el Figma la última pieza termina justo
 donde empieza el pie de página, y anclarlo abajo hace que eso se cumpla sea
 cual sea el largo de la página. De paso entran desde abajo, que es lo que el
@@ -548,6 +554,15 @@ por debajo de la suma, las formas se meten detrás de la tarjeta y se pierde
 media composición —en «Notre équipe», que mide 778px, quedaban a la vista sólo
 el anillo y un gajo de los chevrones—. Es, además, el alto que el Figma le da a
 la sección.
+
+El de la derecha se ancla arriba y al canto (`is-right`), porque su sitio lo
+da la foto y no el pie.
+
+**Cuidado con las coordenadas que informa `get_metadata`**: las dos piezas de
+la derecha venían con una `x` de 1606 y 1430 sobre un artboard de 1512, o sea
+fuera. La buena es la del `transform` del SVG exportado —`translate(-1438 -346)`
+dice que la pieza arranca en x=1438, y=346— y además el export ya viene
+recortado a lo que se ve dentro del artboard, que es justo lo que hace falta.
 
 **Al exportar, Figma mete dos rectángulos que hay que sacar**: el fondo
 `#1E1E1E` del tamaño del propio SVG y el rectángulo blanco de 1512×2036 del
