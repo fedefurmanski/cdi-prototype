@@ -1128,7 +1128,7 @@
   /* Sin diseño de mobile, la capa decorativa se atenúa: con el contenido a
      todo el ancho las formas quedan detrás del texto y compiten con él. */
   .deco {
-    opacity: 0.55;
+    --deco-op: 0.55;
   }
 
   .videoblock__inner {

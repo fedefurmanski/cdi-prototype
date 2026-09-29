@@ -147,6 +147,10 @@ button {
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  /* Se gradúa por sección con `--deco-op`. Va como variable y no como valor
+     suelto para que la atenuación de pantallas angostas —que se declara sobre
+     `.deco`— le gane a la de la sección, que se hereda. */
+  opacity: var(--deco-op, 1);
 }
 
 .deco > * {

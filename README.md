@@ -530,10 +530,22 @@ apiladas, aspa, chevrones y anillo— exportadas a `assets/svg/deco-side-*.svg`.
 Traen su propio gris (`#E9EAEC`, el anillo `#EDEEF0`), que no es el
 `--c-deco` del resto del sitio.
 
+La capa va al **78% de opacidad** en estas páginas: acompañan a una columna de
+texto largo y no a una portada. Se gradúa con `--deco-op`, que `.deco` lee.
+Va como variable y no como valor suelto porque la atenuación de pantallas
+angostas se declara sobre `.deco` mismo y así le gana a la de la sección, que
+se hereda.
+
 En el **margen derecho** hay otras dos —un zigzag de contorno y una Z maciza,
 `deco-side-arrows.svg` y `deco-side-zigzag.svg`— pegadas al canto de la ventana
-y cortadas por él. Arrancan a 161px del tope de la sección, que es donde el
-Figma las pone, al costado de la foto.
+y cortadas por él. Van un 20% más grandes que en el Figma y arrancan a 100px
+del tope de la sección, no a los 161 del diseño: a tamaño natural y en su sitio
+quedaban chicas y bajas para el largo real de estas páginas.
+
+**El anillo va arriba del grupo de la izquierda, no abajo.** En el Figma cierra
+la composición al pie, pero en una página de texto quedaba solo y dejaba un
+hueco blanco grande. Al subirlo, el grupo conserva su alto —se le saca una fila
+abajo y se le pone una arriba— así que el mínimo de la sección sigue valiendo.
 
 Todo se arma en **dos combinaciones que la sección alterna**: la A repite el
 orden del Figma y la B recoloca las mismas piezas, a los dos lados. A en «Qui

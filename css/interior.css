@@ -21,6 +21,9 @@
 
 .interior {
   position: relative;
+  /* Un punto por debajo del resto del sitio: acá las formas acompañan a una
+     columna de texto largo y no a una portada. */
+  --deco-op: 0.78;
   /* Sin `overflow: hidden`: convertiría la página en un contenedor de scroll
      y la barra lateral dejaría de quedar fija. */
   padding-top: var(--space-16);
