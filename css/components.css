@@ -405,17 +405,20 @@
   position: relative;
   flex: none;
   height: 301px;
-  /* La tarjeta recorta en sus bordes, pero no acá: al crecer, la foto se metía
-     sobre la fecha y el título en vez de quedar contenida en su marco. */
-  overflow: hidden;
+  /* Al crecer, la foto se metía sobre la fecha y el título: se recorta arriba
+     y a los costados, pero no abajo, porque la fecha del evento destacado
+     asoma 39px por debajo del marco y `overflow: hidden` la cortaba. Abajo no
+     hace falta recortar: la foto crece desde su borde inferior, que no se
+     mueve. */
+  clip-path: inset(0 0 -48px 0);
 }
 
 .news-card__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Mismo gesto que en los bandeaux de perfiles. La tarjeta ya recorta con
-     `overflow: hidden`, así que la foto crece por dentro del marco. */
+  transform-origin: 50% 100%;
+  /* Mismo gesto que en los bandeaux de perfiles, por dentro del marco. */
   transition: scale var(--dur-slow) var(--ease-hover);
 }
 
