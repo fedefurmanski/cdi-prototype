@@ -768,72 +768,48 @@
   color: var(--c-body);
 }
 
-.bars {
-  margin-top: var(--space-2);
-}
-
-.bars__row {
+/* Desgloses: un recuadro por cifra, sin barras (MarkUp #24: la barra gris
+   daba la sensación de algo incompleto). Fondo pastel del color de cada una,
+   como los bloques de la filosofía, y sin filete ni sombra: con tarjeta blanca
+   y filete se confundían con la barra lateral. La cifra va en negro —las de
+   color son las tres grandes de arriba—. */
+.stats {
   display: grid;
-  grid-template-columns: 240px 1fr 48px;
-  align-items: center;
-  gap: var(--space-5);
-  padding: var(--space-4) 0;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-4);
 }
 
-.bars__row + .bars__row {
-  border-top: 1px solid var(--c-grey-200);
+.stats__item {
+  padding: var(--space-6);
+  border-radius: var(--r-card);
+  background: color-mix(in srgb, var(--accent) 16%, #fff);
 }
 
-.bars__label {
+.stats__num {
+  display: block;
+  font-size: 48px;
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--c-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.stats__label {
+  display: block;
+  margin-top: var(--space-3);
   font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
   line-height: 1.4;
   color: var(--c-ink);
 }
 
-.bars__label span {
+/* Sobre el pastel, el gris claro de siempre no llegaba a AA. */
+.stats__label span {
   display: block;
   font-weight: var(--fw-regular);
-  color: var(--c-muted);
-}
-
-.bars__track {
-  height: 10px;
-  border-radius: 5px;
-  background: var(--c-grey-100);
-  overflow: hidden;
-}
-
-.bars__fill {
-  display: block;
-  width: var(--part);
-  height: 100%;
-  border-radius: 5px;
-  background: var(--accent);
-}
-
-/* Crece al entrar en pantalla. El estado plegado se declara sólo con JS: si
-   fallara, las barras se ven completas en vez de vacías. */
-.js .bars__fill {
-  transform-origin: left center;
-  scale: 0 1;
-  transition: scale 900ms var(--ease-out);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.js [data-reveal].is-visible .bars__fill {
-  scale: 1 1;
-}
-
-.is-export .bars__fill {
-  scale: none !important;
-}
-
-.bars__value {
-  font-size: var(--fs-md);
-  font-weight: var(--fw-bold);
-  text-align: right;
-  color: var(--c-ink);
+  color: var(--c-body);
 }
 
 /* --------------------------------------------------------------------------
@@ -948,10 +924,6 @@
     --side-col: 248px;
     --side-gap: 64px;
   }
-
-  .bars__row {
-    grid-template-columns: 190px 1fr 44px;
-  }
 }
 
 @media (max-width: 1000px) {
@@ -1033,16 +1005,6 @@
 
   .target__media {
     aspect-ratio: 16 / 9;
-  }
-
-  .bars__row {
-    grid-template-columns: 1fr 44px;
-    row-gap: var(--space-3);
-  }
-
-  .bars__track {
-    grid-column: 1 / -1;
-    order: 3;
   }
 
   .figures {
