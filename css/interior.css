@@ -844,6 +844,7 @@
 /* Filete de color a la izquierda, como las tarjetas de «Les publics cibles»
    (MarkUp #25); cada annexe lleva el suyo en `--accent`. */
 .annexe {
+  position: relative;
   display: flex;
   flex-direction: column;
   border-left: 4px solid var(--accent);
@@ -888,6 +889,32 @@
   padding-top: var(--space-5);
   font-size: var(--fs-sm);
   color: var(--c-teal-deep);
+}
+
+/* La tarjeta entera es clickeable: el enlace se estira sobre ella con un
+   pseudo-elemento, así sigue habiendo un solo enlace por annexe para el
+   lector de pantalla y el teclado. */
+.annexe__map::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.annexe:has(.annexe__map:focus-visible) {
+  outline: 3px solid var(--c-teal);
+  outline-offset: 3px;
+}
+
+.annexe__map:focus-visible {
+  outline: none;
+}
+
+/* El teléfono y el mail, por encima del enlace estirado: se pueden tocar
+   solos para llamar o escribir. */
+.annexe__contact a {
+  position: relative;
+  z-index: 1;
 }
 
 .annexe h3 {
@@ -977,10 +1004,12 @@
   align-items: stretch;
 }
 
+/* Las páginas de annexe toman el color del filete de su tarjeta en «Nos
+   annexes»: lo declara `.interior__main` en `--accent`. */
 .annexe-page__person {
   padding: var(--space-6);
   border-radius: var(--r-card);
-  background: color-mix(in srgb, var(--c-teal) 16%, #fff);
+  background: color-mix(in srgb, var(--accent, var(--c-teal)) 16%, #fff);
 }
 
 /* Retrato de la chargée. Mientras no llegue la foto, un avatar genérico: la
@@ -990,7 +1019,7 @@
   height: 112px;
   border: 4px solid var(--c-surface);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--c-teal) 32%, #fff);
+  background: color-mix(in srgb, var(--accent, var(--c-teal)) 32%, #fff);
   overflow: hidden;
 }
 
@@ -1030,7 +1059,7 @@
   justify-content: space-between;
   gap: var(--space-6);
   padding: var(--space-6);
-  border-left: 4px solid var(--c-teal);
+  border-left: 4px solid var(--accent, var(--c-teal));
   border-radius: var(--r-card);
   background: var(--c-surface);
   box-shadow: var(--shadow-card);
@@ -1079,13 +1108,13 @@
   font-size: 11px;
 }
 
-/* El marcador: un anillo turquesa con el punto al centro, como la forma del
-   kit, en vez del alfiler azul genérico. */
+/* El marcador: un anillo del color de la annexe con el punto al centro, como
+   la forma del kit, en vez del alfiler azul genérico. */
 .annexe-map__pin {
   display: block;
   width: 32px;
   height: 32px;
-  border: 7px solid var(--c-teal);
+  border: 7px solid var(--accent, var(--c-teal));
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 6px 16px rgba(0, 15, 45, 0.25);
@@ -1108,6 +1137,12 @@
 
 .annexe-map__links {
   margin-top: var(--space-4);
+}
+
+/* El enlace con flecha lee `--accent`, que acá es el color de la annexe: queda
+   en el turquesa de siempre para que el texto no pierda contraste. */
+.annexe-map__links .link-arrow {
+  color: var(--c-teal-deep);
 }
 
 /* --------------------------------------------------------------------------
