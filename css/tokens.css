@@ -151,8 +151,8 @@
 
 /* Color por sección (revisión de octubre). Lo declara el `<li>` de cada ítem
    de la nav —para su hover y su desplegable— y el `<body>` de cada subpágina,
-   que toma sólo ese color en sus acentos. Los botones no lo leen: quedan
-   siempre turquesa. */
+   que lo usa en la barra lateral. El contenido de las páginas conserva sus
+   colores, y los botones quedan siempre turquesa. */
 [data-section="a-propos"] {
   --section: var(--c-pink);
   --section-ink: var(--c-pink-ink);

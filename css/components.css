@@ -1190,3 +1190,22 @@
     display: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Formas del design kit en color
+   Las del margen van en gris como <img>; cuando una forma tiene que tomar un
+   color del contenido, se dibuja con máscara y el color sale de `color`. Las
+   formas del kit no tienen partes blancas —los huecos son huecos—, así que la
+   máscara las respeta tal cual.
+   -------------------------------------------------------------------------- */
+
+.shape {
+  background: currentColor;
+  -webkit-mask: var(--shape) center / contain no-repeat;
+  mask: var(--shape) center / contain no-repeat;
+}
+
+.shape--02-1 { --shape: url("../assets/svg/kit/kit-02-1.svg"); }
+.shape--09-1 { --shape: url("../assets/svg/kit/kit-09-1.svg"); }
+.shape--10-1 { --shape: url("../assets/svg/kit/kit-10-1.svg"); }
+.shape--14-1 { --shape: url("../assets/svg/kit/kit-14-1.svg"); }
