@@ -843,17 +843,25 @@
   margin-top: var(--space-8);
 }
 
+/* Filete de color a la izquierda, como las tarjetas de «Les publics cibles»
+   (MarkUp #25); cada annexe lleva el suyo en `--accent`. */
 .annexe {
   display: flex;
   flex-direction: column;
+  border-left: 4px solid var(--accent);
   border-radius: var(--r-card);
   background: var(--c-surface);
   box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
+/* La foto va adentro de la tarjeta, como en «Les publics cibles»: pegada al
+   borde, el filete de color le quedaba encima como una raya. Mismo margen que
+   el texto, para que los dos se alineen. */
 .annexe__media {
+  margin: var(--space-6) var(--space-6) 0;
   aspect-ratio: 16 / 10;
+  border-radius: var(--r-media);
   overflow: hidden;
 }
 
@@ -875,10 +883,13 @@
   padding: var(--space-6);
 }
 
+/* El enlace con flecha lee `--accent`, que acá es el color del filete:
+   queda en el turquesa de siempre. */
 .annexe__map {
   margin-top: auto;
   padding-top: var(--space-5);
   font-size: var(--fs-sm);
+  color: var(--c-teal-deep);
 }
 
 .annexe h3 {
@@ -903,9 +914,11 @@
   line-height: 1.6;
 }
 
+/* Teléfono y mail en negro y en negrita (MarkUp #26): son lo que se viene a
+   buscar a esta página. */
 .annexe__contact a {
-  color: var(--c-teal-deep);
-  font-weight: var(--fw-semibold);
+  color: var(--c-ink);
+  font-weight: var(--fw-bold);
   width: fit-content;
 }
 
