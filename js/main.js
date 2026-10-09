@@ -1309,6 +1309,45 @@ function initAnnexeMap() {
     });
 }
 
+/* --------------------------------------------------------------------------
+   Equipo: fichas sobre la foto de grupo
+   El hover y el foco las muestran desde el CSS; el clic las deja abiertas
+   —en pantallas táctiles es la única forma— y cierra las demás. Escape o un
+   clic fuera las cierran.
+   -------------------------------------------------------------------------- */
+
+function initTeam() {
+  document.querySelectorAll('[data-team]').forEach((team) => {
+    const spots = [...team.querySelectorAll('.team__spot')];
+
+    const close = (spot) => {
+      spot.setAttribute('aria-expanded', 'false');
+      spot.closest('.team__person').classList.remove('is-open');
+    };
+
+    spots.forEach((spot) => {
+      spot.addEventListener('click', () => {
+        const open = spot.getAttribute('aria-expanded') !== 'true';
+        spots.forEach(close);
+        if (!open) return;
+        spot.setAttribute('aria-expanded', 'true');
+        spot.closest('.team__person').classList.add('is-open');
+      });
+    });
+
+    team.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const abierta = spots.find((s) => s.getAttribute('aria-expanded') === 'true');
+      spots.forEach(close);
+      abierta?.focus();
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!team.contains(event.target)) spots.forEach(close);
+    });
+  });
+}
+
 /* -------------------------------------------------------------------------- */
 
 const news = document.querySelector('.news');
@@ -1330,3 +1369,4 @@ initDecoParallax();
 initHeroParallax();
 initBackToTop();
 initAnnexeMap();
+initTeam();

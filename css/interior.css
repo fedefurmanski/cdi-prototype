@@ -811,26 +811,6 @@
 }
 
 /* --------------------------------------------------------------------------
-   Equipo — provisional, a la espera de referencias
-   -------------------------------------------------------------------------- */
-
-.chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-8);
-}
-
-.chip {
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--r-pill);
-  background: var(--c-surface-alt);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
-  color: var(--c-body);
-}
-
-/* --------------------------------------------------------------------------
    Annexes
    -------------------------------------------------------------------------- */
 
@@ -949,6 +929,327 @@
 
 .annexe__contact a:hover {
   text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Equipo: foto de grupo con fichas
+   Cada persona es un <li> con su zona sobre la cara (--x, --y, en % de la
+   foto). En computadora, la zona abre la ficha al pasar el mouse, con el
+   teclado o con un clic (que la deja abierta; ver `initTeam`). La ficha sale
+   chica, debajo del «+» de la persona, con un triángulo que apunta al
+   círculo. En celular las mismas fichas van como tarjetas debajo de la foto:
+   es un solo marcado.
+   -------------------------------------------------------------------------- */
+
+.team {
+  margin-top: var(--space-16);
+}
+
+/* El equipo que todavía no mandó su foto: el lugar, del mismo tamaño. */
+.team__stage--pending {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1600 / 1027;
+  border-radius: 30px;
+  background: var(--c-surface-alt);
+}
+
+.team__pending {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--c-grey-500);
+}
+
+/* La foto es el contenedor: el paso a tarjetas de abajo depende de su ancho,
+   no del de la pantalla (ver el @container al final). */
+.team__stage {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--space-6);
+  container: team / inline-size;
+}
+
+/* La ficha de alguien de abajo cuelga de la foto: tiene que pasar por encima
+   del título del equipo siguiente y de cualquier otra cosa de la página
+   (menos la navegación). */
+.team__stage:has(.team__person:hover, .team__person:focus-within, .team__person.is-open) {
+  z-index: 9;
+}
+
+/* El marco recorta la foto, y sólo la foto: las fichas van afuera, así
+   pueden colgar por debajo. */
+.team__frame {
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.team__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: scale 1200ms var(--ease-out);
+}
+
+/* Al entrar, la caja sube con el resto de la página (data-reveal="up") y la
+   foto se asienta dentro del marco desde un zoom leve. */
+.js .team__stage[data-reveal]:not(.is-visible) .team__photo {
+  scale: 1.06;
+}
+
+/* Cubre exactamente la foto: las zonas se miden en % de ella (--x, --y van
+   sin unidad: así sirven en % y en cqw). Lo demás —el tamaño de la zona y los
+   corrimientos del «+»— se midió con la foto a 835px (la pantalla de 1512) y
+   se escala con --u, un píxel de esa foto: así la composición que se aprobó
+   es la misma a cualquier ancho. La ficha también se angosta (el texto no:
+   queda en 13px). */
+.team__people {
+  --u: calc(100cqw / 835);
+  --card-w: min(216px, calc(216 * var(--u)));
+  position: absolute;
+  inset: 0;
+}
+
+/* La zona cubre la cara y no se ve: ni un círculo ni un contorno encima de la
+   cara. Lo que avisa que se puede tocar es el «+» de abajo del mentón, que se
+   oscurece al pasar el mouse y lleva el anillo de foco con el teclado. */
+.team__spot {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  display: block;
+  width: calc(96 * var(--u));
+  height: calc(116 * var(--u));
+  translate: -50% -50%;
+  border-radius: 50%;
+}
+
+/* El «+» va a la altura del pecho, bien por debajo del mentón. Si ahí cae la
+   cara de alguien de adelante, se corre por persona con --bx / --by (en el
+   <li>, en píxeles de la foto a 835px): desplazamiento horizontal y distancia
+   al pie de la zona. El «+» en sí no se achica, para que se siga viendo. */
+.team__spot::before,
+.team__spot::after {
+  position: absolute;
+  left: calc(50% + var(--bx, 0) * var(--u));
+  top: calc(100% + var(--by, 30) * var(--u));
+  width: 28px;
+  height: 28px;
+  translate: -50% 0;
+  border-radius: 50%;
+}
+
+/* El «+», turquesa y un poco translúcido para que no pese sobre la foto. */
+.team__spot::after {
+  content: '+';
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--c-teal) 88%, transparent);
+  box-shadow: 0 2px 8px rgba(0, 15, 45, 0.22);
+  color: #fff;
+  font-size: 18px;
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover),
+    opacity 500ms var(--ease-out) calc(450ms + var(--i, 0) * 60ms),
+    scale 500ms var(--ease-out) calc(450ms + var(--i, 0) * 60ms);
+}
+
+/* Los «+» llegan un momento después que la foto, uno detrás de otro, con un
+   fundido corto. El pulso arranca recién cuando ya están. */
+.js .team__stage:not(.is-visible) .team__spot::after {
+  opacity: 0;
+  scale: 0.7;
+}
+
+.js .team__stage:not(.is-visible) .team__spot::before {
+  animation: none;
+  opacity: 0;
+}
+
+/* Detrás, un anillo turquesa que se agranda y se apaga: dice «tocá acá» sin
+   gritar. Cada persona late a destiempo de la anterior para que la foto no
+   palpite entera a la vez. */
+.team__spot::before {
+  content: '';
+  border: 2px solid var(--c-teal);
+  /* Quieto no se ve: lo muestra la animación. Si no, mientras espera su
+     turno queda un círculo vacío asomando detrás del «+». */
+  opacity: 0;
+  animation: team-pulse 2.4s var(--ease-out) infinite;
+  animation-delay: calc(1.2s + var(--i, 0) * 0.3s);
+}
+
+@keyframes team-pulse {
+  0% {
+    scale: 1;
+    opacity: 0.9;
+  }
+
+  70%,
+  100% {
+    scale: 2.2;
+    opacity: 0;
+  }
+}
+
+/* Abierta o con el mouse encima, el pulso ya no hace falta. */
+.team__person:hover .team__spot::before,
+.team__spot[aria-expanded='true']::before {
+  animation: none;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team__spot::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.team__person:hover .team__spot::after,
+.team__spot:focus-visible::after,
+.team__spot[aria-expanded='true']::after {
+  background: var(--c-teal-dark);
+  color: #fff;
+}
+
+.team__spot:focus-visible {
+  outline: none;
+}
+
+.team__spot:focus-visible::after {
+  outline: 3px solid var(--c-teal);
+  outline-offset: 3px;
+}
+
+/* La ficha sale siempre debajo de su «+», centrada en él. Se mide desde el
+   «+»: el pie de la zona (58 bajo el centro de la cara), su distancia (--by),
+   su alto (28px) y el aire del triángulo. De costado nunca se sale de la foto:
+   cerca del borde la ficha se corre y el triángulo sigue apuntando al «+».
+   Por abajo sí puede pasarse, sobre el blanco de la página. */
+.team__person {
+  --badge-x: calc(var(--x) * 1cqw + var(--bx, 0) * var(--u));
+  --card-left: clamp(
+    var(--space-4),
+    calc(var(--badge-x) - var(--card-w) / 2),
+    calc(100cqw - var(--card-w) - var(--space-4))
+  );
+}
+
+/* Blanca y sin filete. La sombra es un drop-shadow y no un box-shadow para
+   que envuelva también el triángulo. */
+.team__card {
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--y) * 1% + (58 + var(--by, 30)) * var(--u) + 28px + 10px);
+  left: var(--card-left);
+  width: var(--card-w);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--r-btn);
+  background: var(--c-surface);
+  filter: drop-shadow(0 4px 12px rgba(0, 15, 45, 0.2));
+  /* Crece desde la punta del triángulo, como si saliera del «+»: si se
+     deslizara, el triángulo se movería sobre el punto. Se va más rápido de lo
+     que llega. */
+  --arrow-left: clamp(
+    var(--r-btn),
+    calc(var(--badge-x) - var(--card-left) - 4.5px),
+    calc(100% - 9px - var(--r-btn))
+  );
+  transform-origin: calc(var(--arrow-left) + 4.5px) -6px;
+  opacity: 0;
+  visibility: hidden;
+  scale: 0.9;
+  transition:
+    opacity 120ms ease-in,
+    scale 160ms ease-in,
+    visibility 0s linear 160ms;
+}
+
+/* El triángulo: un cuadradito girado 45° con la punta redondeada, mitad
+   fuera de la ficha (asoma 6px) y con la punta a 4px del círculo. La otra
+   mitad queda sobre la ficha, blanco sobre blanco. */
+.team__card::before {
+  content: '';
+  position: absolute;
+  top: -4.5px;
+  left: var(--arrow-left);
+  width: 9px;
+  height: 9px;
+  border-top-left-radius: 2px;
+  background: inherit;
+  rotate: 45deg;
+}
+
+.team__person:hover .team__card,
+.team__person:focus-within .team__card,
+.team__person.is-open .team__card {
+  z-index: 2;
+  opacity: 1;
+  visibility: visible;
+  scale: 1;
+  transition:
+    opacity 180ms var(--ease-out),
+    scale 320ms var(--ease-out),
+    visibility 0s;
+}
+
+/* Con movimiento reducido, sólo el fundido. */
+@media (prefers-reduced-motion: reduce) {
+  .team__card {
+    scale: none;
+  }
+}
+
+/* Tres niveles: quién es (el nombre, lo único en negrita negra), qué hace
+   (el cargo, en gris) y cómo escribirle (el mail, como link). */
+.team__name {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  color: var(--c-ink);
+}
+
+/* El cargo, en gris, entre el nombre y el mail. */
+.team__role {
+  margin-top: 2px;
+  font-size: calc(13px * var(--fs-scale));
+  line-height: 1.4;
+  color: var(--c-grey-500);
+}
+
+/* En el turquesa de texto, que pasa AA a este tamaño; el de marca no. Un mail
+   largo corta donde haga falta en vez de salirse de la ficha. */
+.team__mail {
+  display: inline-block;
+  max-width: 100%;
+  margin-top: var(--space-2);
+  overflow-wrap: anywhere;
+  font-size: calc(13px * var(--fs-scale));
+  color: var(--c-teal-ink);
+}
+
+.team__mail:hover {
+  text-decoration: underline;
+}
+
+/* «Demande-moi à propos de», para cuando el cliente mande los temas: un
+   rótulo chico en gris y los temas debajo, después del mail. */
+.team__ask {
+  margin-top: var(--space-3);
+  font-size: calc(13px * var(--fs-scale));
+  line-height: 1.4;
+  color: var(--c-ink-soft);
+}
+
+.team__ask strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: calc(12px * var(--fs-scale));
+  font-weight: var(--fw-semibold);
+  color: var(--c-grey-500);
 }
 
 /* --------------------------------------------------------------------------
@@ -1252,3 +1553,56 @@
   }
 }
 
+@container team (max-width: 719px) {
+  /* Equipo con la foto angosta (celular y tableta): la foto sola y debajo las
+     fichas, todas a la vista. Las zonas sobre la foto no tienen sentido con el
+     dedo, y con la foto chica la ficha tapaba caras. */
+  .team__frame {
+    border-radius: var(--r-card);
+  }
+
+  .team__people {
+    position: static;
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .team__spot {
+    display: none;
+  }
+
+  .team__card {
+    position: static;
+    width: auto;
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--r-card);
+    scale: none;
+    opacity: 1;
+    visibility: visible;
+    filter: none;
+    background: var(--c-surface-alt);
+  }
+
+  .team__card::before {
+    content: none;
+  }
+
+  .team__name {
+    font-size: var(--fs-md);
+  }
+
+  .team__role,
+  .team__mail,
+  .team__ask {
+    font-size: var(--fs-sm);
+  }
+
+  .team__ask {
+    margin-top: var(--space-3);
+  }
+
+  .team__ask strong {
+    font-size: var(--fs-xs);
+  }
+}

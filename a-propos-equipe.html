@@ -278,18 +278,150 @@
               </p>
             </div>
 
-            <!-- TODO(diseño): Federico va a traer referencias para esta sección.
-                 Por ahora, sólo el índice de las unidades; los nombres completos
-                 están en el contenido original de cdi.lu. -->
-            <ul class="chip-list" data-reveal-group>
-              <li class="chip">Direction</li>
-              <li class="chip">Chargés de direction</li>
-              <li class="chip">Développement, qualité et innovation</li>
-              <li class="chip">Administration, technique et infrastructures</li>
-              <li class="chip">Accompagnement social et promotion de la santé</li>
-              <li class="chip">Ressources humaines</li>
-              <li class="chip">Service Leichte Sprache</li>
-            </ul>
+            <section class="team" id="equipe-direction" aria-labelledby="equipe-direction-titre">
+              <h2 class="block__title" id="equipe-direction-titre" data-reveal="up">Direction</h2>
+              <div class="team__stage team__stage--pending" data-reveal="up">
+                <p class="team__pending">Photo de groupe à venir</p>
+              </div>
+            </section>
+            <section class="team" id="equipe-charges-direction" aria-labelledby="equipe-charges-direction-titre">
+              <h2 class="block__title" id="equipe-charges-direction-titre" data-reveal="up">Chargés de direction</h2>
+              <div class="team__stage team__stage--pending" data-reveal="up">
+                <p class="team__pending">Photo de groupe à venir</p>
+              </div>
+            </section>
+
+            <!-- Revisión de octubre (mails del 07/10 y reunión del 08/10): el equipo
+                 se presenta con fotos de grupo —la dirección, las chargées de
+                 direction y después cada cellule— y cada persona tiene su ficha
+                 (nombre, mail, «Demande-moi à propos de»).
+                 En computadora, una zona sobre cada cara abre la ficha al pasar el
+                 mouse, al hacer clic o con el teclado; en celular, las mismas
+                 fichas van como tarjetas debajo de la foto. Las zonas se ubican a
+                 mano sobre cada foto (--x, --y, en % de la foto, sin el signo):
+                 si cambia la foto, hay que moverlas. También por persona,
+                 --bx / --by corren el «+» (en px de la foto a 835px, la de una
+                 pantalla de 1512; a otro ancho se escalan con la foto). La ficha
+                 sale siempre debajo del «+». La foto es la que mandó el cliente
+                 el 08/10. Nombres, cargos y mails, de cdi.lu (À propos › Notre
+                 équipe), ubicados según Federico; faltan los de las caras 4, 6 y 8
+                 (--i: 3, 5, 7). Mientras no estén los temas de «Demande-moi à
+                 propos de», la ficha lleva el cargo (ver .team__ask en el CSS).
+                 Los demás equipos esperan su foto. -->
+            <section class="team" id="equipe-developpement" aria-labelledby="equipe-developpement-titre" data-team>
+              <h2 class="block__title" id="equipe-developpement-titre" data-reveal="up">Cellule de développement, de qualité et d’innovation</h2>
+              <div class="team__stage" data-reveal="up">
+                <div class="team__frame">
+                  <img class="team__photo" src="assets/img/equipe/groupe-1.jpg" alt="Photo de groupe de la cellule de développement, de qualité et d’innovation" />
+                </div>
+                <ul class="team__people">
+                <li class="team__person" style="--i: 0; --x: 17.1; --y: 33.1">
+                  <button class="team__spot" type="button" aria-expanded="false" aria-controls="membre-1">
+                    <span class="visually-hidden">Maxime Pantaleoni</span>
+                  </button>
+                  <div class="team__card" id="membre-1">
+                    <p class="team__name">Maxime Pantaleoni</p>
+                    <p class="team__role">Gestionnaire de projets</p>
+                    <a class="team__mail" href="mailto:maxime.pantaleoni@cc-cdi.lu">maxime.pantaleoni@cc-cdi.lu</a>
+                  </div>
+                </li>
+                <li class="team__person" style="--i: 1; --x: 31.0; --y: 27.9; --bx: 50; --by: -14">
+                  <button class="team__spot" type="button" aria-expanded="false" aria-controls="membre-2">
+                    <span class="visually-hidden">Georges Werner</span>
+                  </button>
+                  <div class="team__card" id="membre-2">
+                    <p class="team__name">Georges Werner</p>
+                    <p class="team__role">Responsable – Coordinateur</p>
+                    <a class="team__mail" href="mailto:georges.werner@cc-cdi.lu">georges.werner@cc-cdi.lu</a>
+                  </div>
+                </li>
+                <li class="team__person" style="--i: 2; --x: 47.9; --y: 25.4; --bx: 56; --by: 8">
+                  <button class="team__spot" type="button" aria-expanded="false" aria-controls="membre-3">
+                    <span class="visually-hidden">Selma Muratovic</span>
+                  </button>
+                  <div class="team__card" id="membre-3">
+                    <p class="team__name">Selma Muratovic</p>
+                    <p class="team__role">Gestionnaire de projets</p>
+                    <a class="team__mail" href="mailto:selma.muratovic@cc-cdi.lu">selma.muratovic@cc-cdi.lu</a>
+                  </div>
+                </li>
+                <li class="team__person" style="--i: 3; --x: 66.1; --y: 29.2; --bx: 56; --by: -40">
+                  <button class="team__spot" type="button" aria-expanded="false" aria-controls="membre-4">
+                    <span class="visually-hidden">Prénom Nom</span>
+                  </button>
+                  <div class="team__card" id="membre-4">
+                    <p class="team__name">Prénom Nom</p>
+                    <p class="team__role">Fonction</p>
+                    <a class="team__mail" href="mailto:prenom.nom@cc-cdi.lu">prenom.nom@cc-cdi.lu</a>
+                  </div>
+                </li>
+                <li class="team__person" style="--i: 4; --x: 82.5; --y: 36.4; --bx: 28">
+                  <button class="team__spot" type="button" aria-expanded="false" aria-controls="membre-5">
+                    <span class="visually-hidden">Mark Pfeiffer</span>
+                  </button>
+                  <div class="team__card" id="membre-5">
+                    <p class="team__name">Mark Pfeiffer</p>
+                    <p class="team__role">Responsable – Coordinateur, Marketing &amp; Communication</p>
+                    <a class="team__mail" href="mailto:mark.pfeiffer@cc-cdi.lu">mark.pfeiffer@cc-cdi.lu</a>
+                  </div>
+                </li>
+                <li class="team__person" style="--i: 5; --x: 44.6; --y: 48.1">
+                  <button class="team__spot" type="button" aria-expanded="false" aria-controls="membre-6">
+                    <span class="visually-hidden">Prénom Nom</span>
+                  </button>
+                  <div class="team__card" id="membre-6">
+                    <p class="team__name">Prénom Nom</p>
+                    <p class="team__role">Fonction</p>
+                    <a class="team__mail" href="mailto:prenom.nom@cc-cdi.lu">prenom.nom@cc-cdi.lu</a>
+                  </div>
+                </li>
+                <li class="team__person" style="--i: 6; --x: 66.3; --y: 48.7">
+                  <button class="team__spot" type="button" aria-expanded="false" aria-controls="membre-7">
+                    <span class="visually-hidden">Astrid Seiler</span>
+                  </button>
+                  <div class="team__card" id="membre-7">
+                    <p class="team__name">Astrid Seiler</p>
+                    <p class="team__role">Secrétariat &amp; Budget</p>
+                    <a class="team__mail" href="mailto:secretariat@cc-cdi.lu">secretariat@cc-cdi.lu</a>
+                  </div>
+                </li>
+                <li class="team__person" style="--i: 7; --x: 34.6; --y: 67.5; --bx: -36">
+                  <button class="team__spot" type="button" aria-expanded="false" aria-controls="membre-8">
+                    <span class="visually-hidden">Prénom Nom</span>
+                  </button>
+                  <div class="team__card" id="membre-8">
+                    <p class="team__name">Prénom Nom</p>
+                    <p class="team__role">Fonction</p>
+                    <a class="team__mail" href="mailto:prenom.nom@cc-cdi.lu">prenom.nom@cc-cdi.lu</a>
+                  </div>
+                </li>
+                </ul>
+              </div>
+            </section>
+            <section class="team" id="equipe-administration" aria-labelledby="equipe-administration-titre">
+              <h2 class="block__title" id="equipe-administration-titre" data-reveal="up">Cellule administrative, technique et des infrastructures</h2>
+              <div class="team__stage team__stage--pending" data-reveal="up">
+                <p class="team__pending">Photo de groupe à venir</p>
+              </div>
+            </section>
+            <section class="team" id="equipe-accompagnement" aria-labelledby="equipe-accompagnement-titre">
+              <h2 class="block__title" id="equipe-accompagnement-titre" data-reveal="up">Cellule d’accompagnement social et de promotion de la santé</h2>
+              <div class="team__stage team__stage--pending" data-reveal="up">
+                <p class="team__pending">Photo de groupe à venir</p>
+              </div>
+            </section>
+            <section class="team" id="equipe-ressources-humaines" aria-labelledby="equipe-ressources-humaines-titre">
+              <h2 class="block__title" id="equipe-ressources-humaines-titre" data-reveal="up">Service ressources humaines</h2>
+              <div class="team__stage team__stage--pending" data-reveal="up">
+                <p class="team__pending">Photo de groupe à venir</p>
+              </div>
+            </section>
+            <section class="team" id="equipe-leichte-sprache" aria-labelledby="equipe-leichte-sprache-titre">
+              <h2 class="block__title" id="equipe-leichte-sprache-titre" data-reveal="up">Service Leichte Sprache</h2>
+              <div class="team__stage team__stage--pending" data-reveal="up">
+                <p class="team__pending">Photo de groupe à venir</p>
+              </div>
+            </section>
           </section>
         </div>
       </div>
