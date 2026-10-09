@@ -588,13 +588,11 @@
   margin-top: var(--space-8);
 }
 
+/* Sin filete al costado (MarkUp #35, confirmado en la reunión del 08/10): el
+   texto arranca alineado con la foto de arriba. */
 .approach__panel {
   grid-area: 1 / 1;
-  /* `start` y no `stretch`: si el panel se estirara al alto de la celda —que
-     es el del texto más largo—, el filete sobraría por debajo del texto corto. */
   align-self: start;
-  padding-left: var(--space-6);
-  border-left: 4px solid var(--accent);
 }
 
 .js .approach__panel[inert] {
@@ -927,6 +925,192 @@
 }
 
 /* --------------------------------------------------------------------------
+   Página de una annexe (MarkUp #39)
+   Video de dron arriba, la chargée de direction al lado del contacto, los
+   sitios y el plan de acceso. Clervaux es la plantilla de las siete.
+   -------------------------------------------------------------------------- */
+
+/* Vuelve al listado: la flecha del sistema apunta a la derecha, girada. */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--c-ink);
+}
+
+.back-link .icon {
+  rotate: 180deg;
+  color: var(--section, var(--c-teal));
+  transition: translate var(--dur-hover) var(--ease-hover);
+}
+
+.back-link:hover .icon {
+  translate: -4px 0;
+}
+
+.annexe-page__media {
+  position: relative;
+}
+
+.annexe-page__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--c-grey-100);
+}
+
+.annexe-page__media .play-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+}
+
+/* La chargée de direction y el contacto, lado a lado. */
+.annexe-page__intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  align-items: stretch;
+}
+
+.annexe-page__person {
+  padding: var(--space-6);
+  border-radius: var(--r-card);
+  background: color-mix(in srgb, var(--c-teal) 16%, #fff);
+}
+
+/* Retrato de la chargée. Mientras no llegue la foto, un avatar genérico: la
+   silueta deja claro que ahí va una persona. */
+.annexe-page__photo {
+  width: 112px;
+  height: 112px;
+  border: 4px solid var(--c-surface);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-teal) 32%, #fff);
+  overflow: hidden;
+}
+
+.annexe-page__photo img,
+.annexe-page__photo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.annexe-page__photo svg {
+  fill: var(--c-surface);
+}
+
+.annexe-page__role {
+  margin-top: var(--space-5);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-ink-soft);
+}
+
+.annexe-page__name {
+  margin-top: var(--space-2);
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-bold);
+  color: var(--c-ink);
+}
+
+/* El título arriba y los datos al pie: la tarjeta toma el alto de la de la
+   chargée y, con todo arriba, quedaba un hueco abajo. */
+.annexe-page__contact {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  border-left: 4px solid var(--c-teal);
+  border-radius: var(--r-card);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.annexe-page__contact .block__title {
+  font-size: var(--fs-h4);
+}
+
+.annexe-page__contact .annexe__addr {
+  margin-top: 0;
+}
+
+/* Plan de acceso: fondo de OpenStreetMap en gris claro y un marcador de la
+   marca (ver `initAnnexeMap`). Sin JS o sin conexión con el CDN queda el recuadro gris y
+   el enlace a Google Maps de abajo. */
+.annexe-map {
+  position: relative;
+  z-index: 0;
+  margin-top: var(--space-6);
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-card);
+  background: var(--c-surface-alt);
+  overflow: hidden;
+}
+
+.annexe-map .leaflet-container {
+  font-family: var(--font-sans);
+}
+
+/* Sólo los fondos se aclaran: el marcador, en su propia capa, queda a color.
+   El filtro va cuadro por cuadro y no sobre la capa entera: sobre la capa
+   dejaba una línea fina en cada unión. */
+.annexe-map .leaflet-tile {
+  filter: grayscale(1) brightness(1.06) contrast(0.82);
+}
+
+/* Cada cuadro pisa medio pixel al siguiente: con el filtro, el redondeo de
+   las uniones dejaba una línea clara entre cuadros. */
+.annexe-map .leaflet-tile-container img.leaflet-tile {
+  width: 256.5px !important;
+  height: 256.5px !important;
+}
+
+.annexe-map .leaflet-control-attribution {
+  font-size: 11px;
+}
+
+/* El marcador: un anillo turquesa con el punto al centro, como la forma del
+   kit, en vez del alfiler azul genérico. */
+.annexe-map__pin {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border: 7px solid var(--c-teal);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(0, 15, 45, 0.25);
+}
+
+.annexe-map .leaflet-tooltip.annexe-map__label {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--c-ink);
+  color: #fff;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  box-shadow: none;
+}
+
+.annexe-map .leaflet-tooltip.annexe-map__label::before {
+  display: none;
+}
+
+.annexe-map__links {
+  margin-top: var(--space-4);
+}
+
+/* --------------------------------------------------------------------------
    Angosto
    OJO: igual que en la home, de 1080px para abajo son decisiones propias y no
    diseño validado.
@@ -962,6 +1146,10 @@
 }
 
 @media (max-width: 760px) {
+  .annexe-page__intro {
+    grid-template-columns: 1fr;
+  }
+
   /* La filosofía: la forma pasa a la esquina de arriba y el texto toma el
      ancho entero. */
   .philo__item {

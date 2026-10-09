@@ -1244,6 +1244,45 @@ function initBackToTop() {
   update();
 }
 
+/* --------------------------------------------------------------------------
+   Plan de acceso de una annexe
+   Leaflet con fondos de OpenStreetMap en gris —sin cookies— y el marcador
+   de la marca. Sin rueda del mouse: la página se scrollea por encima del mapa sin
+   quedar atrapada; se acerca con los botones o con dos dedos.
+   -------------------------------------------------------------------------- */
+
+function initAnnexeMap() {
+  const box = document.querySelector('.annexe-map[data-map-lat]');
+  if (!box || !window.L) return;
+
+  const punto = [Number(box.dataset.mapLat), Number(box.dataset.mapLng)];
+  const mapa = window.L.map(box, { scrollWheelZoom: false, zoomControl: true }).setView(punto, 16);
+
+  // Fondos de OpenStreetMap, aclarados en gris desde el CSS. Sirven para el
+  // prototipo; en producción hace falta un proveedor con clave (CARTO,
+  // MapTiler, Stadia): la política de uso de OSM no admite tráfico de sitio.
+  window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(mapa);
+
+  const icono = window.L.divIcon({
+    className: '',
+    html: '<span class="annexe-map__pin"></span>',
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+  });
+
+  window.L.marker(punto, { icon: icono, keyboard: false })
+    .addTo(mapa)
+    .bindTooltip(box.dataset.mapLabel || '', {
+      permanent: true,
+      direction: 'right',
+      offset: [20, 0],
+      className: 'annexe-map__label',
+    });
+}
+
 /* -------------------------------------------------------------------------- */
 
 const news = document.querySelector('.news');
@@ -1264,3 +1303,4 @@ initDecoReveal();
 initDecoParallax();
 initHeroParallax();
 initBackToTop();
+initAnnexeMap();
