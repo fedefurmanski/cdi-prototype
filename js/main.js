@@ -341,7 +341,10 @@ function initVideo() {
    -------------------------------------------------------------------------- */
 
 // `?popup=off` lo saca puntualmente, para mirar la página sin él.
-const POPUP_ENABLED = true;
+// TODO: apagado mientras se aplican los cambios de la revisión de octubre;
+// volver a true antes de mandarle el prototipo al cliente. `?popup=on` lo
+// muestra igual.
+const POPUP_ENABLED = false;
 
 const REMEMBER_DISMISSAL = false;
 const POPUP_KEY = 'cdi:event-popup';
@@ -1077,8 +1080,11 @@ function initDecoReveal() {
 
   // Cada pieza entra por separado: un `.deco-cluster` se anima por dentro, no
   // como bloque, así las formas que van juntas se escalonan entre sí.
-  const piezasDe = (hijo) =>
-    hijo.classList.contains('deco-cluster') ? [...hijo.children] : [hijo];
+  // Un `.deco-rail` lleva su grupo un nivel más adentro.
+  const piezasDe = (hijo) => {
+    const grupo = hijo.classList.contains('deco-rail') ? hijo.querySelector('.deco-cluster') : hijo;
+    return grupo?.classList.contains('deco-cluster') ? [...grupo.children] : [hijo];
+  };
 
   // El escalonado se resuelve acá y corre a lo largo de toda la banda: el delay
   // va en el estilo en línea, no en una custom property, porque la propiedad
@@ -1211,6 +1217,33 @@ function initDecoParallax() {
   update();
 }
 
+/* --------------------------------------------------------------------------
+   Volver arriba
+   El botón aparece recién pasada una pantalla de scroll: antes no hay adónde
+   volver. Con movimiento reducido el salto es directo.
+   -------------------------------------------------------------------------- */
+
+function initBackToTop() {
+  const btn = document.querySelector('[data-action="back-to-top"]');
+  if (!btn) return;
+
+  const update = () => {
+    btn.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.8);
+  };
+
+  btn.addEventListener('click', () => {
+    const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reducido ? 'auto' : 'smooth' });
+    // El foco vuelve al principio con el scroll —al logo y no al «Aller au
+    // contenu», que se haría visible—: si no, el siguiente Tab seguiría
+    // desde el pie.
+    document.querySelector('.nav a')?.focus({ preventScroll: true });
+  });
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
 /* -------------------------------------------------------------------------- */
 
 const news = document.querySelector('.news');
@@ -1230,3 +1263,4 @@ initLineReveal();
 initDecoReveal();
 initDecoParallax();
 initHeroParallax();
+initBackToTop();

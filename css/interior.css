@@ -21,6 +21,10 @@
 
 .interior {
   position: relative;
+  /* Las subpáginas usan sólo el color de su sección (ver `data-section` en
+     tokens.css). Filetes, puntos y barras lo leen de `--accent`; el texto en
+     color, de `--section-ink`. */
+  --accent: var(--section, var(--c-teal));
   /* Un punto por debajo del resto del sitio: acá las formas acompañan a una
      columna de texto largo y no a una portada. */
   --deco-op: 0.78;
@@ -86,7 +90,7 @@
   position: absolute;
   left: 0;
   top: 0.28em;
-  color: var(--c-teal);
+  color: var(--section-ink, var(--c-teal));
 }
 
 .subnav__eyebrow strong {
@@ -96,7 +100,7 @@
 .subnav {
   /* El filete de color sigue la curva de la tarjeta: es un borde, no una barra
      aparte, que en las esquinas se vería recto contra el redondeo. */
-  border-left: 3px solid var(--c-teal);
+  border-left: 3px solid var(--accent);
   border-radius: 20px;
   background: var(--c-surface);
   box-shadow: var(--shadow-soft);
@@ -125,13 +129,13 @@
 
 .subnav a:hover,
 .subnav a[aria-current] {
-  color: var(--c-teal-deep);
+  color: var(--section-ink, var(--c-teal-deep));
   translate: 6px 0;
 }
 
 /* La página en curso se queda marcada, no sólo desplazada. */
 .subnav a[aria-current='page'] {
-  color: var(--c-teal-deep);
+  color: var(--section-ink, var(--c-teal-deep));
 }
 
 /* --------------------------------------------------------------------------
@@ -322,7 +326,7 @@
 }
 
 .steps__ctrl[aria-selected='true'] .steps__num {
-  color: var(--accent);
+  color: var(--section-ink, var(--accent));
 }
 
 /* Los cuatro nombres viven apilados en la misma celda: así el filete no se
@@ -719,18 +723,10 @@
   font-weight: var(--fw-bold);
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--c-teal-deep);
+  color: var(--section-ink, var(--c-teal-deep));
   /* Ancho estable mientras corre el contador, para que la etiqueta de al lado
      no se mueva a cada cifra. */
   font-variant-numeric: tabular-nums;
-}
-
-.figures__num--verde {
-  color: var(--c-green);
-}
-
-.figures__num--naranja {
-  color: var(--c-orange);
 }
 
 .figures__label {
@@ -901,7 +897,7 @@
 }
 
 .annexe__contact a {
-  color: var(--c-teal-deep);
+  color: var(--section-ink, var(--c-teal-deep));
   font-weight: var(--fw-semibold);
   width: fit-content;
 }
@@ -1013,3 +1009,9 @@
   }
 }
 
+
+/* «Voir sur la carte» y demás enlaces de texto con flecha: en color de la
+   sección, en su versión de texto. */
+.interior .link-arrow {
+  color: var(--section-ink, var(--c-teal-deep));
+}

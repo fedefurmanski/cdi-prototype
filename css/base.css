@@ -194,6 +194,22 @@ button {
   object-position: 50% 0%;
 }
 
+/* Formas grandes cortadas por el borde de la ventana: la caja es angosta y la
+   forma la llena a lo alto, así que asoma sólo la parte que da hacia adentro
+   —la que sigue fuera de pantalla es la del borde—. Las del margen izquierdo
+   se cortan por la izquierda y las del derecho, por la derecha. Sólo para
+   formas que se reconocen cortadas: círculos, anillos, óvalos, reloj de
+   arena. Un triángulo o un damero por la mitad ya no se entienden. */
+.deco .is-cut-left {
+  object-fit: cover;
+  object-position: 100% 50%;
+}
+
+.deco .is-cut-right {
+  object-fit: cover;
+  object-position: 0% 50%;
+}
+
 /* Las formas que en el Figma van pegadas entre sí viven dentro de un
    `.deco-cluster`: el grupo se ancla una sola vez y sus hijos se posicionan
    en coordenadas locales, así nunca se separan al cambiar el ancho. */
@@ -201,6 +217,26 @@ button {
   position: absolute;
   left: var(--x, 0px);
   top: var(--y, 0px);
+  width: var(--w, auto);
+  height: var(--h, auto);
+}
+
+/* Riel para formas que acompañan el scroll: ocupa todo el alto de la banda y
+   lleva adentro un `.deco-cluster` en flujo, a `--start` del tope. Al bajar,
+   el grupo sube con la página hasta que su pie toca el de la ventana; ahí
+   queda clavado con `sticky` y sólo sigue corriendo el contenido, hasta que
+   se acaba la banda. Va en flujo —no absoluto— porque `sticky` no funciona
+   sobre un elemento posicionado en absoluto. */
+.deco-rail {
+  display: flex;
+  flex-direction: column;
+}
+
+.deco-rail > .deco-cluster {
+  position: sticky;
+  top: calc(100vh - var(--h));
+  flex: none;
+  margin-top: var(--start, 0px);
   width: var(--w, auto);
   height: var(--h, auto);
 }
@@ -476,8 +512,9 @@ button {
    -------------------------------------------------------------------------- */
 
 /* Se oculta la forma, no el grupo: dentro de un `.deco-cluster` cada pieza
-   entra por su cuenta, escalonada, en vez de moverse el grupo en bloque. */
-.js .deco > *:not(.deco-cluster),
+   entra por su cuenta, escalonada, en vez de moverse el grupo en bloque. El
+   `.deco-rail` tampoco se oculta: es sólo el carril del grupo que lleva. */
+.js .deco > *:not(.deco-cluster):not(.deco-rail),
 .js .deco-cluster > * {
   opacity: 0;
   transition:

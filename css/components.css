@@ -1071,3 +1071,122 @@
   outline: 1px solid var(--c-line);
   outline-offset: -1px;
 }
+
+/* --------------------------------------------------------------------------
+   Herramientas flotantes: «Lire le texte», accesibilidad y volver arriba
+   Fijas abajo a la derecha en todas las páginas, como en cdi.lu. El
+   conmutador de versiones ocupa la esquina izquierda, así que no se pisan.
+   -------------------------------------------------------------------------- */
+
+.float-tools {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.float-tools button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  box-shadow: 0 8px 24px rgba(0, 15, 45, 0.18);
+  transition:
+    scale var(--dur-hover) var(--ease-hover),
+    background-color var(--dur-hover) var(--ease-hover);
+}
+
+.float-tools button:hover {
+  scale: 1.06;
+}
+
+.float-tools__read {
+  gap: var(--space-2);
+  padding-inline: 14px 18px;
+  border-radius: var(--r-pill);
+  background: var(--c-navy);
+  color: #fff;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+}
+
+.float-tools__read:hover {
+  background: #0d2044;
+}
+
+.float-tools__a11y {
+  width: 44px;
+  border-radius: 50%;
+  background: var(--c-teal);
+}
+
+.float-tools__a11y img {
+  width: 30px;
+  height: 30px;
+}
+
+/* La flecha del sistema apunta a la derecha: girada, apunta arriba. Sólo
+   aparece cuando ya hay algo para volver, y oculta no recibe foco. */
+.float-tools__top {
+  width: 44px;
+  border-radius: 50%;
+  background: var(--c-surface);
+  color: var(--c-ink);
+  /* Oculta, además, cede su lugar: el margen negativo deja a los otros dos
+     contra el borde, y al aparecer se corren para hacerle sitio. */
+  margin-left: calc(-44px - var(--space-2));
+  opacity: 0;
+  visibility: hidden;
+  translate: 0 8px;
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    translate var(--dur-base) var(--ease-out),
+    margin-left var(--dur-base) var(--ease-out),
+    visibility 0s linear var(--dur-base),
+    scale var(--dur-hover) var(--ease-hover);
+}
+
+.float-tools__top.is-visible {
+  margin-left: 0;
+  opacity: 1;
+  visibility: visible;
+  translate: 0 0;
+  transition-delay: 0s;
+}
+
+.float-tools__top .icon {
+  rotate: -90deg;
+}
+
+/* En celular el rótulo se va —queda como nombre accesible— y el botón de
+   lectura pasa a círculo, para no tapar el texto. */
+@media (max-width: 680px) {
+  .float-tools {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .float-tools__read {
+    width: 44px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .float-tools__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media print {
+  .float-tools {
+    display: none;
+  }
+}

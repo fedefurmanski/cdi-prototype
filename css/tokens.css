@@ -18,6 +18,16 @@
   --c-teal-dark: #1f8996;     /* ídem, para la versión azul */
   --c-navy: #000f2d;          /* botón "Lire le texte" */
 
+  /* Versiones de texto de cada color de marca: el mismo tono con la saturación
+     al máximo y la luz justa para pasar AA (4,5:1) sobre blanco. Oscurecer sin
+     saturar los dejaba apagados. Los colores de marca quedan para lo que no es
+     texto chico —formas, filetes, fondos—; estos, para el texto en color. */
+  --c-pink-ink: #e80069;
+  --c-orange-ink: #a86800;
+  --c-teal-ink: #008292;
+  --c-coral-ink: #ea1900;
+  --c-green-ink: #637f00;
+
   /* --- Neutros ------------------------------------------------------------ */
   --c-ink: #000000;           /* títulos */
   --c-ink-soft: #1f1f1f;      /* links de footer */
@@ -49,7 +59,7 @@
      proporción (sin unidad) para que acompañen el crecimiento. */
   --fs-scale: 1;
   --fs-display: calc(50px * var(--fs-scale));   /* H1 hero */
-  --fs-lead: calc(38px * var(--fs-scale));      /* párrafo elevator speech */
+  --fs-lead: calc(30px * var(--fs-scale));      /* párrafo elevator speech (texto «Vision») */
   --fs-h2: calc(32px * var(--fs-scale));        /* títulos de sección */
   --fs-h3: calc(26px * var(--fs-scale));        /* "Les parents" / "Les professionnels" */
   --fs-h4: calc(20px * var(--fs-scale));        /* títulos de tarjeta */
@@ -137,6 +147,35 @@
   --dur-slow: 620ms;
   --dur-deco: 800ms; /* entrada de las formas */
   --dur-line: 760ms; /* entrada del texto, línea por línea */
+}
+
+/* Color por sección (revisión de octubre). Lo declara el `<li>` de cada ítem
+   de la nav —para su hover y su desplegable— y el `<body>` de cada subpágina,
+   que toma sólo ese color en sus acentos. Los botones no lo leen: quedan
+   siempre turquesa. */
+[data-section="a-propos"] {
+  --section: var(--c-pink);
+  --section-ink: var(--c-pink-ink);
+}
+
+[data-section="parents"] {
+  --section: var(--c-orange);
+  --section-ink: var(--c-orange-ink);
+}
+
+[data-section="professionnels"] {
+  --section: var(--c-teal);
+  --section-ink: var(--c-teal-ink);
+}
+
+[data-section="actualites"] {
+  --section: var(--c-coral);
+  --section-ink: var(--c-coral-ink);
+}
+
+[data-section="contact"] {
+  --section: var(--c-green);
+  --section-ink: var(--c-green-ink);
 }
 
 /* Segunda versión pedida por el cliente: mismo layout, Intranet en azul. */

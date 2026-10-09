@@ -198,6 +198,7 @@
 }
 
 .nav__link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -205,11 +206,34 @@
   font-weight: var(--fw-bold);
   line-height: 1.6;
   color: var(--c-ink);
-  transition: color var(--dur-fast) var(--ease-out);
 }
 
-.nav__link:hover {
-  color: var(--c-teal);
+/* El texto queda siempre en negro y el color de la sección (`data-section` en
+   el `<li>`) va en una rayita debajo. En texto, el naranja, el turquesa y el
+   verde sólo pasaban AA oscurecidos hasta no parecerse a la marca; la rayita
+   no es texto y lleva el color tal cual. Va a 2px, el grosor del trazo de la
+   negrita a este cuerpo, y entra desde la izquierda con la curva de los hovers
+   del sitio, que sale despacio y aterriza blando. Al sacar el puntero no se
+   repliega sobre sí misma: sigue de largo y se va por la derecha. El origen
+   cambia de golpe —no es animable— y eso es justo lo que hace el truco. */
+.nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--section, var(--c-teal));
+  scale: 0 1;
+  transform-origin: right center;
+  transition: scale var(--dur-hover) var(--ease-hover);
+}
+
+.nav__link:hover::after,
+.nav__item.is-open > .nav__link::after {
+  scale: 1 1;
+  transform-origin: left center;
 }
 
 .nav__link .icon {
@@ -262,61 +286,22 @@
 }
 
 .dropdown__inner {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: var(--space-12);
-  padding: var(--space-10);
+  padding: var(--space-8);
 }
 
-/* La columna entera es el enlace a la página: el título, la bajada y el «voir
-   la page» son un solo blanco de clic, que es como se lee. */
-.dropdown__intro {
-  display: block;
-  align-self: center;
-  color: inherit;
-}
-
-.dropdown__intro:hover .dropdown__cta .icon {
-  transform: translateX(5px);
-}
-
-.dropdown__eyebrow {
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--c-teal-deep);
-}
-
-.dropdown__pitch {
-  margin-top: var(--space-3);
-  font-size: var(--fs-sm);
-  line-height: 1.6;
-  color: var(--c-body);
-}
-
-.dropdown__cta {
-  margin-top: var(--space-5);
-}
-
-/* Se llena hacia abajo y no de lado: la primera columna lleva 01–04 y la
-   segunda 05–08, que es como se lee un índice.
-
-   `align-content: center` no es decorativo: sin él, si la columna de la
-   izquierda queda más alta, las cuatro filas se reparten el sobrante —las
-   pistas `auto` crecen— y el índice sale desparramado. */
+/* Revisión de octubre: sin la columna de presentación y sin numeración. Cada
+   subpágina es un botón gris; al pasar el puntero toma el color de la sección.
+   Se llena por filas —cuatro por fila—, que es como se lee una botonera. */
 .dropdown__links {
   display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(4, auto);
-  grid-auto-columns: 1fr;
-  align-content: center;
-  column-gap: var(--space-10);
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
 }
 
 /* Los items entran escalonados. El orden lo lleva `--i` en el marcado: es
    posición, no estado, y así no hace falta que el JS reparta retardos. */
 .dropdown__links li {
+  display: flex;
   opacity: 0;
   translate: 0 8px;
   transition:
@@ -332,36 +317,27 @@
 
 .dropdown__links a {
   display: flex;
+  flex: 1;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--c-line);
+  min-height: 64px;
+  padding: var(--space-3) var(--space-5);
+  /* El filete del color de la sección, como en las tarjetas y en la barra
+     lateral de las subpáginas: es un borde y no una barra aparte, así sigue
+     la curva de la esquina. 3px, como la barra lateral, que es la pieza de
+     tamaño parecido; las tarjetas grandes llevan 4px. */
+  border-left: 3px solid var(--section, var(--c-teal));
+  border-radius: var(--r-btn);
+  background: var(--c-deco);
   color: var(--c-ink);
-  transition: color var(--dur-hover) var(--ease-hover);
+  transition:
+    color var(--dur-hover) var(--ease-hover),
+    background-color var(--dur-hover) var(--ease-hover);
 }
 
 .dropdown__links a:hover {
-  color: var(--c-teal-deep);
-}
-
-.dropdown__num {
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
-  /* Claro a propósito: la numeración ordena, no compite con el rótulo. Al
-     pasar el puntero pasa a teal, que es cuando cuenta. */
-  color: color-mix(in srgb, var(--c-grey-300) 50%, #fff);
-  font-variant-numeric: tabular-nums;
-  transition: color var(--dur-hover) var(--ease-hover);
-}
-
-/* Mismo formato que el índice de «Les causes»: el punto es puntuación de la
-   numeración, no contenido, así que va acá y no en el marcado. */
-.dropdown__num::after {
-  content: '.';
-}
-
-.dropdown__links a:hover .dropdown__num {
-  color: var(--c-teal);
+  background: color-mix(in srgb, var(--section, var(--c-teal)) 14%, #fff);
+  color: var(--section-ink, var(--c-teal-ink));
 }
 
 .dropdown__label {
@@ -560,18 +536,25 @@
   text-align: center;
 }
 
+/* Rótulo de una sola palabra («Vision»): va en versalitas y negrita, como el
+   «Bienvenue au CDI» del hero, para que se lea como título y no como nota. */
 .elevator__label {
   font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   line-height: 1.8571;
   color: var(--c-ink);
 }
 
+/* El texto de «Vision» dobla en largo a la frase del Figma: a 38px eran ocho
+   líneas. Baja a 30px (`--fs-lead`) y se abre a 980px para quedar en cinco. */
 .elevator__text {
   margin: 21px auto 0;
-  max-width: 840px;
+  max-width: 980px;
   font-size: var(--fs-lead);
   font-weight: var(--fw-regular);
-  line-height: 1.3889;
+  line-height: 1.45;
   color: var(--c-ink);
 }
 
@@ -983,27 +966,6 @@
   color: var(--c-teal);
 }
 
-.footer__a11y {
-  display: grid;
-  place-items: center;
-  width: 35px;
-  height: 35px;
-  margin-left: 12px;
-  border-radius: 50%;
-  background: var(--c-teal);
-  transition: transform var(--dur-hover) var(--ease-hover);
-}
-
-.footer__a11y:hover {
-  transform: scale(1.08);
-}
-
-.footer__a11y img {
-  width: 27px;
-  height: 27px;
-}
-
-
 /* ==========================================================================
    Breakpoints
 
@@ -1070,6 +1032,11 @@
     font-size: var(--fs-md);
   }
 
+  /* Apilada no hay hover, y cada ítem ya lleva su filete gris. */
+  .nav__link::after {
+    display: none;
+  }
+
   /* Apilada, el panel no cuelga: se despliega en el sitio como un acordeón.
      El alto se anima con `grid-template-rows` de 0fr a 1fr —con `overflow`
      en el hijo— porque `height: auto` no es animable. */
@@ -1091,23 +1058,19 @@
 
   .dropdown__inner {
     overflow: hidden;
-    grid-template-columns: 1fr;
-    gap: 0;
     padding: 0;
   }
 
-  /* La bajada y el «voir la page» sobran acá: el propio item es el enlace. */
-  .dropdown__intro {
-    display: none;
-  }
-
+  /* Apilados, los botones van uno debajo del otro y más bajos: el acordeón
+     no tiene que empujar la nav hasta abajo de la pantalla. */
   .dropdown__links {
-    grid-auto-flow: row;
-    grid-template-rows: none;
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+    padding: var(--space-3) 0;
   }
 
   .dropdown__links a {
-    padding: 12px 0 12px var(--space-4);
+    min-height: 48px;
   }
 
   .profiles__grid {
@@ -1157,7 +1120,7 @@
   :root {
     --gutter-min: 20px;
     --fs-display: calc(34px * var(--fs-scale));
-    --fs-lead: calc(28px * var(--fs-scale));
+    --fs-lead: calc(22px * var(--fs-scale));
     --fs-h2: calc(26px * var(--fs-scale));
     --fs-lg: calc(18px * var(--fs-scale));
   }
@@ -1171,7 +1134,7 @@
   }
 
   .elevator__text {
-    line-height: 1.4615;
+    line-height: 1.5;
   }
 
   .section-title,

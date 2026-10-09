@@ -58,7 +58,7 @@
     <link rel="stylesheet" href="css/interior.css" />
   </head>
 
-  <body>
+  <body data-section="a-propos">
     <a class="skip-link" href="#main">Aller au contenu principal</a>
 
     <header class="header">
@@ -113,7 +113,7 @@
 
         <nav id="nav-principal" aria-label="Navigation principale">
           <ul class="nav__list">
-            <li class="nav__item" data-dropdown>
+            <li class="nav__item" data-dropdown data-section="a-propos">
               <a
                 class="nav__link"
                 href="a-propos-qui-sommes-nous.html" aria-current="page"
@@ -126,68 +126,51 @@
 
               <div class="dropdown" id="menu-a-propos">
                 <div class="dropdown__inner">
-                  <div class="dropdown__intro">
-                    <p class="dropdown__eyebrow">À propos du CDI</p>
-                    <p class="dropdown__pitch">
-                      Un centre de compétences en psycho-pédagogie spécialisée qui prend en
-                      charge les enfants et les jeunes présentant des troubles du développement
-                      intellectuel.
-                    </p>
-                  </div>
-
                   <ul class="dropdown__links">
                     <li style="--i: 0">
                       <a href="a-propos-qui-sommes-nous.html">
-                        <span class="dropdown__num">01</span>
                         <span class="dropdown__label">Qui sommes-nous&nbsp;?</span>
                         <span class="icon icon--arrow" aria-hidden="true"></span>
                       </a>
                     </li>
                     <li style="--i: 1">
                       <a href="a-propos-trouble.html">
-                        <span class="dropdown__num">02</span>
                         <span class="dropdown__label">Le trouble du développement intellectuel</span>
                         <span class="icon icon--arrow" aria-hidden="true"></span>
                       </a>
                     </li>
                     <li style="--i: 2">
                       <a href="a-propos-philosophie.html">
-                        <span class="dropdown__num">03</span>
                         <span class="dropdown__label">Notre philosophie</span>
                         <span class="icon icon--arrow" aria-hidden="true"></span>
                       </a>
                     </li>
                     <li style="--i: 3">
                       <a href="a-propos-approche.html">
-                        <span class="dropdown__num">04</span>
                         <span class="dropdown__label">Notre approche</span>
                         <span class="icon icon--arrow" aria-hidden="true"></span>
                       </a>
                     </li>
                     <li style="--i: 4">
                       <a href="a-propos-publics.html">
-                        <span class="dropdown__num">05</span>
                         <span class="dropdown__label">Les publics cibles</span>
                         <span class="icon icon--arrow" aria-hidden="true"></span>
                       </a>
                     </li>
                     <li style="--i: 5">
                       <a href="a-propos-chiffres.html">
-                        <span class="dropdown__num">06</span>
                         <span class="dropdown__label">Le CDI en chiffres</span>
                         <span class="icon icon--arrow" aria-hidden="true"></span>
                       </a>
                     </li>
                     <li style="--i: 6">
                       <a href="a-propos-equipe.html">
-                        <span class="dropdown__num">07</span>
                         <span class="dropdown__label">Notre équipe</span>
                         <span class="icon icon--arrow" aria-hidden="true"></span>
                       </a>
                     </li>
                     <li style="--i: 7">
                       <a href="a-propos-annexes.html">
-                        <span class="dropdown__num">08</span>
                         <span class="dropdown__label">Nos annexes</span>
                         <span class="icon icon--arrow" aria-hidden="true"></span>
                       </a>
@@ -196,18 +179,18 @@
                 </div>
               </div>
             </li>
-            <li>
+            <li data-section="parents">
               <a class="nav__link" href="#">Pour les parents
                 <span class="icon icon--chevron" aria-hidden="true"></span>
               </a>
             </li>
-            <li>
+            <li data-section="professionnels">
               <a class="nav__link" href="#">Pour les professionnels
                 <span class="icon icon--chevron" aria-hidden="true"></span>
               </a>
             </li>
-            <li><a class="nav__link" href="#">Nos actualités</a></li>
-            <li><a class="nav__link" href="#">Contactez nous</a></li>
+            <li data-section="actualites"><a class="nav__link" href="#">Nos actualités</a></li>
+            <li data-section="contact"><a class="nav__link" href="#">Contactez nous</a></li>
           </ul>
         </nav>
 
@@ -230,25 +213,26 @@
     </header>
 
     <main id="main" class="interior">
-      <!-- Formas del artboard «test claude» del Figma. Van pegadas entre sí, así
-           que cada lado vive en un `.deco-cluster`: el grupo se ancla una vez y
-           las piezas se colocan en coordenadas locales.
-           Combinación A; la sección alterna entre las dos. -->
+      <!-- Formas del design kit de la marca (CDI_Design KIT.ai, página 1) sobre
+           la composición aprobada: a la izquierda una columna de 173px pegada
+           al borde, con dos formas enteras y una grande cortada; a la derecha,
+           una sola forma grande cortada por el borde (MarkUp #18 a #20). La
+           combinación sale del curriculum B2C (p. 24): una forma grande que
+           corta el borde y formas enteras alrededor, llenas y de línea.
+           La columna arranca a 408px del tope, sube con la página y, cuando
+           su pie llega al de la ventana, queda fija (`.deco-rail`) mientras
+           sigue corriendo el contenido de la derecha. -->
       <div class="deco" aria-hidden="true" data-deco-step="60">
-        <div class="deco-cluster is-bottom" style="--x: 0px; --b: 0px; --w: 346px; --h: 672px">
-          <img src="assets/svg/deco-side-ring.svg" alt="" style="--x: 0px; --y: 0px; --w: 173px; --h: 173px" />
-          <img src="assets/svg/deco-side-ellipses.svg" alt="" style="--x: 171px; --y: 173px; --w: 175px; --h: 177px" />
-          <img src="assets/svg/deco-side-stripes.svg" alt="" style="--x: 0px; --y: 175px; --w: 173px; --h: 173px" />
-          <img src="assets/svg/deco-side-chevrons.svg" alt="" style="--x: 0px; --y: 349px; --w: 173px; --h: 323px" />
-          <img src="assets/svg/deco-side-cross.svg" alt="" style="--x: 175px; --y: 349px; --w: 164px; --h: 164px" />
+        <div class="deco-rail is-bottom" style="--x: 0px; --b: 0px; --w: 173px; --h: 100%">
+          <div class="deco-cluster" style="--start: 408px; --w: 173px; --h: 672px">
+            <img src="assets/svg/kit/kit-05-4.svg" alt="" style="--x: 0px; --y: 0px; --w: 173px; --h: 173px" />
+            <img src="assets/svg/kit/kit-03-2.svg" alt="" style="--x: 0px; --y: 175px; --w: 173px; --h: 173px" />
+            <img class="is-cut-left" src="assets/svg/kit/kit-09-1.svg" alt="" style="--x: 0px; --y: 349px; --w: 173px; --h: 323px" />
+          </div>
         </div>
 
-        <div class="deco-cluster is-right" style="--rx: 0px; --y: 100px; --w: 98px; --h: 394px">
-          <img src="assets/svg/deco-side-arrows.svg" alt="" style="--x: 9px; --y: 0px; --w: 89px; --h: 197px" />
-          <img src="assets/svg/deco-side-zigzag.svg" alt="" style="--x: 0px; --y: 197px; --w: 98px; --h: 197px" />
-        </div>
+        <img class="is-right is-cut-right" src="assets/svg/kit/kit-14-1.svg" alt="" style="--rx: 0px; --y: 100px; --w: 118px; --h: 168px" />
       </div>
-
       <div class="interior__inner container">
         <!-- ===============================================================
              Barra lateral — navegación dentro de la página
@@ -282,7 +266,7 @@
 
           <section class="block" id="publics">
             <div class="target-list" data-reveal-group="rise">
-              <article class="target" style="--accent: var(--c-teal)">
+              <article class="target">
                 <figure class="target__media">
                   <img src="assets/img/public-parents.jpg" alt="" loading="lazy" />
                 </figure>
@@ -291,7 +275,7 @@
                   <p>Ou le jeune majeur lui-même, souhaitant avoir des conseils dans le contexte des troubles du développement intellectuel.</p>
                 </div>
               </article>
-              <article class="target" style="--accent: var(--c-green)">
+              <article class="target">
                 <figure class="target__media">
                   <img src="assets/img/public-pedagogique.jpg" alt="" loading="lazy" />
                 </figure>
@@ -300,7 +284,7 @@
                   <p>Des écoles et lycées, souhaitant obtenir un diagnostic spécialisé ou des conseils sur des stratégies d’intervention appropriées.</p>
                 </div>
               </article>
-              <article class="target" style="--accent: var(--c-orange)">
+              <article class="target">
                 <figure class="target__media">
                   <img src="assets/img/public-partenaires.jpg" alt="" loading="lazy" />
                 </figure>
@@ -369,18 +353,28 @@
             <a href="#">Mentions légales</a>
             <a href="#">Cookies</a>
             <a href="#">Accessibilité</a>
-            <button class="btn btn--dark" type="button" data-action="read-aloud">
-              <span class="icon icon--speaker icon--lg" aria-hidden="true"></span>
-              Lire le texte
-            </button>
-            <button class="footer__a11y" type="button" data-action="a11y-panel">
-              <img src="assets/icons/accessibility.svg" alt="" />
-              <span class="visually-hidden">Ouvrir les options d'accessibilité</span>
-            </button>
           </div>
         </div>
       </div>
     </footer>
+
+    <!-- Herramientas de lectura: flotan abajo a la derecha en todas las páginas,
+         como en cdi.lu (revisión de octubre, MarkUp #15). Antes vivían en el pie
+         y había que bajar hasta el final para encontrarlas. -->
+    <div class="float-tools">
+      <button class="float-tools__read" type="button" data-action="read-aloud">
+        <span class="icon icon--speaker icon--lg" aria-hidden="true"></span>
+        <span class="float-tools__label">Lire le texte</span>
+      </button>
+      <button class="float-tools__a11y" type="button" data-action="a11y-panel">
+        <img src="assets/icons/accessibility.svg" alt="" />
+        <span class="visually-hidden">Ouvrir les options d'accessibilité</span>
+      </button>
+      <button class="float-tools__top" type="button" data-action="back-to-top">
+        <span class="icon icon--arrow" aria-hidden="true"></span>
+        <span class="visually-hidden">Revenir en haut de la page</span>
+      </button>
+    </div>
 
     <script src="js/main.js" type="module"></script>
   </body>
