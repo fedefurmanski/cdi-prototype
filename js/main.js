@@ -1105,7 +1105,25 @@ function initDecoReveal() {
     });
   });
 
-  const mostrar = (hijo) => piezasDe(hijo).forEach((el) => el.classList.add('is-in'));
+  // Formas que cruzan el borde entre dos bandas —en color de un lado, en gris
+  // del otro— llevan el mismo `data-deco-pair`: entran juntas, con el retraso
+  // y la dirección de la primera, así la unión no se separa mientras se mueven.
+  const parejas = new Map();
+  todas.forEach((el) => {
+    const id = el.dataset.decoPair;
+    if (!id) return;
+    if (!parejas.has(id)) parejas.set(id, []);
+    parejas.get(id).push(el);
+  });
+  parejas.forEach((piezas) => {
+    piezas.forEach((el) => { el.style.transitionDelay = piezas[0].style.transitionDelay; });
+  });
+
+  const mostrar = (hijo) =>
+    piezasDe(hijo).forEach((el) => {
+      const pareja = parejas.get(el.dataset.decoPair) || [el];
+      pareja.forEach((p) => p.classList.add('is-in'));
+    });
 
   const exportando = document.documentElement.classList.contains('is-export');
   const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1125,6 +1143,14 @@ function initDecoReveal() {
       else if (cls.contains('is-bottom')) desde = 'from-below';
       else if (cls.contains('is-center')) desde = 'from-above';
       piezasDe(hijo).forEach((el) => el.classList.add(desde));
+    });
+  });
+  const DIRECCIONES = ['from-left', 'from-right', 'from-below', 'from-above'];
+  parejas.forEach((piezas) => {
+    const desde = DIRECCIONES.find((d) => piezas[0].classList.contains(d));
+    piezas.slice(1).forEach((el) => {
+      el.classList.remove(...DIRECCIONES);
+      el.classList.add(desde);
     });
   });
 

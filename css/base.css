@@ -513,8 +513,10 @@ button {
 
 /* Se oculta la forma, no el grupo: dentro de un `.deco-cluster` cada pieza
    entra por su cuenta, escalonada, en vez de moverse el grupo en bloque. El
-   `.deco-rail` tampoco se oculta: es sólo el carril del grupo que lleva. */
-.js .deco > *:not(.deco-cluster):not(.deco-rail),
+   `.deco-rail` tampoco se oculta: es sólo el carril del grupo que lleva.
+   Las exclusiones van en `:where()`, que no suma especificidad: con `:not()`
+   esta regla le ganaba a `.is-in` y las formas sueltas no aparecían nunca. */
+.js .deco > *:where(:not(.deco-cluster, .deco-rail)),
 .js .deco-cluster > * {
   opacity: 0;
   transition:

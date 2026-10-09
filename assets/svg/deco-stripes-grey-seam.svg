@@ -1,0 +1,9 @@
+<svg width="164" height="167" viewBox="0 0 164 167" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Las rayas de deco-grey-x2.svg, al pie de la banda de perfiles, en el
+     mismo gris que las otras formas de esa banda (#ECEDEF; las originales son
+     #F0F0F0, pensadas para fondo blanco). Siguen en rosa del otro lado del
+     borde (deco-stripes-pink-seam.svg, MarkUp #28 y #33). El dibujo se repite cada 83,5px, así que
+     un cuadrado de 167px de alto empalma sin salto con el de abajo. -->
+<clipPath id="c"><rect width="164" height="167"/></clipPath>
+<path clip-path="url(#c)" d="M0 43.0541L123.729 167H165.794L0 0.915116V43.0541ZM40.5213 0L207.229 167H249.295L82.5868 0H40.5213ZM0 126.701L40.2286 167H82.294L0 84.5618V126.701ZM291.022 0L333 42.0512V0H291.022ZM124.022 0L290.729 167H332.795L166.087 0H124.022ZM207.522 0L333 125.698V83.5586L249.587 0H207.522Z" fill="#ECEDEF"/>
+</svg>
