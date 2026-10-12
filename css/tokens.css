@@ -37,8 +37,11 @@
   --c-ink: #000000;           /* títulos */
   --c-ink-soft: #1f1f1f;      /* links de footer */
   --c-body: #565e6b;          /* textos de párrafo en tarjetas */
-  --c-muted: #909090;         /* pills de categoría, "Voir plus" */
-  --c-grey-500: #5f6776;
+  /* Idiomas inactivos, copyright, año de las fechas. El #909090 del Figma daba
+     3,2:1 sobre blanco; éste pasa AA sobre blanco (4,9:1), sobre el gris del
+     footer (4,7:1) y sobre el de la barra de accesibilidad (4,5:1). */
+  --c-muted: #707070;
+  --c-grey-500: #5f6776;      /* texto de los pills de categoría */
   --c-grey-300: #797979;
   --c-grey-200: #e9e9e9;      /* fondo de pills */
   --c-grey-100: #e6e6e6;
@@ -208,7 +211,7 @@
   --c-green-soft: #667a28;
   --c-pink: #c04e82;
   --c-pink-deep: #8d3a60;
-  --c-muted: #767676;
+  --c-muted: #595959;
   --c-body: #2b3038;
   --c-ink-soft: #000000;
   --c-line: #767676;

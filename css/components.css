@@ -159,7 +159,9 @@
   padding: 2px 10px;
   border-radius: var(--r-pill);
   background: var(--c-grey-200);
-  color: var(--c-muted);
+  /* El gris del Figma (#909090) da 2,6:1 sobre el fondo del pill y no pasa
+     AA (4,5:1); éste da 4,7:1. */
+  color: var(--c-grey-500);
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
   line-height: 1.9286;

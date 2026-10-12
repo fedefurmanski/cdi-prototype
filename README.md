@@ -377,6 +377,11 @@ where nothing animates.
 - **Text size**: three steps through `--fs-scale`.
 - Buttons and links on brand colours use `--c-on-brand`; text links use
   `--c-teal-ink` (AA).
+- Secondary grey text is darker than in Figma, whose #909090 failed AA (3.2:1
+  on white, 2.6:1 on the tag pills). `--c-muted` is #707070 (4.7:1 or more on
+  white and on the footer grey; inactive languages, copyright, date years,
+  sources) and service tags (*Parents*, *Professionnels*) use `--c-grey-500`
+  (4.7:1 on their pill).
 - Tablists (*Notre approche*, *Les causes*) follow the ARIA pattern; the team
   hotspots are buttons with `aria-expanded` and work with the keyboard.
 - The search panel is a dialog: focus goes to the field, Escape returns focus
