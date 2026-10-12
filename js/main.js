@@ -701,9 +701,21 @@ function initStepper() {
       });
     };
 
+    // En celular la caja de los textos toma el alto del paso activo, con una
+    // transición (ver `.steps__panels` en interior.css): con el alto del más
+    // largo, a los pasos cortos les sobraba aire al pie. En desktop sigue
+    // midiendo lo del más largo y no salta.
+    const caja = root.querySelector('.steps__panels');
+    const celular = window.matchMedia('(max-width: 760px)');
+    const ajustar = (i) => {
+      if (!caja || i < 0) return;
+      caja.style.height = celular.matches ? `${paneles[i].offsetHeight}px` : '';
+    };
+
     const mostrar = (i, mover) => {
       pintar(tabs[i]);
       relanzarLineas(paneles[i]);
+      ajustar(i);
       tabs.forEach((tab, j) => {
         const activo = i === j;
         tab.setAttribute('aria-selected', String(activo));
@@ -732,6 +744,16 @@ function initStepper() {
 
     const inicial = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
     pintar(tabs[inicial >= 0 ? inicial : 0]);
+
+    // El alto se vuelve a medir si cambia el del texto (las fuentes, el A+, el
+    // ancho de la pantalla) o si se pasa de celular a desktop.
+    if (caja) {
+      const remedir = () => ajustar(actual() >= 0 ? actual() : 0);
+      new ResizeObserver(remedir).observe(caja.parentElement);
+      paneles.forEach((p) => new ResizeObserver(remedir).observe(p));
+      celular.addEventListener('change', remedir);
+      remedir();
+    }
 
     tabs.forEach((tab, i) => {
       tab.addEventListener('click', () => mostrar(i, false));

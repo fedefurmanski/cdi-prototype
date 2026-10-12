@@ -1637,6 +1637,58 @@
     margin-top: var(--space-8);
   }
 
+  /* «Les causes» en celular, como el encabezado de un carrusel: arriba los
+     números y las flechas en la misma línea, debajo el nombre del paso como
+     título y después el texto. Apilado como en desktop —texto, números con
+     nombre, flechas aparte— quedaba un hueco entre cada parte. El índice se
+     disuelve (`display: contents`) para que números y nombre se ubiquen cada
+     uno en su fila. La caja de los textos toma el alto del paso activo y lo
+     cambia con una transición (lo mide `initStepper`). */
+  .steps {
+    grid-template-areas:
+      'ctrls nav'
+      'name name'
+      'panels panels';
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    padding: var(--space-5);
+  }
+
+  .steps__index {
+    display: contents;
+  }
+
+  .steps__ctrls {
+    grid-area: ctrls;
+  }
+
+  .steps__nav {
+    grid-area: nav;
+    align-self: center;
+  }
+
+  .steps__names {
+    grid-area: name;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .steps__panels {
+    grid-area: panels;
+    overflow: hidden;
+    transition: height 360ms var(--ease-out);
+  }
+
+  /* Cada texto mide lo suyo y no se estira al alto de la celda: si no, el
+     alto del paso activo daba siempre el del más largo. */
+  .steps__panel {
+    align-self: start;
+  }
+
+  .steps__panel p {
+    font-size: var(--fs-md);
+  }
+
   .next-page {
     margin-top: var(--space-12);
   }
