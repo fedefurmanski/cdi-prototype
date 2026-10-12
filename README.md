@@ -1,975 +1,475 @@
-# CDI — Refonte HP
+# CDI — Website redesign prototype
 
-Base estática de la home del **Centre pour le développement intellectuel**,
-implementada a partir del Figma [CDI Refonte HP](https://www.figma.com/design/AmROMNmh0wuaWCuWTJqiNy/CDI-Refonte-HP?node-id=549-145)
-(frame `home 1`, nodo `549:145`).
+Static prototype of the new **cdi.lu** (Centre pour le développement
+intellectuel): the home page and the whole **À propos** section — 16 pages in
+all — built from the Figma file
+[CDI Refonte HP](https://www.figma.com/design/AmROMNmh0wuaWCuWTJqiNy/CDI-Refonte-HP?node-id=549-145)
+and from the client's review rounds in MarkUp.
 
-Sin build step, sin dependencias: se abre con cualquier servidor estático.
+It is a **reference for the real implementation**, not production code: there
+is no CMS, some content is placeholder (flagged below), and a few features only
+exist to present the design (version switch, hard-coded search index). Layout,
+behaviour, breakpoints and animations are meant to be reproduced as they are.
+
+No build step and no dependencies. Code comments are in Spanish; this file is
+the English overview.
 
 ```bash
 python3 .claude/serve.py
 ```
 
-Luego http://127.0.0.1:4173 — o cualquier otro servidor estático sobre la raíz
-del proyecto. (Ojo: macOS bloquea el acceso de procesos no autorizados a
-`~/Downloads`; si el servidor falla con *Operation not permitted*, mové el
-proyecto fuera de esa carpeta o dale acceso a la terminal en Ajustes →
-Privacidad y seguridad → Archivos y carpetas.)
+Then open http://127.0.0.1:4173. Any static server on the project root works
+too. `serve.py` only adds `Cache-Control: no-store` (so CSS/JS edits show up on
+reload) and serves each request in its own thread.
 
-## Estructura
+> macOS blocks unauthorised processes from reading `~/Downloads`. If the
+> server fails with *Operation not permitted*, move the project elsewhere or
+> grant the terminal access in System Settings → Privacy & Security → Files and
+> Folders.
+
+External resources loaded at runtime: Open Sans from Google Fonts, Leaflet from
+a CDN and OpenStreetMap tiles (annexe pages only).
+
+---
+
+## Contents
+
+1. [Files](#files)
+2. [Pages](#pages)
+3. [Query parameters and flags](#query-parameters-and-flags)
+4. [Foundations](#foundations)
+5. [Decorative shapes](#decorative-shapes)
+6. [Home page](#home-page)
+7. [À propos pages](#à-propos-pages)
+8. [Responsive behaviour](#responsive-behaviour)
+9. [Animation system](#animation-system)
+10. [Accessibility](#accessibility)
+11. [Pending content and open points](#pending-content-and-open-points)
+12. [Gotchas worth knowing](#gotchas-worth-knowing)
+
+---
+
+## Files
 
 ```
-index.html            Una sola página, marcada por secciones semánticas
+index.html                     Home
+a-propos-*.html                À propos section: 8 pages + 7 annexe pages
 css/
-  tokens.css          Custom properties: color, tipografía, layout, movimiento
-  base.css            Reset, contenedor, capa decorativa, gancho de revelado
-  components.css      Botones, iconos, pills, tarjetas, play
-  sections.css        Header, hero, elevator, profils, services, video, news, footer
+  tokens.css                   Custom properties: colour, type scale, layout,
+                               motion, section colours, high-contrast overrides
+  base.css                     Reset, container, decorative layer, reveal states,
+                               mobile shape composition (.deco-foot)
+  components.css               Buttons, icons, pills, cards, popup, floating tools
+  sections.css                 Header, nav, search, home bands, footer, and all
+                               home breakpoints (incl. the mobile menu)
+  interior.css                 À propos layout and components, interior
+                               breakpoints, team page
 js/
-  main.js             Carrusel, botones de play, barra de accesibilidad, reveal
+  main.js                      Everything interactive, one init function per
+                               feature (see the list at the bottom of the file)
 assets/
-  img/                Fotos (redimensionadas a tamaño web)
-  svg/                Formas decorativas de marca + logos
-  icons/              Iconos de UI, iconos de servicio, redes sociales
+  img/                         Photos resized for the web
+    annexes/                   Annexe façades (from cdi.lu)
+    equipe/groupe-1.jpg        The only team group photo received so far
+    equipe/personas/           Individual portraits (from cdi.lu), 39 files
+  svg/                         Decorative shapes of the home, logos
+  svg/kit/                     Shapes from the brand design kit (À propos);
+                               *-rosa.svg are pink copies (see below)
+  icons/                       UI icons, service icons, social networks
+  video/hero.mp4               Hero footage (see video/LEEME.txt)
+.claude/serve.py               Local server
 ```
 
-## Decisiones de implementación
+## Pages
 
-**Escala.** El diseño es un artboard de 1512px con 120px de margen. `.container`
-reproduce esa caja de 1272px y la centra, encogiéndose por debajo de 1352px con
-un margen mínimo de 40px. Las alturas de sección son `min-height` con los
-valores del Figma: a 1512px el documento mide los mismos 6159px, y más angosto
-las bandas crecen con el contenido en vez de cortarlo.
-
-**Fondo del hero.** El encuadre del Figma (foto sobre una caja de 1512x983 con
-el header tapando los primeros 185px) está expresado en porcentajes —
-`background-size: 115.6% auto` anclado al pie — para que dé exactamente lo mismo
-a 1512px y además acompañe a pantallas más anchas sin dejar banda gris.
-
-**Formas decorativas.** Cada banda tiene su `.deco`, una capa absoluta e inerte
-al puntero. Cada forma declara a qué se ancla — borde izquierdo de la ventana
-(por defecto), `.is-right`, `.at-content` (al borde de la caja de contenido),
-`.is-center`, `.is-bottom` — en vez de a coordenadas absolutas del artboard. Así
-las que van a sangre siguen tocando el borde en una pantalla de 1728px, y las
-que acompañan al contenido se mueven con él. La sección las recorta con
-`overflow: hidden`, igual que en el Figma.
-
-**Formas agrupadas.** Las que en el Figma van pegadas entre sí —los círculos
-turquesa + rayas rosas + onda verde del elevator, los triángulos verdes + rayas
-rosas del pie de actualités, etc.— viven dentro de un `.deco-cluster`. El grupo
-se ancla una sola vez y sus hijos se posicionan en coordenadas locales, así que
-**nunca se separan** al cambiar el ancho. Si se agrega una forma que toca a
-otra, va dentro del mismo cluster.
-
-**Vídeo.** El hero reproduce `assets/video/hero.mp4` (autoplay, muted, loop),
-con su primer fotograma de poster. El encuadre es `object-fit: cover` sobre la
-caja del hero: recorta un 6% vertical y nada horizontal. El bloque de vídeo
-todavía no tiene clip. Ver `assets/video/LEEME.txt`.
-
-**Popup de evento.** `<dialog>` nativo: el navegador da la trampa de foco, el
-cierre con Escape y el fondo oscuro. Se abre 600ms después de cargar. En
-`js/main.js`, `REMEMBER_DISMISSAL` está en `false` para que aparezca en cada
-visita mientras se revisa el sitio; en producción hay que ponerlo en `true`
-(entonces se muestra una vez por evento, recordado en `localStorage`).
-`?popup=off` en la URL lo saltea — sirve para QA y capturas.
-
-**Iconos.** Los monocromos se pintan con `mask-image` sobre `currentColor`, así
-heredan el color del contexto (teal en los links, blanco sobre el hero, gris en
-el footer) y se animan con `transform` sin tocar el SVG. Los multicolor —
-iconos de servicio, redes, logos — van como `<img>`.
-
-**Color de acento.** Cada tarjeta define `--accent` inline; el borde izquierdo,
-el título y el link lo heredan. Cambiar el color de una tarjeta es una sola
-línea.
-
-## Ganchos para las animaciones
-
-La base ya deja el andamiaje puesto:
-
-- `--ease-out`, `--ease-in-out`, `--dur-fast/base/slow` en `tokens.css`: una
-  sola fuente de verdad para tiempos y curvas.
-- `data-reveal` en cualquier elemento + el `IntersectionObserver` de `main.js`
-  le agrega `is-visible` al entrar en viewport. Variantes: `up` (por defecto),
-  `left`, `right`, `scale`, `zoom` (la foto entra con un acercamiento corto).
-- `data-reveal-group` en un contenedor escalona a los hijos solo (90ms cada uno,
-  tope a los 6): agregar una tarjeta no obliga a renumerar nada.
-- El estado inicial sólo se aplica con JS activo (`html.js`), así que sin JS no
-  se oculta nada. Y si el observador no llegara a funcionar, a los 3s se revela
-  todo igual: nunca queda la página en blanco.
-- Las formas decorativas tienen un parallax corto (`initDecoParallax`, 26px de
-  recorrido) atado al scroll con `requestAnimationFrame`.
-- Todo se apaga con `prefers-reduced-motion`.
-- El carrusel mueve el track con `translate3d` y lee el paso del CSS real, así
-  que un timeline de GSAP puede tomarlo sin recalcular medidas.
-- `prefers-reduced-motion` ya está respetado globalmente en `base.css`.
-
-## Breakpoints
-
-A 1512px o más el render es idéntico al Figma. Por debajo:
-
-| Ancho    | Qué cambia                                                        |
-|----------|-------------------------------------------------------------------|
-| < 1352px | El contenedor se encoge (margen mínimo 40px)                      |
-| ≤ 1400px | Las flechas del carrusel entran al flujo, junto a los puntos      |
-| ≤ 1240px | La foto del hero pasa a `cover`                                   |
-| ≤ 1080px | Menú desplegable; servicios a 2 columnas; perfiles a 1; carrusel de a 2 |
-| ≤ 900px  | Bloque vídeo apilado; footer a 2 columnas; decoración atenuada    |
-| ≤ 680px  | Todo a una columna; tipografía reducida; se sueltan las alturas   |
-
-**El Figma sólo define desktop.** De 1080px para abajo — el menú desplegable, el
-apilado de tarjetas, la fila de controles del carrusel, la atenuación de la capa
-decorativa — son decisiones propias para que la página no se rompa, no diseño
-validado. Hay que revisarlas cuando llegue el diseño de tablet/mobile.
-
-## Cambios del cliente aplicados
-
-**Toolbar.** Se sacaron el conmutador de contraste y los botones A+/A−. La
-búsqueda bajó a la barra principal, a la derecha. La barra de accesibilidad
-queda, de izquierda a derecha: idiomas · Facile à lire · Intranet.
-
-**Versiones para comparar.** Hay un conmutador con dos ejes independientes.
-**Está oculto**: aparece abajo a la izquierda sólo con `?switch=on`, porque en
-el link que ve el cliente estorbaba. Las variantes se pueden elegir igual por
-URL aunque el conmutador no esté a la vista.
-
-| Eje        | Opciones                          | Qué cambia |
-|------------|-----------------------------------|------------|
-| `intranet` | **`blue`** · `pink`               | Color del botón Intranet |
-| `profiles` | **`gradient`** · `cards` · `banners` | Sección "profils": la propuesta con degradado (300px), la tarjeta del Figma V8 (200px) o el bandeau duotono de la r7 (240px) |
-
-En negrita, lo elegido: son los valores por defecto. El conmutador queda para
-poder volver a mostrar las alternativas; si ya no hace falta, se borra el bloque
-`.version-switch` del HTML y listo.
-
-**Popup de evento.** Encendido (`POPUP_ENABLED`). `?popup=off` lo saca
-puntualmente. `REMEMBER_DISMISSAL` está en `false`: se muestra en cada carga, que
-es lo cómodo para mostrarlo. Para producción conviene ponerlo en `true`, así se
-ve una sola vez por evento.
-
-### Contraste de los bandeaux — decisión de diseño pendiente
-
-Medido sobre el render, texto blanco:
-
-| Variante | Naranja | Turquesa | AA texto grande |
-|----------|---------|----------|-----------------|
-| B · Bandeaux | 2,76:1 | 2,36:1 | 3:1 |
-| C · Dégradé  | 1,89:1 | 2,16:1 | 3:1 |
-
-Ninguna pasa. El blanco sobre el naranja de marca da 2,1:1 por sí solo, así que
-el problema es del par color/texto, no del velo. Las palancas, por si hay
-auditoría: subir la opacidad de `.profile-banner::before` (con 0,55 arriba, B
-llegaba a 3,1–3,7:1), pasar el texto a oscuro (8,3:1 y 6,8:1, con los colores a
-plena saturación) u oscurecer el panel al 65% del color.
-
-La variante del degradado usa recortes propios (`-focus`) al 74% del original,
-elegidos marcando sobre la foto la zona que ocupa el texto para que ninguna cara
-quede detrás. Los originales son 4:3 con la gente al centro; si en algún momento
-hay fotos pensadas para apaisado, el encuadre mejora solo.
-
-Cada eje se guarda por separado y se escribe en la URL
-(`?profiles=banners&intranet=blue`), así se puede pasar un link a una
-combinación concreta. Agregar un eje nuevo es un grupo `data-axis` en el
-conmutador más una regla CSS: el JS no se toca. `?switch=on` lo muestra.
-
-El valor inicial lo fija un script en línea en el `<head>`, antes del primer
-pintado, así que no parpadea. Los tokens `--intranet-bg` / `--intranet-disc`
-viven en `:root` y los cambia el atributo `data-intranet` en `<html>`; los
-componentes sólo los consumen. Agregar una tercera versión es una regla
-`[data-intranet="x"]` en `tokens.css` más un botón en el conmutador.
-
-> Cuidado al tocar esto: **no pongas `transition` sobre una propiedad cuyo valor
-> venga de una custom property que cambia**. Chrome arranca una transición que
-> nunca avanza y el color queda clavado en el inicial — la variable se actualiza
-> pero `background-color` no. Costó un rato encontrarlo.
-
-**Textos.** «Pour les familles» → «Pour les parents» en la navegación y el
-footer. Las dos tarjetas de perfil pasaron de «Les parents» / «Les
-professionnels» a «Pour les parents» / «Pour les professionnels». Las pills de
-categoría de las tarjetas de servicio siguen diciendo «Parents» /
-«Professionnels» (ver dudas abajo).
-
-**Bloque 2.** Marcado con un `TODO(cliente)` en `index.html`: el texto actual es
-el del Figma, a la espera del que escriban Maxime y Mark.
-
-### Dudas abiertas sobre el brief
-
-- *«Retirer les deux outils dont nous n'avons pas besoin»* no dice cuáles. Se
-  interpretaron el contraste y el tamaño de texto, porque la constelación nueva
-  que el cliente enumera contiene exactamente los demás elementos. Confirmar.
-- *«La partie recherche intégrée dans la barre principale»*: se movió el botón
-  tal cual estaba. Si querían un campo de búsqueda abierto, es otra decisión de
-  diseño y hace falta el Figma.
-- *«les deux boutons»* se entendió como las dos tarjetas de perfil. Si incluía
-  también las pills de categoría, se cambian en un minuto.
-
-## Alto contraste
-
-El botón de la barra de accesibilidad activa `html.is-high-contrast`, que
-redefine los tokens de color por versiones oscurecidas hasta cruzar 4,5:1 sobre
-blanco, sube el velo del hero a 0,72, subraya los enlaces, atenúa las fotos de
-los bandeaux y le pone contorno a las tarjetas. Medido en el navegador:
-
-| Elemento | Normal | Alto contraste |
-|----------|--------|----------------|
-| Link "En savoir plus" | 2,63:1 | 4,58:1 |
-| Texto de tarjeta | 6,54:1 | 13,27:1 |
-| Link de footer | 15,65:1 | 19,93:1 |
-
-La preferencia se guarda en `localStorage`. `?contrast=on` lo fuerza, para QA.
-
-## Versión editable en Figma
-
-Página **«Accueil V8 — éditable»** del mismo archivo, creada nueva para no tocar
-las existentes. Adentro, el marco `home — éditable` (1512 × 6159):
-
-- `Référence · site` — captura del sitio **sin** las formas, bloqueada al fondo.
-  Sirve para ver dónde cae todo mientras se mueven las formas.
-- Ocho marcos, uno por banda (`01 · Header` … `08 · Footer`), transparentes y
-  con `clipsContent`, que recortan las formas en el borde de su sección igual
-  que el sitio.
-- Las 25 formas decorativas como **vectores editables**, en las coordenadas
-  exactas del sitio.
-
-**Sin auto-layout en ningún contenedor**, para poder arrastrar las formas.
-
-La referencia se genera con `?export=1`: oculta la capa decorativa y fija el
-hero al alto del artboard (si no, el hero mide lo que el viewport y la captura
-sale mal). `?export=2` hace lo mismo pero deja las formas, para comparar el
-sitio contra la maqueta.
-
-**Ida y vuelta.** Las posiciones del Figma se traen al código leyendo los nodos
-con `use_figma` y mapeando cada forma a su sección y a su tipo de anclaje. En el
-sitio las formas siempre van detrás del contenido (`.deco` tiene `z-index: 0` y
-`pointer-events: none`; el contenido va en `z-index: 1`), así que el orden de
-capas de la maqueta no hace falta reproducirlo.
-
-## Pendientes conocidos
-
-- **Diseño de tablet y mobile**: falta el Figma. Lo que hay abajo de 1080px
-  funciona y no se rompe, pero no está validado.
-- **Barra de accesibilidad**: los botones de contraste y tamaño de texto guardan
-  la preferencia en `localStorage` y aplican `html.is-high-contrast` /
-  `font-size`, pero falta definir la paleta de alto contraste y pasar las
-  medidas a `rem` para que el escalado tenga efecto real.
-- **Contraste del hero**: con el metraje real y la capa negra al 20% del Figma,
-  el texto blanco cae a **1,41:1** de contraste sobre los planos claros del
-  vídeo (AA pide 4,5:1 para texto normal; el H1, al ser grande, pide 3:1).
-  Medido sobre 16 fotogramas: falla en 10. La palanca es `--hero-scrim` en
-  `tokens.css`; a 0,8 con degradado a la izquierda el peor caso sube a 5,6:1.
-  Decisión pendiente de diseño.
-- **Clip del bloque de vídeo**: falta `assets/video/video-block.mp4`. Mientras
-  tanto muestra su poster y el botón de play queda deshabilitado.
-- **Contenido**: el bloque "Video Block" y una de las noticias son placeholder,
-  tal como en el Figma.
-- Dos pictogramas de la barra de accesibilidad (contraste y "Facile à lire")
-  venían rasterizados dentro del Figma, no como vectores: están recortados del
-  PNG original en `assets/icons/`. Conviene pedirlos en SVG al equipo de diseño.
-
-## Formas que en el diseño se tocan
-
-Si dos formas están pegadas en Figma, tienen que ir juntas en un
-`.deco-cluster`: se ancla el grupo una sola vez y los hijos van en coordenadas
-locales. Anclarlas por separado parece igual a 1512px, pero si una lleva
-`at-content` (sigue al contenedor) y la otra `is-right` (sigue al borde de la
-ventana), **se despegan apenas la ventana es más ancha** — en una MacBook 16"
-el hueco ya se ve. Los pares agrupados son `grey-ring`+`grey-x2`,
-`grey-checkers`+`x-pink` y `burst-teal`+`grey-checkers2`, además de los
-clústeres del Elevator, Profils y Actualités.
-
-### Desfases de 1-2px entre formas de un mismo grupo
-
-Varias parejas venían del Figma con 1 o 2px de diferencia por redondeo. Cuando
-son dos formas **del mismo alto puestas una al lado de la otra**, eso es
-redondeo y no diseño: se alinean por arriba (`grey-ring`+`grey-x2`,
-`grey-checkers`+`x-pink`, `burst-teal`+`grey-checkers2`).
-
-Ojo con no "corregir" las que no lo son: `stripes-pink`+`wave-green` y
-`triangles-green`+`stripes-pink-2` tienen alturas distintas y **están alineadas
-abajo** a propósito; `grey-circle`+`grey-x3` lo están arriba. Antes de tocar,
-conviene mirar si el desfase de arriba y el de abajo son iguales (redondeo) o si
-uno de los dos da cero (alineación intencional).
-
-## Dónde se mide la posición de las formas
-
-Las formas se posicionan contra la **costura de color** entre bandas (donde el
-fondo pasa de blanco a gris), no contra la caja del `<section>`: no coinciden,
-porque algunas bandas arrancan con un tramo del color de la anterior. En Figma
-pasa lo mismo — el frame de cada banda empieza antes que su cambio de color —
-así que comparar `y` de frame contra `top` de sección da diferencias de 25-30px
-y las formas quedan flotando lejos de la costura.
-
-Para medirlo: se detectan las costuras en las dos capturas (la fila donde cambia
-el color de fondo dominante) y se compara la distancia de cada forma a la
-costura más cercana. Las bandas del prototipo no miden igual que las de Figma
-(Vidéo +25px, Actualités +28px), así que anclar por la costura de arriba o por
-la de abajo **no** da lo mismo: hay que usar la que la forma toca en el diseño
-(`--y` si va pegada arriba, `--b` con `is-bottom` si va pegada abajo).
-
-## Detalles de interacción y ritmo
-
-- **Barra de herramientas.** El grupo de accesibilidad (contraste y A+/A−) y
-  el selector de idioma llevan 18px extra cada uno: con el `gap` parejo de la
-  barra, los tres grupos se leían como uno solo.
-- **Flechas del carrusel.** Se centran contra el carrusel mediante
-  `bottom: calc(100% + var(--space-10) + var(--news-card-h) / 2 - 22px)`, es
-  decir subiendo desde el borde de la fila de controles. Venían con `top: 627px`
-  y `603px` —coordenadas calcadas del artboard, distintas entre sí— y se
-  descolgaban cada vez que cambiaba el alto de las tarjetas. El alto vive en el
-  token `--news-card-h`, que usa también `.news-card`, así que ahora se acompañan
-  solas. La separación lateral es
-  `min(70px, (100vw - var(--container)) / 2 - 16px)` — 26px de aire hasta la
-  tarjeta, iguales de los dos lados; antes eran 51px a la izquierda y 81px a la
-  derecha, valores calcados, que dejaban apenas 7px. El `min()` las frena
-  cuando el margen lateral se achica, así no se salen de la ventana entre
-  1400px y 1512px, que es el rango donde siguen estando fuera del flujo.
-- **Chevrons del nav.** 9×5px (antes 10×6).
-- **Bandeaux con degradado.** Al pasar el puntero la foto crece 7% en 620ms,
-  con `transform-origin: right center` — está anclada a la derecha, así que
-  creciendo desde ahí el encuadre no se corre y el degradado sigue entrando
-  sobre la misma zona. El bandeau ya recortaba con `overflow: hidden`.
-- **Bajada de las tarjetas de actualidad.** Cortada a dos líneas con
-  `line-clamp`, que agrega puntos suspensivos. Con tres líneas se pegaba al
-  «Lire la suite». Cuando llegue el texto definitivo conviene escribirlo para
-  que entre en dos líneas y no dependa del corte.
-
-## Espesor de las flechas
-
-Todas las flechas del sitio —los 25 CTA, «En savoir plus», «Lire la suite» y
-las del carrusel— salen del mismo archivo, `assets/icons/arrow-up.svg`, que
-venía sin `stroke-width` y por lo tanto usaba el valor por defecto de 1. A 16px
-se veían lavadas. Ahora está en **1.5**, y el chevron del nav en **1.3** (su
-viewBox es más chico, así que proporcionalmente ya era más grueso).
-
-Se cambia en el SVG y no por CSS: los iconos se usan como máscara, así que el
-`stroke` del archivo es lo único que define el espesor.
-
-Queda una inconsistencia anterior sin resolver: `calendar.svg` tiene
-`stroke-width="2"` mientras que `mail`, `phone`, `location-marker` y
-`speakerphone` no lo declaran y quedan en 1.
-
-## Iconos de las tarjetas de servicio
-
-Los nueve iconos van como **máscara CSS** y no como `<img>`: son de un solo
-color plano, así que enmascararlos permite animarles el color. En reposo se ven
-igual que antes — ocho de los nueve ya coincidían exactamente con el acento de
-su tarjeta, y el noveno difería en un matiz de turquesa imperceptible.
-
-Al pasar el puntero el icono crece a 1.14 y el color se oscurece. El tono de
-llegada se calcula con `color-mix(in srgb, var(--accent) 80%, #000)`: ese 80% es
-el único número a tocar si se quiere más o menos marcado. Se mezcla con **negro
-y no con un azul de tinta** — mezclados con azul, los acentos cálidos se van a
-marrón.
-
-La flecha del «En savoir plus» también se corre 5px. Ese movimiento ya existía
-en `.link-arrow:hover`, pero sólo se disparaba al pasar por encima de la flecha
-misma; como la tarjeta entera es el enlace, ahora acompaña al hover de la
-tarjeta.
-
-Una trampa: las rutas de los iconos están en `components.css` y no en el
-marcado. Una `url()` dentro de una custom property se resuelve contra la hoja
-que la usa, no contra el documento, así que puestas en el HTML terminaban
-apuntando a `/css/assets/…` y las máscaras quedaban vacías (el icono se veía
-como un cuadrado de color).
-
-## Annexes
-
-«Nos annexes» es una grilla de fichas con foto, dirección y contacto, y nada
-más. Hubo una segunda vista —un localizador con un mapa de Luxemburgo dibujado
-a mano desde Natural Earth— que se sacó por pedido del cliente: para siete
-direcciones fijas el mapa no aportaba y desbalanceaba el bloque. Si alguna vez
-vuelve, está en el historial (`37ae889`); la nota de por qué no se usó un iframe
-de Google Maps sigue valiendo: en un sitio público arrastra cookies de terceros
-y consentimiento.
-
-Las fotos vienen del sitio actual. **La de Warken traía 14px de blanco pegados
-al borde derecho**: se recortó y se reescaló a los mismos 640×440 que las otras.
-Si se vuelven a bajar assets del sitio del cliente, conviene revisar los bordes
-antes de meterlos en una tarjeta con `object-fit: cover`, porque el blanco no se
-va solo.
-
-## «Les causes»: el texto primero, el índice abajo
-
-Es el mismo mecanismo que el carrusel de «Notre approche» —`tablist`, paneles
-apilados en una celda de grilla— pero con otra piel. Pasó por tres versiones:
-primero cuatro subrayados con filete y flechas (demasiadas líneas), después un
-riel de números a la izquierda, y al final esto: **el texto arranca arriba a la
-izquierda y ocupa el ancho, abajo a la izquierda va el índice del paso —`01. À
-la conception`— y abajo a la derecha las flechas.**
-
-El índice es el `tablist`: **los cuatro números se ven siempre** —el activo en
-el color de su paso, los otros tres en un gris bien claro (el de cuerpo al 42%),
-porque están para decir que hay más estados y no para leerse; al pasar el
-puntero suben de contraste y que se puede saltar a cualquiera— y después de un filete vertical va
-el nombre del paso. Los cuatro nombres viven apilados en la misma celda de
-grilla y sólo se ve el activo, así el filete no se corre de sitio al cambiar:
-el ancho lo fija el nombre más largo. El rótulo está fuera del botón, así que
-el JS lo marca por posición (igual que las fotos de «Notre approche») y cada
-botón lleva el nombre repetido en `visually-hidden` para el lector de pantalla.
-
-**El fondo toma el color del paso al 8%, y el filete de 1px el mismo color a
-tono pleno** —sin él la caja flota sobre el blanco—. Los dos los escribe el JS.
-
-**Sobre el color literal.** El color va como valor literal en
-`data-tint` y no como variable: una propiedad en transición no se re-evalúa
-cuando cambia la custom property de la que depende, y el fondo se quedaba en el
-primer color. Es la misma trampa de Chrome que ya había mordido en el conmutador
-de versiones.
-
-El alto del bloque lo fija el paso más largo —los paneles comparten celda—, así
-que el índice y las flechas no se mueven al cambiar de paso.
-
-**El texto que entra se rehace línea por línea**, con la misma máscara del
-hero. Por eso el panel perdió su propio desplazamiento y sólo se apaga: dos
-gestos encimados se estorban.
-
-Relanzar una transición tiene dos trampas seguidas, y las dos dan el mismo
-síntoma —no pasa nada— así que conviene tenerlas juntas:
-
-1. **Quitar y reponer la clase con un reflujo en el medio no alcanza.** Al
-   quitarla, la línea no vuelve de un salto a su sitio de partida: arranca la
-   transición de vuelta. El reflujo la encuentra recién salida, o sea todavía
-   en cero, y reponer la clase la anima de cero a cero. Hay que **apagar** la
-   transición para que el regreso sea instantáneo y volver a encenderla antes
-   de reponer la clase; el navegador decide si anima mirando el estilo
-   *posterior* al cambio, así que alcanza con que esté puesta ahí.
-2. **Se apaga con `transition-property`, no con el atajo `transition`.** El
-   atajo resetea también el `transition-delay`, que es donde vive el escalonado
-   de línea a línea: se relanzaba bien pero las cuatro líneas entraban juntas.
-   La misma corrección hacía falta en el rearmado por `resize`.
-
-Si el despiece todavía no está hecho —espera a que carguen las fuentes— no se
-hace nada, que de eso ya se ocupa el observador de `initLineReveal`.
-
-Esto destapó una red de seguridad mal puesta en `initLineReveal`: decía «si
-**alguno** entró, el observador funciona, no hago nada», y como el título entra
-siempre primero, nunca se disparaba. Un bloque al que el observador no llegara
-—los paneles del carrusel, que comparten celda y arrancan ocultos— se quedaba
-enmascarado, o sea invisible, para siempre. Ahora la red muestra **cada** bloque
-que a los tres segundos siga sin entrar.
-
-## El menú desplegable de «À propos»
-
-El item de la nav abre un panel con las ocho secciones de la página, numeradas,
-más una bajada y un «voir la page» a la izquierda. Tres cosas que no son obvias:
-
-- **El panel se ancla a `.nav`, no al `<li>`.** `.nav` es el único ascendiente
-  posicionado, así que el panel cae alineado a la grilla de la página en vez de
-  colgar del item, que está pegado al borde derecho. El `<li>` lleva
-  `position: static` escrito a propósito para que siga siendo así.
-- **Cerrado no lleva `hidden` ni `display: none`**: los dos cortan la
-  transición. Va con `visibility` retrasada —que sí anima— y el JS le pone
-  `inert`, que lo saca del foco y del lector sin tocar el render.
-- **Con ratón abre al pasar por encima y cierra con 120 ms de respiro**, para
-  que el recorrido diagonal hasta el panel no lo apague a mitad de camino. Sin
-  hover —táctil, o la nav apilada— el primer toque abre y el segundo navega.
-
-La columna de la izquierda —foto, título, bajada y «voir la page»— es **un solo
-enlace**: es como se lee, y evita tres blancos de clic pegados. Por eso el «voir
-la page» es un `<span>` y no un `<a>`: un enlace dentro de otro no es marcado
-válido.
-
-Los items entran escalonados con `--i` escrito en el marcado: es posición, no
-estado, así que el retardo sale de CSS y el JS no reparte nada.
-
-**Sin foto, por decisión del cliente.** Se probó una: como recuadro de
-proporción fija encima del título dejaba un hueco blanco debajo y el panel
-quedaba alto; estirada a una columna propia sangrada al borde funcionaba, pero
-obligaba a poner los ocho enlaces en una sola columna —en dos, «Le trouble du
-développement intellectuel» se parte en tres líneas— y el conjunto pesaba más
-de lo que un menú necesita. Quedó el panel sólo de texto.
-
-La rejilla de enlaces lleva `align-content: center`. Sin eso, si la columna de
-la izquierda queda más alta, las cuatro filas se reparten el sobrante —las
-pistas `auto` crecen— y el índice sale desparramado.
-
-Apilado (≤1080px) el panel no cuelga: se despliega en el sitio como acordeón,
-animando `grid-template-rows` de `0fr` a `1fr` con `overflow: hidden` en el
-hijo, porque `height: auto` no es animable. **Ojo al verificarlo en el panel del
-navegador de la app: congela las transiciones y devuelve el valor de arranque
-—`0px`— aunque el acordeón funcione.** Con `transition: none` forzado se lee el
-valor final.
-
-## Tres detalles del interior que vale recordar
-
-- **El filete del panel de «Notre approche» lleva `align-self: start`.** Los
-  paneles se apilan en la misma celda de grilla, así que por omisión se estiran
-  al alto del más largo y el filete sobraba por debajo del texto corto.
-- **El filete de las tarjetas de «publics cibles» va con `margin-top: auto`** y
-  la tarjeta sin relleno abajo. Si siguiera al texto quedaría a distinta altura
-  en cada una, porque los textos no miden lo mismo.
-- **Cuidado con dos reglas `.target` en la misma hoja.** La de la sección de
-  componentes y la de la sección de públicos se pisaban el `padding`: la
-  segunda volvía a poner el relleno inferior que la primera había sacado.
-
-## Dos trampas del layout interior
-
-**`min-width: 0` en la celda de contenido.** Una celda de grilla no se encoge
-por debajo del ancho de lo que contiene (`min-width: auto` es el valor por
-omisión). La tira del carrusel mide 300%, así que empujaba la columna hasta
-desbordar el contenedor y meter scroll horizontal en toda la página. Vale para
-cualquier cosa que se desplace dentro de una grilla.
-
-**El modo exportación va en el script del `<head>`.** Estaba en `main.js`, que
-es un módulo diferido: se aplicaba después del primer pintado y las capturas
-agarraban las animaciones de entrada a mitad de camino —elementos en opacidad
-0,4 o directamente invisibles—, que parecía un error de maquetado y no lo era.
-Es el mismo problema que ya había pasado con la clase `js`.
-
-## Páginas interiores — la sección «À propos»
-
-La grilla sale del Figma «Diagnostique spécialisé»: 292px de barra lateral,
-145px de calle y 835px de contenido, dentro del mismo contenedor de 1272px de
-la home. Los estilos propios están en `css/interior.css`; la cabecera y el pie
-se copiaron del `index.html` tal cual.
-
-### Las formas del margen izquierdo
-
-Salen del artboard **«test claude»** del Figma (`node-id=786-395`), que es la
-maqueta de la página interior. Son cinco piezas —rayas diagonales, elipses
-apiladas, aspa, chevrones y anillo— exportadas a `assets/svg/deco-side-*.svg`.
-Traen su propio gris (`#E9EAEC`, el anillo `#EDEEF0`), que no es el
-`--c-deco` del resto del sitio.
-
-Las formas **entran rápido**: `--dur-deco` baja a 420ms y el escalonado a 60ms
-por pieza, con `data-deco-step` en la capa. Con los valores de la home —800ms y
-150ms— las siete piezas tardaban 1,7s en terminar de armarse, que para una
-decoración de margen es una eternidad.
-
-La capa va al **78% de opacidad** en estas páginas: acompañan a una columna de
-texto largo y no a una portada. Se gradúa con `--deco-op`, que `.deco` lee.
-Va como variable y no como valor suelto porque la atenuación de pantallas
-angostas se declara sobre `.deco` mismo y así le gana a la de la sección, que
-se hereda.
-
-En el **margen derecho** hay otras dos —un zigzag de contorno y una Z maciza,
-`deco-side-arrows.svg` y `deco-side-zigzag.svg`— pegadas al canto de la ventana
-y cortadas por él. Van un 20% más grandes que en el Figma y arrancan a 100px
-del tope de la sección, no a los 161 del diseño: a tamaño natural y en su sitio
-quedaban chicas y bajas para el largo real de estas páginas.
-
-**El anillo va arriba del grupo de la izquierda, no abajo.** En el Figma cierra
-la composición al pie, pero en una página de texto quedaba solo y dejaba un
-hueco blanco grande. Al subirlo, el grupo conserva su alto —se le saca una fila
-abajo y se le pone una arriba— así que el mínimo de la sección sigue valiendo.
-
-Todo se arma en **dos combinaciones que la sección alterna**: la A repite el
-orden del Figma y la B recoloca las mismas piezas, a los dos lados. A en «Qui
-sommes-nous», «Notre philosophie», «Les publics cibles» y «Notre équipe»; B en
-las otras cuatro.
-
-Las piezas se encastran entre sí, así que cada lado vive en un
-`.deco-cluster` y se colocan en coordenadas locales. **El grupo de la izquierda
-se ancla al pie de la sección**
-(`is-bottom`, `--b: 0`) y no al tope: en el Figma la última pieza termina justo
-donde empieza el pie de página, y anclarlo abajo hace que eso se cumpla sea
-cual sea el largo de la página. De paso entran desde abajo, que es lo que el
-JS deduce del anclaje.
-
-**`.interior` lleva `min-height: 1080px`** por encima de 1000px de ancho, y el
-número no es arbitrario. La columna de formas mide 675px y la tarjeta de la
-barra lateral termina a 650px del tope: para que no se tocaran harían falta
-1350, y con eso las páginas cortas quedaban con un campo blanco enorme debajo
-del contenido.
-
-El punto delicado no es que se solapen sino **cuánto**. A 1150 la segunda fila
-de formas arrancaba a 1px del pie de la tarjeta: se rozaban, y un roce se lee
-como un error de alineación. A 1080 esa fila entra 70px por detrás, que ya se
-lee como profundidad. **La regla es solaparse con ganas o no solaparse**; lo
-que no se puede es besar el borde.
-
-Por eso también **el anillo va solo en la fila de arriba en las dos
-combinaciones**: queda entero dentro de la banda de la tarjeta y asoma sólo por
-su izquierda, que es el gesto más limpio de los tres posibles.
-
-El de la derecha se ancla arriba y al canto (`is-right`), porque su sitio lo
-da la foto y no el pie.
-
-**Cuidado con las coordenadas que informa `get_metadata`**: las dos piezas de
-la derecha venían con una `x` de 1606 y 1430 sobre un artboard de 1512, o sea
-fuera. La buena es la del `transform` del SVG exportado —`translate(-1438 -346)`
-dice que la pieza arranca en x=1438, y=346— y además el export ya viene
-recortado a lo que se ve dentro del artboard, que es justo lo que hace falta.
-
-**Al exportar, Figma mete dos rectángulos que hay que sacar**: el fondo
-`#1E1E1E` del tamaño del propio SVG y el rectángulo blanco de 1512×2036 del
-artboard entero. El `clipPath` de los chevrones **no** se toca: es el que
-recorta la pieza en el borde del artboard, que es justo como el diseño la
-muestra, cortada por el canto de la ventana.
-
-### Una página por item de la barra lateral
-
-Al principio era una sola página larga con ocho secciones y anclas. El
-programador del cliente va a servir **cada item como una página propia**, así
-que están partidas:
-
-| Archivo | Sección |
+| File | Page |
 | --- | --- |
-| `a-propos-qui-sommes-nous.html` | Qui sommes-nous ? (entrada de la sección) |
+| `index.html` | Home |
+| `a-propos-qui-sommes-nous.html` | Qui sommes-nous ? (entry point of the section) |
 | `a-propos-trouble.html` | Le trouble du développement intellectuel |
 | `a-propos-philosophie.html` | Notre philosophie |
 | `a-propos-approche.html` | Notre approche |
 | `a-propos-publics.html` | Les publics cibles |
 | `a-propos-chiffres.html` | Le CDI en chiffres |
 | `a-propos-equipe.html` | Notre équipe |
-| `a-propos-annexes.html` | Nos annexes |
-
-**No hay página «À propos».** Se probó una portada de sección —título, foto e
-índice de las ocho— y el cliente la descartó: la sección entra directamente por
-«Qui sommes-nous ?», que se quedó con la foto. De ahí que el item «À propos» de
-la navegación enlace a esa página y que la columna izquierda del desplegable sea
-sólo texto: sin página de sección no tiene a dónde llevar, y los ocho destinos
-están listados al lado.
-
-**Nombres planos y no una carpeta `a-propos/`**, para que las rutas de
-`assets/`, `css/` y `js/` sigan siendo las mismas en todos los archivos. Sin
-paso de compilación, una carpeta obligaría a `../` en cada enlace de cada
-página y a recordarlo cada vez que se toca una.
-
-El `<h2 class="block__title">` de cada sección pasó a ser el `<h1>` de su
-página; el `<section class="block">` se mantiene, con su `id`, para no tocar
-ningún estilo. Las ocho páginas se generaron con un script a partir de la
-página larga (`scratchpad/separar.py` en su momento); **si hay que volver a
-partir algo, ojo con los `<section>` anidados** —los paneles de los `tablist`
-de «Les causes» y «Notre approche» lo son— porque una expresión regular
-perezosa corta en el cierre del hijo y se lleva media sección.
-
-La barra lateral reproduce la tarjeta del Figma, con dos diferencias: el filete
-es del turquesa de marca y no naranja, y **se queda fija al scrollear**. Ahora
-enlaza entre páginas y la página en curso lleva `aria-current="page"`.
-`initSubnav()` —el scroll-spy de cuando era una sola página— sigue en el JS
-pero no hace nada: sale por la puerta de atrás si no encuentra enlaces a
-anclas. Está por si alguna página vuelve a crecer y necesita su propio índice.
-
-**Componentes.** Todas las cajas comparten el estilo de las tarjetas del resto
-del sitio —blanco, redondeo, sombra y filete de acento a la izquierda— para que
-la página no se sienta de otro sitio. Además:
-
-- `.approach` — el carrusel de «Notre approche»: foto apaisada arriba con los
-  pasos 01/02/03 encima, sobre un velo oscuro, y el texto debajo. Cada paso abre
-  con una frase destacada, porque el cuerpo es largo y necesita un punto de
-  entrada. Es un `tablist` de verdad, con flechas, Inicio y Fin, y **no** avanza
-  solo: no corresponde cambiar el contenido mientras alguien lee. Las fotos se
-  cruzan en el mismo lugar y los textos se apilan en la misma celda de grilla,
-  así el alto lo fija el más largo y nada salta al cambiar de paso. Los paneles
-  ocultos llevan `inert` y no `hidden`, porque tienen que seguir ocupando su
-  celda.
-- `.target` — los públicos cibles: **tres filas a lo ancho, con la foto al
-  costado.** Eran tres columnas con la foto redonda arriba; al quedar solas en
-  su propia página, tres tarjetas angostas en el tercio superior dejaban el
-  resto vacío. La foto va **dentro del relleno**, con su propio redondeo: se
-  probó sangrada al borde y se comía la esquina redondeada de la tarjeta.
-  Tampoco lleva el filete corto al pie —tenía sentido cuando la tarjeta estaba
-  centrada, no en una fila a lo ancho—: vuelve el filete de acento a la
-  izquierda, el de todas las tarjetas del sitio. En angosto la foto vuelve
-  arriba, apaisada.
-- `.bars` — barras de proporción que crecen al entrar en pantalla.
-- `initCounters()` — las cifras cuentan hacia arriba. El número final está en el
-  marcado: si el JS no corre, se lee igual.
-
-**Las fotos** salen del sitio actual del cliente (cdi.lu), recortadas y
-optimizadas: las tres de «publics cibles» —circulares, como allá— y las siete de
-las annexes. El siège de Strassen no aparece en esta sección: el título habla de
-annexes, y la dirección ya está en el pie. En cdi.lu las de las annexes van como `background-image`, por eso no
-aparecen buscando `<img>`. Las ilustraciones de «Notre approche» de ese sitio
-resultaron ser formas de color planas, así que ahí se usan fotos del propio
-proyecto. Conviene confirmar con el cliente que son las definitivas.
-
-**Sobre el contenido.** «Les publics cibles» son sólo tres frases: en cdi.lu
-aparecen cuatro veces porque un slider repite el título, pero no hay más texto.
-Lo que sí es largo es «Notre approche» —el `#section2` del sitio—, y por eso es
-la sección que se armó con el componente numerado.
-
-`Notre équipe` está apenas esbozada a la espera de referencias; hay un `TODO` en
-el marcado. Los nombres completos están en el contenido original de cdi.lu.
-
-## El video del hero al scrollear
-
-`initHeroParallax()` le hace un acercamiento —hasta 30%— con una deriva hacia
-abajo, de modo que el video queda por detrás del movimiento de la página. El
-recorrido se mide contra el alto del hero, así que lo que se ve es sólo el
-primer tramo: con un 10% el efecto era imperceptible.
-
-Dos decisiones que importan:
-
-- **En reposo vale 1 y 0.** El encuadre de arranque, que se ajustó a mano y
-  costó varias vueltas, queda exactamente igual: la animación sólo existe una
-  vez que empezás a scrollear.
-- **La deriva se calcula contra el sobrante que deja el zoom**, nunca por
-  encima. Por eso no hace falta agrandar la caja del video —que cambiaría el
-  encuadre— y aun así no se llega a ver el borde. `HERO_ZOOM` y `HERO_DRIFT` en
-  `main.js` son los dos números a tocar.
-
-No corre en modo exportación ni con movimiento reducido.
-
-## El header acompaña al scroll
-
-Al bajar se va; al subir vuelve, pero **sólo la barra de navegación**, no la
-cabecera entera. Eso último lo resuelve el CSS sin una línea de JS: el header es
-`position: sticky` con un `top` negativo que vale lo que miden la franja del
-gobierno más la barra de accesibilidad, así que esas dos se van con el scroll y
-lo que queda clavado arriba son los 77px de la navegación. Sin eso, al subir
-aparecía una cortina de 185px.
-
-El elemento sigue ocupando su sitio en el flujo, así que no hay saltos ni hace
-falta un espaciador. El JS sólo decide si está o no (`is-hidden`), con un umbral
-de 6px para que el temblor del trackpad no lo haga parpadear, y no lo esconde
-nunca si el menú está desplegado o el foco está dentro.
-
-**`body` pasó de `overflow-x: hidden` a `overflow-x: clip`.** Los dos recortan
-lo que se va de ancho —las formas decorativas—, pero `hidden` convierte al body
-en contenedor de scroll y eso deja el `sticky` sin efecto. `clip` no crea
-contenedor de scroll. Es la clase de detalle que hace perder una tarde: el
-`sticky` está bien escrito y simplemente no pasa nada.
-
-La barra lateral del interior se detiene a `--nav-h + 24px`, para no pegarse a
-la navegación cuando ésta vuelve.
-
-## Los estados de hover
-
-Todo lo que responde al puntero usa `--dur-hover` (520ms) y `--ease-hover`,
-nunca `--ease-out`: levantamientos, sombras, flechas, iconos y zooms de foto.
-**`--ease-out` es una curva que gana el 90% del recorrido en el primer cuarto
-del tiempo**; con ella el gesto se siente seco por más que se alargue la
-duración, porque el problema es la curva y no el reloj. `--ease-hover` sale
-despacio, glisa y aterriza blando.
-
-### La transición del hover la borraba el revelado
-
-El síntoma era que las tarjetas se levantaban de golpe por más que el
-componente declarara su transición. La causa: `.js [data-reveal]` tiene
-especificidad (0,2,0) y la regla del componente (0,1,0), así que **la lista de
-`transition` no se suma: se reemplaza entera.** Como casi toda tarjeta es
-objetivo de revelado, se quedaba con `opacity, translate, scale` y perdía su
-`transform` y su `box-shadow`: duración cero.
-
-Por eso las dos propiedades están declaradas en la regla del revelado
-(`css/base.css`), aunque el revelado no las use. Lo mismo en las dos reglas que
-la pisan a su vez: `[data-reveal="banner"]` y la del `.profile-banner__arrow`.
-Los retardos del escalonado van **dentro del atajo**, no en un
-`transition-delay` aparte, porque ése se aplicaría también al hover y lo dejaría
-esperando 360ms antes de arrancar.
-
-Regla práctica: **si una regla de revelado declara `transition`, tiene que
-repetir las propiedades del hover del elemento.** Para comprobarlo, leer
-`getComputedStyle(el).transitionProperty` en el elemento real, no fiarse de lo
-que dice el archivo del componente.
-
-### El círculo con flecha crece, no se desplaza
-
-En los bandeaux de perfiles y en las tarjetas de perfil el círculo se movía 4px
-al pasar el puntero. Con un disco de 40-46px el desplazamiento tironea del ojo y
-se lee más el recorrido que el gesto. Ahora escala a 1.12. Va con `scale` y no
-con `transform` por la trampa de siempre: el `transform: none` del revelado le
-ganaría por especificidad.
-
-Las flechas de texto —«En savoir plus», «Lire la suite», los botones— siguen
-desplazándose, que ahí sí funciona: acompañan a una línea de texto.
-
-### La sombra
-
-`--shadow-card-hover` (`0 12px 26px / 0.16`) reemplaza al `0 14px 28px / 0.18`
-que estaba escrito a mano en cuatro sitios. El salto desde la de reposo
-(`0 4px 12px / 0.25`) era demasiado recorrido para el tiempo que dura y se leía
-como un golpe.
-
-Las fotos que hacen zoom al pasar el puntero necesitan que **su propio marco**
-recorte, no sólo la tarjeta: `.news-card__media` no tenía `overflow: hidden` y
-la foto crecía por encima de la fecha y el título en lugar de quedar contenida.
-
-## El revelado se anima con `translate`, no con `transform`
-
-`.js [data-reveal].is-visible { transform: none }` son tres clases de
-especificidad; `.service-card:hover { transform: translateY(-6px) }`, dos. El
-estado final del revelado le ganaba al hover, así que **el levantarse de las
-tarjetas al pasar el puntero no se aplicaba** en nada que se hubiera revelado al
-scrollear — tarjetas de servicio, de actualidad y bandeaux.
-
-El sistema usa ahora `translate` y `scale`, que son propiedades propias e
-independientes de `transform`. Regla general: en este proyecto `transform` queda
-reservado para los estados de interacción, y las entradas se animan con
-`translate`/`scale`. Lo mismo vale para las formas decorativas, donde `transform`
-lo ocupa el parallax.
-
-### Entrada de los bandeaux de perfiles
-
-Llevan `data-reveal="banner"`: tres tiempos encadenados en vez de un fade
-parejo — el bandeau entra desde abajo con una escala mínima, la foto se asienta
-desde un zoom del 10% y el texto con la flecha llegan 240ms después. El zoom de
-la foto sólo se declara mientras no entró; dejarlo puesto en `scale: 1` al
-terminar le ganaría por especificidad al `scale` del hover y lo anularía.
-
-## Entrada del texto: línea por línea, con máscara
-
-El hero (título y párrafo) y el texto del elevator llevan `data-lines`. Cada
-línea entra deslizándose desde abajo detrás de una máscara, 120ms después de la
-anterior. `data-lines-delay` retrasa el bloque entero, que es lo que ordena la
-cascada del hero (volanta → título → párrafo → botón).
-
-El corte de línea lo decide el navegador y cambia con el ancho, así que no hay
-marcado por línea: `initLineReveal()` envuelve cada palabra, las agrupa por
-`offsetTop` y recién entonces rearma el bloque con una máscara por línea. Se
-rehace en `resize`.
-
-Cuatro cosas que costaron y conviene no deshacer:
-
-- **Se mide después de que cargó la tipografía.** Open Sans carga asincrónica y,
-  medido con la de respaldo, el agrupado sale mal: una máscara termina
-  conteniendo dos líneas. Con máscara el texto está oculto hasta que entra, así
-  que esperar no deja nada a la vista; hay un tope de 1,5s por las dudas.
-- **Ninguna palabra se puede partir** (`.word { white-space: nowrap }`). El
-  navegador cortaba «psycho-pédagogie» por el guion; además, una palabra a
-  caballo entre dos líneas tiene un solo `offsetTop` y rompía el agrupado.
-- **Se anota qué palabra venía con espacio delante.** Si no, al rearmar se
-  inventa un espacio donde no lo había y el punto final queda separado del
-  `</strong>` que lo precede.
-- **La máscara lleva `padding-bottom` con margen negativo que lo compensa.** El
-  alto de línea del título es 1.08 y `overflow: hidden` recortaba la 'p' de
-  «développement».
-
-Al rearmar, un `<strong>` que cruza un corte se parte en dos. Es equivalente:
-acá sólo aporta el peso tipográfico.
-
-## Entrada de las formas al hacer scroll
-
-Cada forma entra cuando su grupo cruza el cuarto inferior de la pantalla: se
-desplaza 64px desde el borde al que está anclada —las de la derecha desde la
-derecha, las de abajo desde abajo— mientras se desvanece desde opacidad 0, en
-800ms con ease-out. Las que van juntas en un `.deco-cluster` entran una después
-de otra, cada 150ms.
-
-Los números: la distancia en las clases `.from-*` de `base.css`, el escalonado
-en `DECO_IN_STEP` de `main.js`, la duración en el token `--dur-deco` y el punto
-de disparo en el `rootMargin` del observador.
-
-Dos decisiones que conviene no deshacer:
-
-- **Se oculta la pieza, no el grupo.** El `.deco-cluster` queda visible y lo que
-  se anima son sus hijos, que es lo que permite escalonarlos entre sí. El
-  parallax, en cambio, sigue moviendo el grupo entero: por eso uno usa
-  `translate` y el otro `transform`, que son propiedades distintas y se componen
-  sin pisarse.
-- **El observador mira el grupo, no la pieza.** Así las formas que van juntas
-  arrancan todas en el mismo punto del scroll y la diferencia entre ellas la da
-  el delay, no la posición.
-
-Y dos trampas ya pagadas:
-
-- **La dirección va en clases, no en una custom property.** Chrome no vuelve a
-  evaluar una propiedad que está en transición cuando cambia la variable de la
-  que depende, así que el desplazamiento quedaba siempre en cero. Es el mismo
-  problema que había aparecido con el color del conmutador de versiones.
-- **La clase `js` se agrega en el script del `<head>`, no en `main.js`.** El
-  módulo está diferido y se aplicaba después del primer pintado, así que todo lo
-  que el CSS oculta para animarlo alcanzaba a verse y se desvanecía a la vista.
-
-### Los hijos de un grupo se ocultan desde el CSS, no desde el JS
-
-La trampa que más engaña de todas. `data-reveal-group` le pone el atributo
-`data-reveal` a sus hijos **desde el JS**, y el módulo es diferido: corre
-*después* del primer pintado. Para cuando el JS los marca ya se pintaron
-visibles, así que esconderlos y revelarlos ocurre en el mismo tirón y no se
-anima nada.
-
-El síntoma es el peor posible para diagnosticar: la página parece no animarse
-**salvo el título**, que sí funciona porque su `data-lines` está escrito en el
-marcado y el CSS lo agarra desde el primer pintado. Pasaba en «Notre
-philosophie» y «Les publics cibles», que son las dos páginas donde el grupo de
-tarjetas es lo único que hay y está arriba de todo; en las demás no se notaba
-porque lo primero es un `.prose` con su `data-reveal` escrito a mano.
-
-La cura es una regla sobre el **contenedor** —eso sí está en el marcado— así
-que vale antes de que corra una línea de JS:
-
-```css
-.js [data-reveal-group] > * { opacity: 0; translate: 0 28px; }
-.js [data-reveal-group='rise'] > * { translate: 0 32px; scale: 0.97; }
-```
-
-El desplazamiento también, no sólo la opacidad: si sólo se ocultaran, al llegar
-el atributo el elemento saltaría a su posición de partida con la transición ya
-puesta y se iría deslizando hacia abajo —invisible, pero gastando el
-recorrido— y la entrada real saldría corta.
-
-Las dos reglas van **antes** que las de cada gesto: tienen su misma
-especificidad, así que un hijo con su propio `data-reveal` en el marcado —los
-bandeaux de perfiles— gana por orden y conserva sus valores.
-
-### El escalonado se calcula al revelar, no de antemano
-
-Antes el retardo se repartía al arrancar: `data-reveal-group` numeraba a sus
-hijos y listo. Eso tenía dos problemas. Uno, una tarjeta a la que se llega
-scrolleando —sola, sin compañía— igual esperaba su turno aunque no hubiera
-nadie con quien escalonarse. Dos, todo lo que no estaba en un grupo entraba a la
-vez, así que una página interior era un fogonazo: barra lateral, texto y
-tarjetas apareciendo al mismo tiempo mientras el título se escribía línea por
-línea.
-
-Ahora el retardo se decide dentro del observador, con lo que entra en la misma
-tanda: se ordenan por posición en el documento y se numeran ahí. **Lo que se ve
-de entrada cae uno detrás de otro; lo que entra solo aparece en el acto.** Un
-retardo escrito a mano en el marcado sigue mandando, para los pocos casos donde
-está puesto a propósito (el botón del hero, el cuerpo del bloque de vídeo).
-
-El valor de `data-reveal-group` elige el gesto de los hijos: a secas es `up`;
-`data-reveal-group="rise"` los sube con una pizca de escala, que es como entran
-las tarjetas —parece que se acercan, que es lo que se quiere de una caja con
-sombra—.
-
-**La barra lateral de las páginas interiores entra desde la izquierda.** Era lo
-único que se quedaba quieto mientras todo lo demás se animaba, y se notaba.
-
-### Cómo verificar una animación (y cómo no)
-
-Ninguna de las dos superficies automáticas sirve:
-
-- Con `--virtual-time-budget`, Chrome headless dispara el IntersectionObserver
-  de forma errática: leer estilos computados desde una página sonda da
-  resultados que se contradicen entre corridas.
-- El panel del navegador integrado está *throttled*: las transiciones quedan
-  congeladas, y se lee el estado final aplicado en las clases junto con el valor
-  inicial en el estilo computado. Confunde bastante.
-
-Lo que sí sirve: capturas headless con distintos presupuestos de tiempo (se ve
-la forma aparecer entre una y otra), revisar en el panel que las clases y los
-delays sean los correctos —eso no depende del render—, y comparar el render de
-`?export=2` contra el anterior, que debe dar cero diferencias porque en ese modo
-la animación no corre.
-
-## Parallax de las formas: el recorrido se mide por forma
-
-Las bandas recortan con `overflow: hidden` y muchas formas del diseño van
-pegadas a la costura entre bandas. Si se desplaza la capa `.deco` entera, esas
-formas se salen de la banda y quedan **rebanadas al scrollear**. Por eso
-`initDecoParallax()` mide, forma por forma, cuánto le sobra hasta el borde de su
-banda y limita ahí el recorrido: la que está al ras no se mueve, la que tiene
-aire flota los 26px completos. Si se agregan formas nuevas no hay que tocar
-nada, se mide sola (y se vuelve a medir en `resize`).
-
-En modo `?export=…` el parallax no corre, si no la referencia que se compara
-contra Figma sale corrida.
-
-## Cosas a tener en cuenta si se re-exportan assets del Figma
-
-- Los SVG exportados traen un rect opaco de fondo y otro del tamaño del
-  artboard; hay que sacarlos, pero **sin tocar los que están dentro de un
-  `<clipPath>`** o la forma desaparece entera. El color de ese rect de fondo es
-  el del canvas de la página, así que **cambia si alguien cambia el fondo del
-  Figma** (era `#1E1E1E`, ahora `#F5F5F5`): conviene detectarlo por posición —
-  es siempre el primer `<rect>`, antes del primer `<g>`, con las medidas exactas
-  del root — y no por color.
-- El export recorta a la **tinta visible** (`absoluteRenderBounds`), no a la caja
-  del frame (`absoluteBoundingBox`). Cuando la forma no llega a los bordes de su
-  frame, el SVG sale más chico: hay que leer las dos cajas y recalcular `--w`,
-  `--h` y el anclaje (`--rx` / `--b`) contra las de render, o la forma aparece
-  encogida y corrida. Pasó con `chevrons-teal` (246×246 → 246×122) y
-  `grey-bigcircle` (502×505 → 317×364).
-- Al traer de vuelta formas que el cliente reacomodó en Figma **no alcanza con
-  importar las posiciones**: si además editó la forma (relleno, trazo,
-  geometría), hay que re-exportar el SVG. Reutilizar el archivo local viejo
-  porque el nombre coincide pierde esas ediciones en silencio.
-- Algunos nodos arrastran el `filter` de drop-shadow del grupo padre — al logo
-  le venía la sombra de la barra de navegación. Conviene revisar `<filter>`.
-- Los iconos de instancia traen un `<rect x="0.5" y="0.5" width="23" ...>` con
-  el contorno de la caja: se ve como un cuadrado alrededor del icono.
-- Ojo con los glifos chicos dentro de viewBox grandes (chevron, lupa): hay que
-  usarlos a tamaño natural, no estirarlos con `contain`.
+| `a-propos-annexes.html` | Nos annexes (overview) |
+| `a-propos-annexe-*.html` | One page per annexe: Clervaux, Echternach, Differdange, Kannercampus Belval, Luxembourg, Kannerinsel Berchem, Warken |
+
+- There is **no "À propos" landing page**: the client dropped it. The nav item
+  links straight to *Qui sommes-nous ?*.
+- File names are **flat** (no `a-propos/` folder) so that every page uses the
+  same relative paths to `css/`, `js/` and `assets/`.
+- Header and footer are copied verbatim into every page. Other nav items
+  (parents, professionals, news, contact, services) are `#` links for now.
+
+## Query parameters and flags
+
+**URL parameters** (for QA, screenshots and showing variants):
+
+| Parameter | Effect |
+| --- | --- |
+| `?popup=off` / `?popup=on` | Skip / force the event popup on the home |
+| `?contrast=on` | Force high-contrast mode |
+| `?fs=0\|1\|2` | Force a text-size step (A−/A+) |
+| `?switch=on` | Show the hidden version switch (bottom left) |
+| `?intranet=blue\|pink` | Intranet button colour (default `blue`) |
+| `?profiles=gradient\|cards\|banners` | Home "profils" band variant (default `gradient`) |
+| `?export=1` | Capture mode: no decorative shapes, no animation, hero at artboard height |
+| `?export=2` | Same, but keeps the shapes (to compare against Figma) |
+
+**Constants in `js/main.js`** that matter for production:
+
+| Constant | Value | Note |
+| --- | --- | --- |
+| `POPUP_ENABLED` | `true` | Event popup on the home |
+| `REMEMBER_DISMISSAL` | `false` | Shows the popup on every load, handy for review. **Set to `true` in production**: it is then shown once per event (stored in `localStorage`) |
+| `POPUP_DELAY` | 600 ms | Delay before the popup opens |
+| `MIN_AUTOPLAY_WIDTH` | 900 px | The hero video only autoplays above this width |
+| `PAGINAS`, `FRECUENTES` | — | The search index and the "frequent searches" chips. Prototype only: in production this is the CMS search |
+
+Other tuning numbers (`HERO_ZOOM`, `HERO_DRIFT`, `STAGGER_MS`, `DECO_IN_STEP`,
+`LINE_STEP`, `DECO_SHIFT`, `FONT_STEPS`) are commented where they are declared.
+
+## Foundations
+
+**Scale.** The design is a 1512px artboard with 120px side margins.
+`.container` reproduces that 1272px box, centred, and shrinks below 1352px with
+a 40px minimum gutter. At 1512px the home matches the Figma pixel for pixel.
+
+**Tokens** (`css/tokens.css`) are the single source of truth for colour, type,
+spacing and motion. A few that are not obvious:
+
+- **Section colours.** Each nav item and each page `<body>` carries
+  `data-section`, which sets `--section` and `--section-ink`: À propos pink,
+  Parents orange, Professionnels teal, Actualités coral, Contact green. In the
+  nav the colour is only a thin underline (text stays black — the client
+  rejected coloured nav text). On À propos pages it drives the sidebar, the
+  "next page" card, list bullets and the pink corner shape. Buttons are always
+  teal.
+- **`--c-on-brand`** is the text/icon colour on brand colours (buttons, badges,
+  arrows): night blue, 7.9:1 on the teal. It becomes white in high contrast.
+  White text on the brand teal or orange does not pass AA.
+- **`--c-teal-ink`** (#008292, 4.56:1) is the teal for text links; the brand
+  teal is only used for fills.
+- **Type scale** (`--fs-*`) is multiplied by `--fs-scale`, which the A−/A+
+  buttons change (1, 1.12, 1.25).
+- **Motion**: `--dur-*`, `--ease-out` for entrances, `--dur-hover` +
+  `--ease-hover` for everything that reacts to the pointer (see
+  [Gotchas](#gotchas-worth-knowing)).
+
+**Icons.** Single-colour icons are CSS masks over `currentColor`
+(`.icon.icon--name`), so they inherit colour and animate without touching the
+SVG. Multi-colour ones (service icons, social, logos) are `<img>`. Icon URLs
+live in `components.css`, not in the markup (see Gotchas).
+
+**Card accent.** Cards set `--accent` inline; border, title and link inherit
+it, so recolouring a card is one declaration.
+
+## Decorative shapes
+
+The brand shapes are a big part of the design, and the same system is used on
+every page.
+
+- Each band has a `.deco` layer: absolute, behind the content (`z-index: 0`),
+  no pointer events. The band clips it with `overflow: hidden`.
+- Each shape declares **what it is anchored to** instead of absolute artboard
+  coordinates: the left edge of the window (default), `.is-right`,
+  `.at-content` (the content box), `.is-center`, `.is-bottom`. Full-bleed
+  shapes keep touching the edge on wider screens; the others follow the
+  content.
+- **Shapes that touch each other in Figma live in one `.deco-cluster`**,
+  anchored once, children in local coordinates, so they never drift apart.
+  Any new shape that touches another goes into the same cluster.
+- **`.deco-rail`** holds a cluster that sticks to the bottom of the window
+  while the content scrolls (used for the left column of the À propos pages).
+- **`data-deco-pair`**: two halves of a shape that crosses from one band into
+  the next (coloured on one side, grey on the other) enter together.
+- `.is-cut-left` / `.is-cut-right`: large shapes cut by the window edge. Only
+  for shapes that still read when cut (circles, rings, patterns).
+- Shapes enter from the edge they are anchored to when their group reaches
+  the lower quarter of the screen (`initDecoReveal`), and float with a short
+  parallax (`initDecoParallax`) whose travel is **measured per shape** so that
+  none gets sliced by its band's edge.
+
+**Brand-kit shapes** (`assets/svg/kit/`) carry their own grey through the SVG
+`color` attribute (`#E9EAEC`, painted with `currentColor`). Because they are
+used as `<img>`, CSS cannot recolour them; the pink corner shape of the À
+propos pages therefore uses pink copies (`kit-XX-Y-rosa.svg`, `#EA5F9E`). In
+*Notre philosophie* the large shapes inside the coloured blocks are CSS masks
+(`.shape`) and take the block's colour.
+
+On phones (≤760px) the margin shapes are hidden and replaced by **`.deco-foot`**,
+a stepped two-row composition at the bottom of the page (3 tiles on top, 4
+below, the big one taking 2 × 2), with the "next page" card or the news CTA
+sitting on top of it.
+
+## Home page
+
+Bands, top to bottom: hero (video), *Vision* (elevator speech), profiles
+(*Pour les parents* / *Pour les professionnels*), services, video block, news,
+footer.
+
+- **Hero video** (`initVideo`, `initHeroParallax`): autoplay, muted, loop above
+  900px, with a first-frame poster. On scroll it zooms (up to 30%) and drifts
+  within the zoom's spare room, so the edge never shows; at rest the framing is
+  exactly the approved one.
+- **Profiles**: three variants behind the version switch; the client chose
+  `gradient`. The `-focus` crops keep faces clear of the text.
+- **Services**: nine cards. On phones only 4 show, plus *Afficher les 5
+  autres services* (`initServicesMore`).
+- **News carousel** (`initNewsCarousel`): reads `--per-view` from CSS (3 / 2
+  / 1), moves the track with `translate3d`, arrows outside the content above
+  1400px and in the controls row below. On phones: one card with the next one
+  peeking, touch swipe (40px threshold), centred position, dots with 24px tap
+  targets.
+- **Event popup** (`initEventPopup`): native `<dialog>` (focus trap, Escape,
+  backdrop for free), see the flags above.
+- **Header** (`initHeadroom`): sticky; hides on scroll down and shows on
+  scroll up — but only the nav bar comes back, not the government strip and
+  toolbar (negative `top` on the sticky header, no JS needed for that part).
+- **Toolbar**: contrast, A−/A+, FR/DE/EN (links not wired), *Facile à lire*,
+  *Intranet*.
+- **Floating tools** (bottom right, every page): *Lire le texte*, accessibility
+  and back to top. The first two are **placeholders** with no behaviour yet;
+  back to top works (`initBackToTop`).
+- **Search** (`initSearch`): the magnifier in the nav opens a panel under the
+  bar (full screen on phones) with frequent searches as chips and live
+  results — section dot, highlighted match, accent-insensitive. Enter goes to
+  the first result; Escape or a click outside closes. The index is static.
+- **À propos dropdown** (`initDropdown`): opens on hover with a 120ms grace
+  period on close, on click/tap otherwise. It is anchored to `.nav` so it
+  aligns with the page grid; closed it uses delayed `visibility` + `inert`
+  (not `hidden`, which would kill the transition).
+
+## À propos pages
+
+**Layout** (`css/interior.css`): from the Figma *Diagnostique spécialisé*
+page — 292px sidebar, 145px gap, 835px content inside the same 1272px
+container. The sidebar card is sticky and marks the current page with
+`aria-current="page"`. Above 1000px the section has `min-height: 1080px` so
+the left shape column overlaps the sidebar card clearly (a near-touch reads as
+a mistake; a generous overlap reads as depth).
+
+**Shapes on desktop.** Each page has its own grey combination in the left
+column (a sticky `.deco-rail`) and **one pink shape at the top right**, cut by
+the window edge. Every page has a different pink shape (no big single circles,
+none repeating its own grey column); the seven annexe pages share the one of
+*Nos annexes*. The grey column is at 78% opacity (`--deco-op`), the pink shape
+at 100% — the opacity is set on the rail, not on the whole layer.
+
+**Per page:**
+
+- **Le trouble** — *Les causes* is a stepper (`initStepper`, `.steps`): text
+  first, then the step index (all four numbers visible, the active one in its
+  colour) and arrows. The background takes the step colour at 8%. Incoming
+  text is re-revealed line by line. On phones it becomes a carousel header
+  (numbers and arrows on one line) and the box animates to the active step's
+  height.
+- **Notre philosophie** — coloured blocks with a large kit shape cut by the
+  right edge.
+- **Notre approche** — `.approach`: a real `tablist` (arrows, Home/End, no
+  autoplay) with three photos cross-fading in place and the texts stacked in
+  one grid cell (`inert` on hidden panels, not `hidden`). On phones the step
+  labels spread across the photo, the arrows sit on both sides at mid-height,
+  and the photo can be swiped.
+- **Les publics cibles** — three full-width rows with the photo on the side;
+  photo on top on narrow screens.
+- **Le CDI en chiffres** — only the three big figures count up
+  (`initCounters`); the breakdowns below are static **on purpose** (agreed in
+  the 08/10 meeting). The count waits until the figure has faded in, so it is
+  actually visible. The final number is in the markup, so it reads without JS.
+- **Notre équipe** — see below.
+- **Nos annexes** — a grid of whole-clickable cards (phone and mail stay
+  separate links on top). Each annexe page: façade photo (until the drone
+  video arrives), the *chargé(e) de direction*, contact, sites and an access
+  map.
+- **Annexe map** (`initAnnexeMap`): Leaflet with OpenStreetMap tiles greyed
+  out in CSS and a brand marker. **OSM's tile policy does not allow site
+  traffic: production needs a keyed provider** (CARTO, MapTiler, Stadia…). No
+  cookie banner is needed for it as it stands.
+
+**Notre équipe.** Seven teams with the official names from cdi.lu.
+
+- **Desktop** (`initTeam`): a group photo per team with one hotspot per
+  person. The "+" under each face opens a white card (name, role, mail,
+  *Demande-moi à propos de*) right below it, with a small pointer. Hover,
+  click or keyboard; Escape closes. Hotspots are positioned by hand per photo
+  (`--x`, `--y` in % of the photo; `--bx`, `--by` nudge the "+" in px at the
+  835px reference width) and everything scales with the photo through `--u`
+  (a container-query unit), so the composition is identical at any width. An
+  open card passes over the next team (z-index on `.team`).
+- **Narrow** (team container < 720px — phones, tablets, 1024px screens): the
+  group photo is replaced by the **team list**, two columns, portrait + name
+  + role + mail, without *Demande-moi*. The lists and portraits are taken from
+  cdi.lu (41 people; two people sit in two teams).
+- Only one group photo exists so far (*Cellule de développement…*); the other
+  teams show a "Photo de groupe à venir" box on desktop.
+
+**On phones and tablets (≤1000px)** the sidebar collapses into a bar that says
+where you are (*À propos · Qui sommes-nous ?*) and opens the list, and each
+page ends with a **next page** card with a counter (*Page suivante · 2/8*; the
+last one goes back to the start). Both are built from the sidebar markup by
+`initSubnavToggle`, so nothing is repeated per page. Annexe pages have a
+static "next annexe" card (*2/7*, cycling).
+
+## Responsive behaviour
+
+The Figma only defines desktop. Everything below 1080px was designed in the
+prototype and iterated with the client; it is not in Figma.
+
+| Width | What changes |
+| --- | --- |
+| < 1352px | Container shrinks (40px minimum gutter) |
+| ≤ 1400px | News carousel arrows move into the controls row |
+| ≤ 1200px | À propos sidebar and gap narrow (248 / 64px) |
+| ≤ 1080px | Burger menu; toolbar moves into the menu panel; profiles in 1 column, services in 2, news 2 per view |
+| ≤ 1000px | À propos pages in one column: collapsible sidebar bar, next-page card |
+| ≤ 900px | Video block stacked; footer in 2 columns |
+| ≤ 760px | Phone layout: section-by-section tuning of the home, margin shapes replaced by `.deco-foot`, news 1 per view with the next card peeking, services show 4, full-screen search |
+| ≤ 680px | Services and footer in one column; *Lire le texte* becomes a round button |
+| team < 720px | Team pages switch from the group photo to the lists (container query) |
+
+**Mobile menu** (≤1080px): the panel fills the rest of the screen and scrolls
+on its own while the page behind stays still. It is a **two-screen
+drill-down**: tapping *À propos* slides its sub-menu in from the right with a
+*Retour* button and a title; first-level items have a section-colour bar and
+enter with a stagger. The toolbar (contrast, sizes, languages, *Facile à lire*,
+*Intranet*) moves to the bottom of the panel (`initNav` moves the node), so the
+header is only the government strip, logo, search and burger (~134px instead
+of ~215px). Toolbar controls and carousel dots have 24 × 24px minimum tap
+targets, and the toolbar controls get a 44px hit area on touch screens.
+
+**Vertical rhythm on phones**: 24 / 32 / 48px, and 32px between a section
+title and its content.
+
+## Animation system
+
+All of it is switched off with `prefers-reduced-motion`, and nothing is hidden
+without JS (initial states only apply under `html.js`).
+
+- **`data-reveal`** + an IntersectionObserver add `is-visible` on entry.
+  Variants: `up` (default), `left`, `right`, `scale`, `rise`, `zoom`, and
+  `banner` (profile banners: three chained steps — box, photo, text).
+  Safety net: if nothing has been revealed after 3s, everything is shown.
+- **`data-reveal-group`** staggers its children (90ms, capped at 6). The delay
+  is computed when elements enter, from what enters together: what is visible
+  on load cascades, what you scroll to appears immediately. A delay written in
+  the markup wins.
+- **`data-lines`** (`initLineReveal`): text slides up line by line behind a
+  mask (120ms apart). Lines are measured after the web font has loaded and
+  rebuilt on resize. `data-lines-delay` delays the whole block.
+- **Shapes**: see [Decorative shapes](#decorative-shapes).
+- **Hover**: lifts, shadows, arrow nudges, icon growth, photo zooms — always
+  with `--dur-hover` / `--ease-hover`.
+
+**Verifying animations**: the in-app browser panel of the editor throttles
+rendering (transitions and observers may not run until a screenshot forces a
+frame), and headless Chrome with `--virtual-time-budget` fires observers
+erratically. Check in a real browser; for pixel comparisons use `?export=2`,
+where nothing animates.
+
+## Accessibility
+
+- **High contrast** (toolbar button, `html.is-high-contrast`, `?contrast=on`):
+  redefines the colour tokens with darker versions that pass 4.5:1 on white,
+  raises the hero scrim to 0.72, underlines links and outlines cards. Stored in
+  `localStorage` with the text size.
+- **Text size**: three steps through `--fs-scale`.
+- Buttons and links on brand colours use `--c-on-brand`; text links use
+  `--c-teal-ink` (AA).
+- Tablists (*Notre approche*, *Les causes*) follow the ARIA pattern; the team
+  hotspots are buttons with `aria-expanded` and work with the keyboard.
+- The search panel is a dialog: focus goes to the field, Escape returns focus
+  to the button.
+
+## Pending content and open points
+
+From the client:
+
+- **Team**: group photos for six teams; names for faces 4, 6 and 8 of the
+  existing photo; the *Demande-moi à propos de* topics (all cards show the
+  example from Maxime's 07/10 mail). That photo mixes people from the
+  development and administrative cells, so its section title is unconfirmed.
+- **Annexes**: drone videos (the pages show the façade meanwhile) and photos
+  of the *chargé(e)s de direction*.
+- **Video block**: the clip (`assets/video/video-block.mp4`) is missing; the
+  block shows its poster and the play button is disabled.
+- **News**: placeholder content, as in Figma.
+- Two e-mail addresses copied from cdi.lu look like typos on the live site:
+  `info.annexeechternach@cc-di.lu` and `stéphanie.wagner@cc-cdi.lu`.
+- Two toolbar pictograms (contrast, *Facile à lire*) only existed as bitmaps
+  in Figma; they are crops in `assets/icons/`. Ask for SVGs.
+
+Design and implementation:
+
+- **Hero contrast**: with the real footage and the 20% scrim from Figma, white
+  text drops to 1.41:1 on bright frames. The lever is `--hero-scrim`; at 0.8
+  with a left gradient the worst case reaches 5.6:1. Design decision pending.
+- **Floating tools**: *Lire le texte* and the accessibility button have no
+  behaviour yet.
+- **Production switches**: `REMEMBER_DISMISSAL = true`, a keyed map tile
+  provider, real search, language links.
+- The version switch (`.version-switch` block in `index.html`) and the
+  `?profiles` / `?intranet` axes can be removed once the variants are no
+  longer needed.
+
+## Gotchas worth knowing
+
+Each of these cost real time; the fixes are in the code with a comment.
+
+- **Never transition a property whose value comes from a custom property that
+  changes.** Chrome starts a transition that never advances and the value
+  stays at its initial state. Colour states that change at runtime are written
+  as literal values (`data-tint`) or classes, not variables.
+- **A reveal rule replaces the component's `transition` list.**
+  `.js [data-reveal]` (0,2,0) beats a component rule (0,1,0), so the component
+  loses its hover transitions. The reveal rule therefore repeats `transform`
+  and `box-shadow`. Check `getComputedStyle(el).transitionProperty` on the real
+  element.
+- **Entrances use `translate` / `scale`, never `transform`.** `transform` is
+  reserved for hover states and for the shape parallax; mixing them made the
+  reveal's final `transform: none` cancel hover lifts.
+- **The `js` and `is-export` classes are set in an inline `<head>` script**, not
+  in `main.js`: the module is deferred and runs after first paint, so anything
+  hidden for animation flashed into view first.
+- **Children of `data-reveal-group` are hidden by a CSS rule on the
+  container**, for the same reason: the JS marks them too late.
+- **Exclusions in the shape-hiding rule use `:where()`**, not `:not()`:
+  `:not()` adds specificity and the rule beat `.is-in`, so standalone shapes
+  never appeared.
+- **`body { overflow-x: clip }`, not `hidden`**: `hidden` makes the body a
+  scroll container and silently disables every `position: sticky`.
+- **`min-width: 0` on grid cells that contain a carousel**, or the 300%-wide
+  track pushes the column and adds horizontal page scroll.
+- **A `url()` inside a custom property resolves against the stylesheet that
+  uses it**, not the document; icon paths written in the HTML pointed to
+  `/css/assets/…`. They live in `components.css`.
+- **Line reveal**: measure after fonts load; words are `white-space: nowrap`
+  (the browser split "psycho-pédagogie" at the hyphen); keep track of which
+  word had a leading space; the mask needs bottom padding compensated by a
+  negative margin or descenders get clipped.
+- **Restarting a transition** needs the transition switched off while the
+  class is removed (otherwise it animates from 0 to 0), and switched off with
+  `transition-property`, not the `transition` shorthand, which also resets the
+  stagger delays.
+- **Team section stacking**: `.team` is the container for the container query
+  and carries the z-index that lets an open card pass over the next team.
+- **Nested `<section>`s**: the tab panels are `<section>`s inside
+  `<section>`s; a lazy regex that "cuts at `</section>`" takes half a page with
+  it.
+
+**If you re-export assets from Figma:**
+
+- Exported SVGs carry an opaque background rect and an artboard-size rect;
+  remove them by position (first `<rect>` before the first `<g>`, root size),
+  not by colour — the colour is the canvas colour and changes — and never the
+  rects inside a `<clipPath>`.
+- The export crops to the visible ink (`absoluteRenderBounds`), not the frame:
+  recompute `--w`, `--h` and anchors from the render bounds.
+- If a shape was edited in Figma (fill, stroke, geometry), re-export it;
+  reusing the old local file with the same name silently loses the edit.
+- Watch for drop-shadow filters inherited from parent groups, outline rects in
+  icon instances, and small glyphs in large viewBoxes (use them at natural
+  size).
+- `get_metadata` can report coordinates outside the artboard; the export's
+  `transform` is the reliable source.
