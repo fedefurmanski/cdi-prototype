@@ -111,7 +111,7 @@
   padding: 0 14px 0 4px;
   border-radius: var(--r-pill);
   background: var(--c-green-soft);
-  color: #fff;
+  color: var(--c-on-brand);
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
 }
@@ -128,7 +128,7 @@
   padding: 0 10px 0 8px;
   border-radius: var(--r-pill);
   background-color: var(--intranet-bg);
-  color: #fff;
+  color: var(--c-on-brand);
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
 }
@@ -878,7 +878,7 @@
 }
 
 .footer__nav a:hover {
-  color: var(--c-teal);
+  color: var(--c-teal-ink);
 }
 
 .footer__contact {
@@ -963,7 +963,7 @@
 }
 
 .footer__legal a:hover {
-  color: var(--c-teal);
+  color: var(--c-teal-ink);
 }
 
 /* ==========================================================================

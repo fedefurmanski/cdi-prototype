@@ -589,8 +589,10 @@
 }
 
 /* Sin filete al costado (MarkUp #35, confirmado en la reunión del 08/10): el
-   texto arranca alineado con la foto de arriba. */
+   texto arranca alineado con la foto de arriba. Los puntos de las listas, en
+   el rosa de la sección (MarkUp #41). */
 .approach__panel {
+  --accent: var(--section, var(--c-pink));
   grid-area: 1 / 1;
   align-self: start;
 }
@@ -862,13 +864,10 @@
   padding: var(--space-6);
 }
 
-/* El enlace con flecha lee `--accent`, que acá es el color del filete:
-   queda en el turquesa de siempre. */
 .annexe__map {
   margin-top: auto;
   padding-top: var(--space-5);
   font-size: var(--fs-sm);
-  color: var(--c-teal-deep);
 }
 
 /* La tarjeta entera es clickeable: el enlace se estira sobre ella con un
@@ -1045,7 +1044,7 @@
   place-items: center;
   background: color-mix(in srgb, var(--c-teal) 88%, transparent);
   box-shadow: 0 2px 8px rgba(0, 15, 45, 0.22);
-  color: #fff;
+  color: var(--c-on-brand);
   font-size: 18px;
   font-weight: var(--fw-bold);
   line-height: 1;
@@ -1112,7 +1111,7 @@
 .team__spot:focus-visible::after,
 .team__spot[aria-expanded='true']::after {
   background: var(--c-teal-dark);
-  color: #fff;
+  color: var(--c-on-brand);
 }
 
 .team__spot:focus-visible {
@@ -1203,8 +1202,9 @@
   }
 }
 
-/* Tres niveles: quién es (el nombre, lo único en negrita negra), qué hace
-   (el cargo, en gris) y cómo escribirle (el mail, como link). */
+/* Quién es (el nombre, lo único en negrita negra), qué hace (el cargo, en
+   gris), cómo escribirle (el mail, como link) y de qué sabe (un rótulo chico
+   en gris y los temas debajo). */
 .team__name {
   font-size: var(--fs-base);
   font-weight: var(--fw-bold);
@@ -1235,8 +1235,7 @@
   text-decoration: underline;
 }
 
-/* «Demande-moi à propos de», para cuando el cliente mande los temas: un
-   rótulo chico en gris y los temas debajo, después del mail. */
+/* «Demande-moi à propos de», debajo del mail (MarkUp #44). */
 .team__ask {
   margin-top: var(--space-3);
   font-size: calc(13px * var(--fs-scale));
@@ -1438,12 +1437,6 @@
 
 .annexe-map__links {
   margin-top: var(--space-4);
-}
-
-/* El enlace con flecha lee `--accent`, que acá es el color de la annexe: queda
-   en el turquesa de siempre para que el texto no pierda contraste. */
-.annexe-map__links .link-arrow {
-  color: var(--c-teal-deep);
 }
 
 /* --------------------------------------------------------------------------

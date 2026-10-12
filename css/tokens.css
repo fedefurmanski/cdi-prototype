@@ -16,7 +16,12 @@
   --c-pink: #ea5f9e;          /* también el pill "Intranet" */
   --c-pink-deep: #b14274;     /* disco dentro del pill Intranet */
   --c-teal-dark: #1f8996;     /* ídem, para la versión azul */
-  --c-navy: #000f2d;          /* botón "Lire le texte" */
+  --c-navy: #000f2d;          /* azul noche del Figma */
+
+  /* Texto e íconos sobre los colores de marca (botones, etiquetas, flechas).
+     En blanco no pasaban AA: sobre el turquesa daba 2,4:1. El azul noche da
+     7,8:1 sobre el turquesa y pasa sobre todos los colores de marca. */
+  --c-on-brand: var(--c-navy);
 
   /* Versiones de texto de cada color de marca: el mismo tono con la saturación
      al máximo y la luz justa para pasar AA (4,5:1) sobre blanco. Oscurecer sin
@@ -207,6 +212,10 @@
   --c-body: #2b3038;
   --c-ink-soft: #000000;
   --c-line: #767676;
+
+  /* Acá los colores de marca se oscurecen para pasar con blanco, y el azul
+     noche ya no alcanzaría. */
+  --c-on-brand: #fff;
 
   /* El texto del hero va sobre vídeo: con el velo del diseño quedaba en 1,4:1
      sobre los planos claros. En alto contraste el velo manda. */

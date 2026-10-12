@@ -92,7 +92,7 @@ button {
   z-index: 100;
   padding: 10px 18px;
   background: var(--c-teal);
-  color: #fff;
+  color: var(--c-on-brand);
   font-weight: var(--fw-bold);
   border-radius: var(--r-btn);
   transition: top var(--dur-fast) var(--ease-out);
