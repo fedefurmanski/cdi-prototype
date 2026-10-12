@@ -504,6 +504,12 @@
   color: var(--c-ink);
 }
 
+/* En la destacada el título deja lugar a la fecha, que asoma 39px por debajo
+   de la foto. */
+.news-card--featured .news-card__title {
+  margin-top: 58px;
+}
+
 .news-card__text {
   margin-top: var(--space-4);
   font-size: var(--fs-sm);

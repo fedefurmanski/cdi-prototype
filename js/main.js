@@ -67,9 +67,23 @@ function initNewsCarousel(root) {
     }
   }
 
+  // En celular la tarjeta activa va centrada, con las vecinas asomando a los
+  // dos lados: el CSS lo pide con `--center: 1`. La primera, en cambio, va
+  // alineada con el margen del contenido —y la siguiente asoma más— y la
+  // última, contra el margen derecho, para que no sobre espacio al final.
+  const offset = () => {
+    if (getComputedStyle(track).getPropertyValue('--center').trim() !== '1') return 0;
+    const card = cards[0];
+    if (!card || index === 0) return 0;
+    const libre = viewport.clientWidth - card.getBoundingClientRect().width;
+    return index === pages - 1 ? libre : libre / 2;
+  };
+
+  const position = (extra = 0) => offset() - index * step() + extra;
+
   function go(nextIndex) {
     index = Math.max(0, Math.min(nextIndex, pages - 1));
-    track.style.transform = `translate3d(${-index * step()}px, 0, 0)`;
+    track.style.transform = `translate3d(${position()}px, 0, 0)`;
     dotsHost?.querySelectorAll('.news__dot').forEach((dot, i) => {
       dot.setAttribute('aria-current', String(i === index));
     });
@@ -92,6 +106,46 @@ function initNewsCarousel(root) {
 
   prev?.addEventListener('click', () => go(index - 1));
   next?.addEventListener('click', () => go(index + 1));
+
+  // Deslizar con el dedo: la tira acompaña al dedo y, al soltar, pasa a la
+  // tarjeta de al lado si el gesto pasó los 40px, o vuelve a su lugar. Sólo
+  // cuenta si el gesto es más horizontal que vertical; si no, es scroll.
+  let gesto = null;
+  viewport.addEventListener(
+    'touchstart',
+    (event) => {
+      const t = event.touches[0];
+      gesto = { x: t.clientX, y: t.clientY, dx: 0, horizontal: null };
+    },
+    { passive: true },
+  );
+  viewport.addEventListener(
+    'touchmove',
+    (event) => {
+      if (!gesto) return;
+      const t = event.touches[0];
+      const dx = t.clientX - gesto.x;
+      const dy = t.clientY - gesto.y;
+      if (gesto.horizontal === null && Math.hypot(dx, dy) > 8) {
+        gesto.horizontal = Math.abs(dx) > Math.abs(dy);
+      }
+      if (!gesto.horizontal) return;
+      gesto.dx = dx;
+      track.style.transition = 'none';
+      track.style.transform = `translate3d(${position(dx)}px, 0, 0)`;
+    },
+    { passive: true },
+  );
+  const soltar = () => {
+    if (!gesto) return;
+    const { dx, horizontal } = gesto;
+    gesto = null;
+    track.style.transition = '';
+    if (horizontal && Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+    else go(index);
+  };
+  viewport.addEventListener('touchend', soltar);
+  viewport.addEventListener('touchcancel', soltar);
 
   // Navegación por teclado dentro del carrusel.
   viewport.addEventListener('keydown', (event) => {
@@ -130,6 +184,7 @@ function initNav() {
 
   const setOpen = (open) => {
     if (open) medir();
+    else document.dispatchEvent(new CustomEvent('cdi:nav-close'));
     nav.classList.toggle('is-open', open);
     document.documentElement.classList.toggle('is-menu-open', open);
     toggle.setAttribute('aria-expanded', String(open));
@@ -255,6 +310,31 @@ function initDropdown() {
 
     abrir(false);
 
+    // En celular el desplegable es una segunda pantalla del menú: arriba,
+    // «← Retour» y el nombre de la sección (el CSS la muestra sólo ahí).
+    const cabeza = document.createElement('div');
+    cabeza.className = 'dropdown__head';
+    const volver = document.createElement('button');
+    volver.type = 'button';
+    volver.className = 'dropdown__back';
+    const flecha = document.createElement('span');
+    flecha.className = 'icon icon--arrow';
+    flecha.setAttribute('aria-hidden', 'true');
+    volver.append(flecha, 'Retour');
+    const titulo = document.createElement('p');
+    titulo.className = 'dropdown__title';
+    titulo.textContent = enlace.textContent.trim();
+    cabeza.append(volver, titulo);
+    panel.querySelector('.dropdown__inner')?.prepend(cabeza);
+
+    volver.addEventListener('click', () => {
+      abrir(false);
+      enlace.focus({ preventScroll: true });
+    });
+
+    // Al cerrar el menú entero, también se cierra la segunda pantalla.
+    document.addEventListener('cdi:nav-close', () => abrir(false));
+
     item.addEventListener('pointerenter', (e) => {
       if (e.pointerType === 'mouse' && ancha.matches) abrir(true);
     });
@@ -270,6 +350,13 @@ function initDropdown() {
       if (item.classList.contains('is-open')) return;
       e.preventDefault();
       abrir(true);
+      // En celular la segunda pantalla arranca arriba y el foco va a
+      // «Retour», que es lo primero de ella.
+      if (!ancha.matches) {
+        const menu = item.closest('nav');
+        if (menu) menu.scrollTop = 0;
+        volver.focus({ preventScroll: true });
+      }
     });
 
     // El foco por teclado abre; al salir del item, cierra. `relatedTarget` es
@@ -829,6 +916,198 @@ function initCounters() {
  * entró: al scrollear hacia arriba, si no, queda marcada la de abajo.
  */
 /* --------------------------------------------------------------------------
+   Búsqueda
+   La lupa abre, debajo del menú, un panel con un campo grande: sin escribir
+   muestra búsquedas frecuentes; al escribir, las páginas del sitio que
+   coinciden, cada una con el color de su sección. Es para el prototipo: el
+   índice es una lista fija y no hay página de resultados (Enter va al
+   primero). En celular el panel ocupa la pantalla, como el menú. Se cierra
+   con la misma lupa —que pasa a ser una X—, con Escape o tocando afuera.
+   El panel se arma acá para no repetirlo en el marcado de cada página.
+   -------------------------------------------------------------------------- */
+
+const PAGINAS = [
+  ['Qui sommes-nous ?', 'a-propos-qui-sommes-nous.html', 'a-propos', 'À propos'],
+  ['Le trouble du développement intellectuel', 'a-propos-trouble.html', 'a-propos', 'À propos'],
+  ['Notre philosophie', 'a-propos-philosophie.html', 'a-propos', 'À propos'],
+  ['Notre approche', 'a-propos-approche.html', 'a-propos', 'À propos'],
+  ['Les publics cibles', 'a-propos-publics.html', 'a-propos', 'À propos'],
+  ['Le CDI en chiffres', 'a-propos-chiffres.html', 'a-propos', 'À propos'],
+  ['Notre équipe', 'a-propos-equipe.html', 'a-propos', 'À propos'],
+  ['Nos annexes', 'a-propos-annexes.html', 'a-propos', 'À propos'],
+  ['Annexe Clervaux', 'a-propos-annexe-clervaux.html', 'a-propos', 'Nos annexes'],
+  ['Annexe Kannercampus Belval', 'a-propos-annexe-belval.html', 'a-propos', 'Nos annexes'],
+  ['Annexe Differdange', 'a-propos-annexe-differdange.html', 'a-propos', 'Nos annexes'],
+  ['Annexe Echternach', 'a-propos-annexe-echternach.html', 'a-propos', 'Nos annexes'],
+  ['Annexe Luxembourg', 'a-propos-annexe-luxembourg.html', 'a-propos', 'Nos annexes'],
+  ['Annexe Kannerinsel Berchem', 'a-propos-annexe-berchem.html', 'a-propos', 'Nos annexes'],
+  ['Annexe Warken', 'a-propos-annexe-warken.html', 'a-propos', 'Nos annexes'],
+  ['Diagnostic spécialisé', 'index.html#services', 'parents', 'Services'],
+  ['Conseils aux familles', 'index.html#services', 'parents', 'Services'],
+  ['Enseignement pour les élèves', 'index.html#services', 'parents', 'Services'],
+  ['Thérapie et rééducation', 'index.html#services', 'parents', 'Services'],
+  ['Recherche et documentation', 'index.html#services', 'professionnels', 'Services'],
+  ['Conseils aux professionnels', 'index.html#services', 'professionnels', 'Services'],
+  ['Enseignement aux élèves', 'index.html#services', 'professionnels', 'Services'],
+  ['Service Leichte Sprache', 'index.html#services', 'professionnels', 'Services'],
+  ['Formation des enseignants', 'index.html#services', 'professionnels', 'Services'],
+  ['Nos actualités', 'index.html', 'actualites', 'Actualités'],
+  ['Contactez nous', '#', 'contact', 'Contact'],
+].map(([titulo, url, seccion, rubro]) => ({ titulo, url, seccion, rubro }));
+
+const FRECUENTES = ['Diagnostic', 'Annexes', 'Leichte Sprache', 'Équipe', 'Formation'];
+
+// Sin acentos y en minúscula, letra por letra, para que «equipe» encuentre
+// «équipe» y la posición de lo encontrado sirva para resaltarlo en el
+// original.
+const plano = (texto) =>
+  [...texto].map((c) => c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()[0] || c).join('');
+
+function initSearch() {
+  const boton = document.querySelector('[data-action="search"]');
+  const nav = document.querySelector('.nav');
+  if (!boton || !nav) return;
+
+  const panel = document.createElement('div');
+  panel.className = 'search';
+  panel.id = 'busqueda';
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-label', 'Recherche');
+  panel.innerHTML = `
+    <div class="search__inner container">
+      <form class="search__form" role="search">
+        <label class="visually-hidden" for="busqueda-campo">Rechercher sur le site</label>
+        <span class="icon icon--search" aria-hidden="true"></span>
+        <input class="search__input" id="busqueda-campo" type="search" placeholder="Rechercher sur le site…" autocomplete="off" />
+      </form>
+      <p class="search__label"></p>
+      <ul class="search__chips"></ul>
+      <ul class="search__results"></ul>
+      <p class="visually-hidden" aria-live="polite" data-estado></p>
+    </div>`;
+  nav.append(panel);
+
+  const campo = panel.querySelector('.search__input');
+  const rotulo = panel.querySelector('.search__label');
+  const chips = panel.querySelector('.search__chips');
+  const lista = panel.querySelector('.search__results');
+  const estado = panel.querySelector('[data-estado]');
+
+  boton.setAttribute('aria-controls', panel.id);
+  boton.setAttribute('aria-expanded', 'false');
+
+  FRECUENTES.forEach((termino) => {
+    const li = document.createElement('li');
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'search__chip';
+    chip.textContent = termino;
+    chip.addEventListener('click', () => {
+      campo.value = termino;
+      pintar();
+      campo.focus();
+    });
+    li.append(chip);
+    chips.append(li);
+  });
+
+  const resaltar = (titulo, consulta) => {
+    const i = plano(titulo).indexOf(consulta);
+    if (i < 0) return document.createTextNode(titulo);
+    const frag = document.createDocumentFragment();
+    const marca = document.createElement('mark');
+    marca.textContent = titulo.slice(i, i + consulta.length);
+    frag.append(titulo.slice(0, i), marca, titulo.slice(i + consulta.length));
+    return frag;
+  };
+
+  function pintar() {
+    const consulta = plano(campo.value.trim());
+    lista.replaceChildren();
+    if (!consulta) {
+      rotulo.textContent = 'Recherches fréquentes';
+      chips.hidden = false;
+      estado.textContent = '';
+      return;
+    }
+    chips.hidden = true;
+    const hallados = PAGINAS.filter(
+      (p) => plano(p.titulo).includes(consulta) || plano(p.rubro).includes(consulta),
+    ).slice(0, 8);
+    rotulo.textContent = hallados.length
+      ? `${hallados.length} résultat${hallados.length > 1 ? 's' : ''}`
+      : `Aucun résultat pour « ${campo.value.trim()} »`;
+    estado.textContent = rotulo.textContent;
+    hallados.forEach((p, i) => {
+      const li = document.createElement('li');
+      li.dataset.section = p.seccion;
+      li.style.setProperty('--i', i);
+      const a = document.createElement('a');
+      a.href = p.url;
+      const punto = document.createElement('span');
+      punto.className = 'search__dot';
+      punto.setAttribute('aria-hidden', 'true');
+      const titulo = document.createElement('span');
+      titulo.className = 'search__title';
+      titulo.append(resaltar(p.titulo, consulta));
+      const rubro = document.createElement('span');
+      rubro.className = 'search__where';
+      rubro.textContent = p.rubro;
+      a.append(punto, titulo, rubro);
+      li.append(a);
+      lista.append(li);
+    });
+  }
+
+  const abierta = () => panel.classList.contains('is-open');
+
+  const abrir = (si) => {
+    if (si) {
+      // El menú y la búsqueda no conviven: si el menú está abierto, se cierra.
+      if (nav.classList.contains('is-open')) nav.querySelector('[data-action="nav-toggle"]')?.click();
+      nav.style.setProperty('--search-top', `${nav.getBoundingClientRect().bottom}px`);
+    }
+    panel.classList.toggle('is-open', si);
+    panel.toggleAttribute('inert', !si);
+    boton.setAttribute('aria-expanded', String(si));
+    document.documentElement.classList.toggle('is-search-open', si);
+    if (si) {
+      pintar();
+      // Después de la transición de entrada: con el panel todavía invisible el
+      // foco no siempre se queda.
+      setTimeout(() => campo.focus({ preventScroll: true }), 60);
+    }
+  };
+
+  abrir(false);
+  pintar();
+
+  boton.addEventListener('click', () => abrir(!abierta()));
+  campo.addEventListener('input', pintar);
+
+  panel.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const primero = lista.querySelector('a');
+    if (primero) location.href = primero.getAttribute('href');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !abierta()) return;
+    abrir(false);
+    boton.focus();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (abierta() && !panel.contains(e.target) && !boton.contains(e.target)) abrir(false);
+  });
+
+  // Si se abre el menú, la búsqueda se cierra.
+  nav.querySelector('[data-action="nav-toggle"]')?.addEventListener('click', () => {
+    if (abierta()) abrir(false);
+  });
+}
+
+/* --------------------------------------------------------------------------
    Servicios: en celular, las 4 primeras y «Afficher les 5 autres services»
    Las nueve apiladas hacían la home larguísima. El botón se agrega acá y el
    CSS esconde el resto sólo en celular, así que sin JS —o en desktop— se ven
@@ -850,10 +1129,15 @@ function initServicesMore() {
   boton.setAttribute('aria-controls', grilla.id || '');
   boton.setAttribute('aria-expanded', 'false');
   const texto = document.createElement('span');
+  // La flecha va dentro de un círculo de color: el link se nota más al pie
+  // de la lista.
+  const circulo = document.createElement('span');
+  circulo.className = 'services__more-circle';
+  circulo.setAttribute('aria-hidden', 'true');
   const flecha = document.createElement('span');
   flecha.className = 'icon icon--chevron';
-  flecha.setAttribute('aria-hidden', 'true');
-  boton.append(texto, flecha);
+  circulo.append(flecha);
+  boton.append(texto, circulo);
   caja.append(boton);
   grilla.after(caja);
 
@@ -1547,6 +1831,7 @@ initEventPopup();
 initVersionSwitch();
 initA11yToolbar();
 initReveal();
+initSearch();
 initServicesMore();
 initSubnavToggle();
 initSubnav();
