@@ -341,7 +341,28 @@
               </a>
             </p>
           </section>
+          <!-- La annexe siguiente, para recorrerlas en celular sin volver a la
+               lista (el CSS la muestra sólo ahí). Después de la última, vuelve
+               a la primera. -->
+          <a class="next-page" href="a-propos-annexe-luxembourg.html">
+            <span>
+              <span class="next-page__label">Annexe suivante<span class="next-page__count"><span aria-hidden="true">5/7</span><span class="visually-hidden">, annexe 5 sur 7</span></span></span>
+              <span class="next-page__title">Annexe Luxembourg</span>
+            </span>
+            <span class="icon icon--arrow icon--md" aria-hidden="true"></span>
+          </a>
         </div>
+      </div>
+      <!-- En celular las formas no van en los márgenes —taparían el texto—
+           sino al pie, en una composición escalonada de dos filas que termina
+           en diagonal: 3 casillas arriba y 4 abajo, con la grande de la
+           columna ocupando 2 × 2 (ver .deco-foot en interior.css). Son las
+           cuatro de esta página. En desktop no se muestra. -->
+      <div class="deco-foot" aria-hidden="true">
+        <img class="deco-foot__big" src="assets/svg/kit/kit-09-1.svg" alt="" />
+        <img src="assets/svg/kit/kit-04-2.svg" alt="" />
+        <img src="assets/svg/kit/kit-01-3.svg" alt="" />
+        <img src="assets/svg/kit/kit-02-1.svg" alt="" />
       </div>
     </main>
 

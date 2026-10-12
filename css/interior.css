@@ -136,6 +136,21 @@
   color: var(--section-ink, var(--c-teal-deep));
 }
 
+/* El botón del submenú plegado y el acceso a la página siguiente: sólo en
+   celular (ver abajo); los agrega `initSubnavToggle`. */
+.subnav__toggle,
+.next-page {
+  display: none;
+}
+
+/* La composición de formas del pie: sólo en celular, donde reemplaza a las
+   de los márgenes. Escalonada en dos filas, termina en diagonal: 3 casillas
+   arriba y 4 abajo, con la grande ocupando 2 × 2 a la izquierda, todas
+   pegadas a 2px como los grupos de desktop. */
+.deco-foot {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
    Encabezado y ritmo del contenido
    -------------------------------------------------------------------------- */
@@ -1453,6 +1468,12 @@
 }
 
 @media (max-width: 1000px) {
+  /* El aire de arriba era el de desktop: entre el menú y el submenú plegado
+     quedaban 64px vacíos. */
+  .interior {
+    padding-top: var(--space-6);
+  }
+
   .interior__inner {
     grid-template-columns: 1fr;
     row-gap: var(--space-10);
@@ -1463,18 +1484,215 @@
     position: static;
   }
 
-  .subnav ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--space-6);
+  /* Apilado, el submenú se pliega en una línea que dice dónde se está y abre
+     la lista al tocarla: desplegado ocupaba la primera pantalla entera y el
+     título quedaba abajo. Sin JS no hay botón y la lista se ve como siempre. */
+  .js .subnav__eyebrow {
+    display: none;
   }
 
-  .subnav li + li {
-    border-top: 0;
+  .subnav__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    width: 100%;
+    min-height: 56px;
+    padding: var(--space-3) var(--space-5);
+    border-left: 3px solid var(--section, var(--c-teal));
+    border-radius: var(--r-card);
+    background: var(--c-surface);
+    box-shadow: var(--shadow-soft);
+    font-size: var(--fs-sm);
+    line-height: 1.4;
+    text-align: left;
+    color: var(--c-ink);
+  }
+
+  .subnav__toggle strong {
+    font-weight: var(--fw-bold);
+  }
+
+  .subnav__toggle-page {
+    font-weight: var(--fw-semibold);
+    color: var(--section-ink, var(--c-teal-ink));
+  }
+
+  .subnav__toggle .icon {
+    flex: none;
+    transition: rotate var(--dur-base) var(--ease-out);
+  }
+
+  .subnav__toggle[aria-expanded='true'] .icon {
+    rotate: 180deg;
+  }
+
+  .js .subnav-wrap:not(.is-open) .subnav {
+    display: none;
+  }
+
+  .subnav-wrap.is-open .subnav {
+    margin-top: var(--space-2);
+    border-radius: var(--r-card);
+  }
+
+  .subnav ul {
+    padding: var(--space-1) var(--space-5);
+  }
+
+  .subnav a {
+    padding: var(--space-3) 0;
+    font-size: var(--fs-sm);
+  }
+
+  /* Al terminar de leer, la página siguiente de la sección: sin esto, para
+     seguir había que volver arriba hasta el submenú. */
+  .next-page {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-16);
+    padding: var(--space-5);
+    border-left: 3px solid var(--section, var(--c-teal));
+    border-radius: var(--r-card);
+    background: var(--c-surface);
+    box-shadow: var(--shadow-soft);
+    color: var(--c-ink);
+  }
+
+  .next-page__label {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-grey-500);
+  }
+
+  /* «2/8»: cuántas páginas tiene la sección y cuál viene. El punto va en la
+     parte que no leen los lectores de pantalla. */
+  .next-page__count > [aria-hidden='true']::before {
+    content: '·';
+    margin-inline: 0.5em;
+  }
+
+  .next-page__count {
+    font-weight: var(--fw-regular);
+    letter-spacing: 0.02em;
+  }
+
+  .next-page__title {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--fs-md);
+    font-weight: var(--fw-bold);
+    line-height: 1.35;
+  }
+
+  .next-page .icon {
+    flex: none;
+    color: var(--section-ink, var(--c-teal-ink));
+    transition: translate var(--dur-hover) var(--ease-hover);
+  }
+
+  .next-page:hover .icon {
+    translate: 4px 0;
   }
 }
 
 @media (max-width: 760px) {
+  /* El ritmo vertical en celular, con tres medidas: 24px entre un título y
+     su texto (16 entre un subtítulo y lo suyo), 32px dentro de un bloque y
+     48px entre bloques. Los de desktop, apilados, quedaban casi iguales entre
+     sí —el título se separaba de su texto tanto como de otro bloque— y no se
+     leía qué iba con qué. */
+  .interior__inner {
+    row-gap: var(--space-8);
+  }
+
+  .page-head + .block,
+  .page-media + .block {
+    margin-top: var(--space-6);
+  }
+
+  .page-media {
+    margin-top: var(--space-6);
+  }
+
+  .block {
+    margin-top: var(--space-12);
+  }
+
+  .block__subtitle {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+
+  .block__subtitle + * {
+    margin-top: var(--space-4);
+  }
+
+  .steps + * {
+    margin-top: var(--space-8);
+  }
+
+  .next-page {
+    margin-top: var(--space-12);
+  }
+
+  /* En las páginas interiores, en celular, las formas de los márgenes se
+     esconden —eran demasiado grandes y quedaban detrás del texto— y en su
+     lugar va la composición del pie (`.deco-foot`, ver más arriba). */
+  .interior .deco {
+    display: none;
+  }
+
+  .deco-foot {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    grid-template-rows: repeat(2, 80px);
+    grid-template-areas:
+      'big big a .'
+      'big big b c';
+    gap: 2px;
+    opacity: var(--deco-op, 1);
+    pointer-events: none;
+  }
+
+  .deco-foot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .deco-foot__big {
+    grid-area: big;
+  }
+
+  .deco-foot > :nth-child(2) {
+    grid-area: a;
+  }
+
+  .deco-foot > :nth-child(3) {
+    grid-area: b;
+  }
+
+  .deco-foot > :nth-child(4) {
+    grid-area: c;
+  }
+
+  /* La composición mide 162px y la tarjeta de «Page suivante» se monta 40px
+     sobre su fila de arriba: va por encima (el contenido está sobre la
+     decoración) y así no queda un hueco blanco antes del footer, sin tapar
+     la fila entera. */
+  .interior {
+    padding-bottom: 122px;
+  }
+
   .annexe-page__intro {
     grid-template-columns: 1fr;
   }

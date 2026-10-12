@@ -121,9 +121,35 @@ function initNav() {
   const toggle = nav?.querySelector('[data-action="nav-toggle"]');
   if (!nav || !toggle) return;
 
+  // En celular el panel ocupa el resto de la pantalla: mide dónde termina la
+  // barra (cambia según cuánto del header se ve) y deja quieta la página de
+  // atrás.
+  const medir = () => {
+    nav.style.setProperty('--menu-top', `${nav.getBoundingClientRect().bottom}px`);
+  };
+
   const setOpen = (open) => {
+    if (open) medir();
     nav.classList.toggle('is-open', open);
+    document.documentElement.classList.toggle('is-menu-open', open);
     toggle.setAttribute('aria-expanded', String(open));
+  };
+
+  window.addEventListener('resize', () => {
+    if (nav.classList.contains('is-open')) medir();
+  });
+
+  // Con el menú hamburguesa, la barra de accesibilidad (contraste, tamaño,
+  // idiomas, Facile à lire, Intranet) se muda al pie del menú, como en
+  // cdi.lu; al volver a desktop vuelve a su lugar. Los botones se llevan sus
+  // eventos consigo.
+  const toolbar = document.querySelector('.toolbar');
+  const herramientas = toolbar?.querySelector('.toolbar__inner');
+  const panel = nav.querySelector(':scope > nav');
+  const ubicarHerramientas = (enDesktop) => {
+    if (!herramientas || !panel) return;
+    const destino = enDesktop ? toolbar : panel;
+    if (herramientas.parentElement !== destino) destino.appendChild(herramientas);
   };
 
   toggle.addEventListener('click', () => {
@@ -139,7 +165,9 @@ function initNav() {
 
   // Si el viewport vuelve a desktop, el panel no debe quedar "abierto".
   const desktop = window.matchMedia('(min-width: 1081px)');
+  ubicarHerramientas(desktop.matches);
   desktop.addEventListener('change', (event) => {
+    ubicarHerramientas(event.matches);
     if (event.matches) setOpen(false);
   });
 }
@@ -776,6 +804,98 @@ function initCounters() {
  * Se queda con la sección visible que esté más arriba, y no con la última que
  * entró: al scrollear hacia arriba, si no, queda marcada la de abajo.
  */
+/* --------------------------------------------------------------------------
+   Submenú plegable en celular
+   Apilado, el submenú de la sección se reduce a un botón que dice dónde se
+   está —«À propos · Qui sommes-nous ?»— y despliega la lista. Y al final de
+   la página va el acceso a la siguiente de la sección. Los dos se arman acá
+   con lo que ya está en el submenú, así no hay que repetirlo en el marcado
+   de cada página; el CSS los muestra sólo en celular.
+   -------------------------------------------------------------------------- */
+
+function initSubnavToggle() {
+  const wrap = document.querySelector('.subnav-wrap');
+  const lista = wrap?.querySelector('.subnav');
+  if (!wrap || !lista) return;
+
+  const seccion = wrap.querySelector('.subnav__eyebrow strong')?.textContent.trim();
+  const actual = lista.querySelector('a[aria-current="page"]')?.textContent.trim();
+  if (!lista.id) lista.id = 'subnav-lista';
+
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = 'subnav__toggle';
+  boton.setAttribute('aria-expanded', 'false');
+  boton.setAttribute('aria-controls', lista.id);
+
+  const texto = document.createElement('span');
+  const fuerte = document.createElement('strong');
+  fuerte.textContent = seccion || '';
+  texto.append(fuerte);
+  if (actual) {
+    const pagina = document.createElement('span');
+    pagina.className = 'subnav__toggle-page';
+    pagina.textContent = actual;
+    texto.append(' · ', pagina);
+  }
+
+  const flecha = document.createElement('span');
+  flecha.className = 'icon icon--chevron';
+  flecha.setAttribute('aria-hidden', 'true');
+
+  boton.append(texto, flecha);
+  wrap.insertBefore(boton, lista);
+
+  boton.addEventListener('click', () => {
+    const abierto = boton.getAttribute('aria-expanded') !== 'true';
+    boton.setAttribute('aria-expanded', String(abierto));
+    wrap.classList.toggle('is-open', abierto);
+  });
+
+  // La página siguiente; después de la última, vuelta a la primera. Si la
+  // página ya trae su propio acceso (las annexes llevan a la annexe
+  // siguiente), se respeta ése.
+  const columna = document.querySelector('.interior__main');
+  if (!columna || columna.querySelector('.next-page')) return;
+  const enlaces = [...lista.querySelectorAll('a')];
+  const indice = enlaces.findIndex((a) => a.getAttribute('aria-current') === 'page');
+  if (indice < 0 || enlaces.length < 2) return;
+  const ultima = indice === enlaces.length - 1;
+  const siguiente = enlaces[ultima ? 0 : indice + 1];
+
+  const acceso = document.createElement('a');
+  acceso.className = 'next-page';
+  acceso.href = siguiente.getAttribute('href');
+
+  const textos = document.createElement('span');
+  const rotulo = document.createElement('span');
+  rotulo.className = 'next-page__label';
+  rotulo.textContent = ultima ? 'Retour au début' : 'Page suivante';
+  // Qué número es la página que viene y cuántas tiene la sección: «2/8».
+  const numero = (ultima ? 0 : indice + 1) + 1;
+  const cuenta = document.createElement('span');
+  cuenta.className = 'next-page__count';
+  const visible = document.createElement('span');
+  visible.setAttribute('aria-hidden', 'true');
+  visible.textContent = `${numero}/${enlaces.length}`;
+  const leido = document.createElement('span');
+  leido.className = 'visually-hidden';
+  leido.textContent = `, page ${numero} sur ${enlaces.length}`;
+  cuenta.append(visible, leido);
+  rotulo.append(cuenta);
+  const titulo = document.createElement('span');
+  titulo.className = 'next-page__title';
+  titulo.textContent = siguiente.textContent.trim();
+  textos.append(rotulo, titulo);
+
+  const flechita = document.createElement('span');
+  flechita.className = 'icon icon--arrow icon--md';
+  flechita.setAttribute('aria-hidden', 'true');
+
+  acceso.append(textos, flechita);
+  columna.append(acceso);
+}
+
 function initSubnav() {
   const nav = document.querySelector('.subnav');
   if (!nav || !('IntersectionObserver' in window)) return;
@@ -1357,6 +1477,7 @@ initEventPopup();
 initVersionSwitch();
 initA11yToolbar();
 initReveal();
+initSubnavToggle();
 initSubnav();
 initStepper();
 initCounters();

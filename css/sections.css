@@ -71,10 +71,16 @@
   gap: 15px;
 }
 
+/* Mínimo 24 × 24 para tocar (WCAG 2.5.8): A+, A− y el contraste medían 14
+   de ancho. Como no tienen fondo, crecer la caja no cambia cómo se ven. */
 .toolbar__btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  min-width: 24px;
+  min-height: 24px;
   color: var(--c-ink);
   transition: opacity var(--dur-fast) var(--ease-out);
 }
@@ -93,8 +99,24 @@
 }
 
 .toolbar__lang {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  min-height: 24px;
   color: var(--c-muted);
   transition: color var(--dur-fast) var(--ease-out);
+}
+
+/* Con el dedo, la zona que se toca llega a 44px de alto sin agrandar la
+   barra: un pseudoelemento invisible por arriba y por abajo. */
+@media (pointer: coarse) {
+  .toolbar__btn::after,
+  .toolbar__lang::after {
+    content: '';
+    position: absolute;
+    inset: -10px 0;
+  }
 }
 
 .toolbar__lang:hover {
@@ -388,33 +410,47 @@
   height: 2px;
   background: currentColor;
   border-radius: 2px;
-  transition: transform var(--dur-base) var(--ease-out);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+/* Las tres barras parten del mismo punto y las de arriba y abajo se corren
+   7px: así, al girar, se cruzan justo en el centro. Antes cada una giraba
+   sobre su propio lugar, a 2px de la otra, y la X quedaba torcida. */
+.nav__toggle-bars {
+  position: relative;
 }
 
 .nav__toggle-bars::before,
 .nav__toggle-bars::after {
   content: "";
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .nav__toggle-bars::before {
-  top: -7px;
+  transform: translateY(-7px);
 }
 
 .nav__toggle-bars::after {
-  top: 5px;
+  transform: translateY(7px);
 }
 
+/* La barra del medio se apaga en vez de achicarse: las de arriba y abajo
+   son sus pseudoelementos, y con un `scaleX(0)` se achicaban con ella y la X
+   desaparecía. */
 .nav__toggle[aria-expanded="true"] .nav__toggle-bars {
-  transform: scaleX(0);
+  background-color: transparent;
 }
 
 .nav__toggle[aria-expanded="true"] .nav__toggle-bars::before {
-  transform: translateY(7px) rotate(45deg) scaleX(1);
+  transform: rotate(45deg);
 }
 
 .nav__toggle[aria-expanded="true"] .nav__toggle-bars::after {
-  transform: translateY(-5px) rotate(-45deg) scaleX(1);
+  transform: rotate(-45deg);
 }
 
 /* --------------------------------------------------------------------------
@@ -811,14 +847,19 @@
 .news__dots {
   display: flex;
   justify-content: center;
-  gap: 8px;
 }
 
+/* El punto se ve de 12px, pero el botón mide 24 × 24 (WCAG 2.5.8): el
+   relleno queda fuera del fondo, y el redondeo interior sigue siendo un
+   círculo. */
 .news__dot {
+  box-sizing: content-box;
   width: 12px;
   height: 12px;
+  padding: 6px;
   border-radius: 50%;
   background: var(--c-line);
+  background-clip: content-box;
   transition: background-color var(--dur-base) var(--ease-out);
 }
 
@@ -996,15 +1037,33 @@
     margin-left: auto;
   }
 
+  /* El panel ocupa el resto de la pantalla y scrollea solo: con «À propos»
+     abierto era más largo que la pantalla y lo de abajo no se alcanzaba.
+     `--menu-top` es dónde termina la barra (lo mide `initNav` al abrir); la
+     página de atrás queda quieta mientras tanto. */
   .nav > nav {
     position: absolute;
-    left: 0;
-    right: 0;
+    /* De borde a borde de la pantalla, no del contenedor: a los costados se
+       asomaba la página. */
+    left: calc((100% - 100vw) / 2);
+    right: calc((100% - 100vw) / 2);
     top: 100%;
+    height: calc(100dvh - var(--menu-top, var(--nav-h)));
     margin-left: 0;
-    padding: 8px 0 20px;
+    padding: 8px 0 calc(32px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
     background: var(--c-surface);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .is-menu-open {
+    overflow: hidden;
+  }
+
+  /* Los botones flotantes tapaban los últimos ítems del menú. */
+  .is-menu-open .float-tools {
+    display: none;
   }
 
   /* El panel lo abre la clase, no el atributo: en desktop la nav se muestra
@@ -1025,7 +1084,83 @@
     margin-inline: auto;
   }
 
+  /* Con el menú hamburguesa, la barra de accesibilidad no va arriba: se muda
+     al pie del menú, como en cdi.lu (la mueve `initNav`). Se esconde acá, desde
+     el primer pintado, para que no aparezca y desaparezca al cargar. El header
+     pegado ya no tiene que esconder su alto. */
+  :root {
+    --header-h: calc(var(--topbar-h) + var(--nav-h));
+  }
+
+  .header {
+    top: calc(-1 * var(--topbar-h));
+  }
+
+  .toolbar {
+    display: none;
+  }
+
+  /* Al pie del menú, en dos filas: arriba «Facile à lire» e «Intranet»,
+     debajo el contraste y el tamaño del texto a la izquierda y los idiomas a
+     la derecha. El `::after` es el salto de fila: en un contenedor flex, el
+     pseudoelemento es un ítem más y a todo el ancho empuja a los siguientes. */
+  .nav > nav .toolbar__inner {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 20px 16px;
+    margin-top: var(--space-6);
+  }
+
+  .nav > nav .toolbar__inner::after {
+    content: '';
+    order: 3;
+    flex-basis: 100%;
+    height: 0;
+    margin-block: -10px;
+  }
+
+  .nav > nav .toolbar__easy {
+    order: 1;
+  }
+
+  .nav > nav .toolbar__intranet {
+    order: 2;
+  }
+
+  .nav > nav .toolbar__contrast {
+    order: 4;
+  }
+
+  .nav > nav .toolbar__sizes {
+    order: 5;
+    margin-right: 0;
+  }
+
+  .nav > nav .toolbar__langs {
+    order: 6;
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  /* Más grandes que en la barra: acá son botones para el dedo. */
+  .nav > nav .toolbar__easy,
+  .nav > nav .toolbar__intranet {
+    min-height: 40px;
+    font-size: var(--fs-sm);
+  }
+
+  .nav > nav .toolbar__easy {
+    padding-right: 16px;
+  }
+
+  .nav > nav .toolbar__intranet {
+    padding-inline: 10px 16px;
+  }
+
+  /* A todo el ancho: el filete gris medía lo que el texto de cada ítem. */
   .nav__link {
+    display: flex;
+    width: 100%;
     justify-content: space-between;
     padding: 14px 0;
     border-bottom: 1px solid var(--c-line);
