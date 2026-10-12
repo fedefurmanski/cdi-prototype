@@ -831,6 +831,47 @@ function initStepper() {
       });
     });
 
+    // En celular no hay flechas: se pasa de paso deslizando la foto, con el
+    // mismo umbral que el carrusel de noticias.
+    const escena = root.querySelector('.approach__stage');
+    if (escena) {
+      let gesto = null;
+      escena.addEventListener(
+        'touchstart',
+        (event) => {
+          const t = event.touches[0];
+          gesto = { x: t.clientX, y: t.clientY, dx: 0, horizontal: null };
+        },
+        { passive: true },
+      );
+      escena.addEventListener(
+        'touchmove',
+        (event) => {
+          if (!gesto) return;
+          const t = event.touches[0];
+          const dx = t.clientX - gesto.x;
+          const dy = t.clientY - gesto.y;
+          if (gesto.horizontal === null && Math.hypot(dx, dy) > 8) {
+            gesto.horizontal = Math.abs(dx) > Math.abs(dy);
+          }
+          if (gesto.horizontal) gesto.dx = dx;
+        },
+        { passive: true },
+      );
+      const soltar = () => {
+        if (!gesto) return;
+        const { dx, horizontal } = gesto;
+        gesto = null;
+        if (horizontal && Math.abs(dx) > 40) {
+          mostrar((actual() + (dx < 0 ? 1 : -1) + tabs.length) % tabs.length, false);
+        }
+      };
+      escena.addEventListener('touchend', soltar);
+      escena.addEventListener('touchcancel', () => {
+        gesto = null;
+      });
+    }
+
     const inicial = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
     pintar(tabs[inicial >= 0 ? inicial : 0]);
 
@@ -880,19 +921,29 @@ function initCounters() {
   const contar = (el) => {
     const destino = Number(el.dataset.count);
     if (!Number.isFinite(destino)) return;
-    const duracion = 1100;
-    const inicio = performance.now();
+    const duracion = 1800;
 
-    const paso = (ahora) => {
-      const t = Math.min(1, (ahora - inicio) / duracion);
-      // Desacelera al final, igual que el resto de las animaciones.
-      const suave = 1 - Math.pow(1 - t, 3);
-      el.textContent = String(Math.round(destino * suave));
-      if (t < 1) requestAnimationFrame(paso);
+    // La cifra entra con el fundido de su caja (data-reveal). Si cuenta a la
+    // par, para cuando se ve entera ya va por el 95% y se lee como texto fijo
+    // (MarkUp #43): arranca recién cuando la caja está casi visible.
+    const caja = el.closest('[data-reveal]');
+    const retardo = parseFloat(caja?.style.getPropertyValue('--reveal-delay')) || 0;
+    const espera = caja ? retardo + 450 : 0;
+
+    const arrancar = () => {
+      const inicio = performance.now();
+      const paso = (ahora) => {
+        const t = Math.min(1, (ahora - inicio) / duracion);
+        // Desacelera al final, igual que el resto de las animaciones.
+        const suave = 1 - Math.pow(1 - t, 3);
+        el.textContent = String(Math.round(destino * suave));
+        if (t < 1) requestAnimationFrame(paso);
+      };
+      requestAnimationFrame(paso);
     };
 
     el.textContent = '0';
-    requestAnimationFrame(paso);
+    window.setTimeout(arrancar, espera);
   };
 
   const observer = new IntersectionObserver(

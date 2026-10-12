@@ -458,8 +458,16 @@
    alto lo fija el más largo y nada salta al cambiar de paso.
    -------------------------------------------------------------------------- */
 
+/* Grilla de una columna: la foto y las flechas comparten la primera celda
+   (en desktop van encima, abajo a la derecha) y en celular las flechas bajan
+   a su propia fila, fuera de la foto. */
 .approach {
+  display: grid;
   margin-top: var(--space-8);
+}
+
+.approach__stage {
+  grid-area: 1 / 1;
 }
 
 .approach__stage {
@@ -540,10 +548,12 @@
 
 /* Flechas para pasar, abajo a la derecha de la foto. */
 .approach__nav {
-  position: absolute;
+  grid-area: 1 / 1;
+  align-self: end;
+  justify-self: end;
+  position: relative;
   z-index: 1;
-  right: var(--space-8);
-  bottom: var(--space-8);
+  margin: var(--space-8);
   display: flex;
   gap: var(--space-3);
 }
@@ -947,8 +957,20 @@
    es un solo marcado.
    -------------------------------------------------------------------------- */
 
+/* La sección es el contenedor: el paso a lista de abajo depende de su ancho
+   —el de la foto—, no del de la pantalla (ver el @container al final). Va
+   sobre lo que sigue para que la ficha de alguien de abajo pase por encima
+   del título del equipo siguiente y de cualquier otra cosa de la página
+   (menos la navegación). */
 .team {
+  position: relative;
+  z-index: 1;
   margin-top: var(--space-16);
+  container: team / inline-size;
+}
+
+.team:has(.team__person:hover, .team__person:focus-within, .team__person.is-open) {
+  z-index: 9;
 }
 
 /* El equipo que todavía no mandó su foto: el lugar, del mismo tamaño. */
@@ -966,20 +988,15 @@
   color: var(--c-grey-500);
 }
 
-/* La foto es el contenedor: el paso a tarjetas de abajo depende de su ancho,
-   no del de la pantalla (ver el @container al final). */
 .team__stage {
   position: relative;
-  z-index: 1;
   margin-top: var(--space-6);
-  container: team / inline-size;
 }
 
-/* La ficha de alguien de abajo cuelga de la foto: tiene que pasar por encima
-   del título del equipo siguiente y de cualquier otra cosa de la página
-   (menos la navegación). */
-.team__stage:has(.team__person:hover, .team__person:focus-within, .team__person.is-open) {
-  z-index: 9;
+/* La lista de cada equipo, con un retrato por persona: sólo con la foto
+   angosta (ver el @container al final). */
+.team__list {
+  display: none;
 }
 
 /* El marco recorta la foto, y sólo la foto: las fichas van afuera, así
@@ -1735,19 +1752,53 @@
     flex-wrap: wrap;
   }
 
-  .approach__controls {
-    gap: var(--space-5);
-    padding: var(--space-5);
-  }
-
-  .approach__nav {
-    right: var(--space-5);
-    bottom: auto;
-    top: var(--space-5);
-  }
-
+  /* Los tres pasos se reparten todo el ancho de la foto y alcanzan a entrar
+     enteros. Las flechas van a media altura sobre los bordes de la foto,
+     como en un carrusel; también se puede deslizar la foto (ver
+     initStepper). */
   .approach__stage {
     aspect-ratio: 4 / 3;
+    touch-action: pan-y;
+  }
+
+  .approach__controls {
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-5) 18px;
+  }
+
+  .approach__num {
+    font-size: calc(18px * var(--fs-scale));
+  }
+
+  .approach__name {
+    font-size: calc(14px * var(--fs-scale));
+    hyphens: auto;
+  }
+
+  /* La fila de flechas ocupa el ancho de la foto pero solo los botones
+     reciben el toque: el resto sigue siendo foto que se puede deslizar. */
+  .approach__nav {
+    align-self: center;
+    justify-self: stretch;
+    justify-content: space-between;
+    margin: 0;
+    padding-inline: var(--space-3);
+    pointer-events: none;
+  }
+
+  .approach__arrow {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--c-ink);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+  }
+
+  .approach__arrow:hover {
+    background: #fff;
   }
 
   .annexes {
@@ -1774,55 +1825,51 @@
 }
 
 @container team (max-width: 719px) {
-  /* Equipo con la foto angosta (celular y tableta): la foto sola y debajo las
-     fichas, todas a la vista. Las zonas sobre la foto no tienen sentido con el
-     dedo, y con la foto chica la ficha tapaba caras. */
-  .team__frame {
-    border-radius: var(--r-card);
-  }
-
-  .team__people {
-    position: static;
-    display: grid;
-    gap: var(--space-3);
-    margin-top: var(--space-5);
-  }
-
-  .team__spot {
+  /* Con la foto angosta (celular y tableta) las zonas sobre las caras no
+     sirven con el dedo, y una ficha encima tapaba caras: en vez de la foto de
+     grupo va la lista del equipo, en dos columnas para que el scroll sea más
+     corto. Cada persona con su retrato, nombre, cargo y mail; sin
+     «Demande-moi», que es para la ficha de la foto. */
+  .team__stage {
     display: none;
   }
 
-  .team__card {
-    position: static;
-    width: auto;
-    padding: var(--space-4) var(--space-5);
+  .team__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8) var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  .team__portrait {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 20%;
     border-radius: var(--r-card);
-    scale: none;
-    opacity: 1;
-    visibility: visible;
-    filter: none;
-    background: var(--c-surface-alt);
+    background: var(--c-grey-100);
   }
 
-  .team__card::before {
-    content: none;
-  }
-
-  .team__name {
-    font-size: var(--fs-md);
-  }
-
-  .team__role,
-  .team__mail,
-  .team__ask {
-    font-size: var(--fs-sm);
-  }
-
-  .team__ask {
+  .team__member .team__name {
     margin-top: var(--space-3);
+    font-size: var(--fs-base);
   }
 
-  .team__ask strong {
+  .team__member .team__role {
     font-size: var(--fs-xs);
+  }
+
+  /* El mail corta antes de la arroba (<wbr> en el marcado) y el dominio va
+     entero: si no, cortaba en el guion de «cc-cdi». Si el usuario solo no
+     entra, corta donde haga falta. Con el dedo llega a los 24px de alto. */
+  .team__member .team__mail {
+    padding-block: 3px;
+    font-size: calc(13px * var(--fs-scale));
+  }
+
+  .team__domain {
+    white-space: nowrap;
   }
 }
