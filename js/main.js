@@ -369,7 +369,9 @@ function initVideo() {
    -------------------------------------------------------------------------- */
 
 // `?popup=off` lo saca puntualmente, para mirar la página sin él.
-const POPUP_ENABLED = true;
+// TODO: apagado mientras se trabaja la versión mobile (12/10); volver a true
+// antes de mandarle el prototipo al cliente. `?popup=on` lo muestra igual.
+const POPUP_ENABLED = false;
 
 const REMEMBER_DISMISSAL = false;
 const POPUP_KEY = 'cdi:event-popup';
@@ -826,6 +828,52 @@ function initCounters() {
  * Se queda con la sección visible que esté más arriba, y no con la última que
  * entró: al scrollear hacia arriba, si no, queda marcada la de abajo.
  */
+/* --------------------------------------------------------------------------
+   Servicios: en celular, las 4 primeras y «Afficher les 5 autres services»
+   Las nueve apiladas hacían la home larguísima. El botón se agrega acá y el
+   CSS esconde el resto sólo en celular, así que sin JS —o en desktop— se ven
+   todas. Las que aparecen entran con el revelado de siempre.
+   -------------------------------------------------------------------------- */
+
+function initServicesMore() {
+  const grilla = document.querySelector('.services__grid');
+  if (!grilla) return;
+  const VISIBLES = 4;
+  const resto = grilla.children.length - VISIBLES;
+  if (resto < 1) return;
+
+  const caja = document.createElement('div');
+  caja.className = 'services__more';
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = 'services__more-btn';
+  boton.setAttribute('aria-controls', grilla.id || '');
+  boton.setAttribute('aria-expanded', 'false');
+  const texto = document.createElement('span');
+  const flecha = document.createElement('span');
+  flecha.className = 'icon icon--chevron';
+  flecha.setAttribute('aria-hidden', 'true');
+  boton.append(texto, flecha);
+  caja.append(boton);
+  grilla.after(caja);
+
+  const pintar = (abierto) => {
+    boton.setAttribute('aria-expanded', String(abierto));
+    texto.textContent = abierto ? 'Afficher moins' : `Afficher les ${resto} autres services`;
+    grilla.classList.toggle('is-expanded', abierto);
+  };
+
+  boton.addEventListener('click', () => {
+    const abrir = boton.getAttribute('aria-expanded') !== 'true';
+    pintar(abrir);
+    // Al plegar, la lista se acorta por encima del botón: se lo trae a la
+    // vista para no dejar a la persona en otra sección.
+    if (!abrir) boton.scrollIntoView({ block: 'nearest' });
+  });
+
+  pintar(false);
+}
+
 /* --------------------------------------------------------------------------
    Submenú plegable en celular
    Apilado, el submenú de la sección se reduce a un botón que dice dónde se
@@ -1499,6 +1547,7 @@ initEventPopup();
 initVersionSwitch();
 initA11yToolbar();
 initReveal();
+initServicesMore();
 initSubnavToggle();
 initSubnav();
 initStepper();

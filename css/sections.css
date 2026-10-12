@@ -654,6 +654,11 @@
   margin-top: var(--head-gap);
 }
 
+/* El botón «Afficher les … autres services» sólo existe en celular. */
+.services__more {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
    6 · Video block
    -------------------------------------------------------------------------- */
@@ -1354,4 +1359,276 @@
   font-size: 0.62em;
   line-height: 0;
   vertical-align: 0.34em;
+}
+
+/* --- Celular: Vision ---
+   Las formas iban a tamaño de desktop detrás del texto. Acá quedan a la
+   mitad, sólo arriba y abajo de él: arriba a la derecha la X naranja (la Z
+   no entra sin pisar el texto); abajo a la izquierda los círculos, las rayas
+   y la corona verde. La corona sigue en gris en la banda de abajo, así que
+   ese pedazo se achica igual y desde el mismo borde, para que sigan
+   encajando. La banda gana el aire justo para que nada pise el texto. */
+@media (max-width: 760px) {
+  /* A color pleno, como en desktop: el 55% de las pantallas angostas era
+     porque las formas iban detrás del texto, y acá ya no lo pisan. La banda de
+     perfiles también, para que la corona gris siga pareja con la verde. */
+  .elevator .deco,
+  .profiles .deco {
+    --deco-op: 1;
+  }
+
+  .elevator .deco-cluster.is-right {
+    scale: 0.5;
+    transform-origin: 100% 0;
+  }
+
+  .elevator .deco-cluster.is-right > :first-child {
+    display: none;
+  }
+
+  /* Sin la Z, la X sube a la esquina. */
+  .elevator .deco-cluster.is-right > :last-child {
+    top: 0;
+  }
+
+  .elevator .deco-cluster.is-bottom {
+    scale: 0.5;
+    transform-origin: 0 100%;
+  }
+
+  .elevator__inner {
+    padding-top: 120px;
+    padding-bottom: 188px;
+  }
+
+  /* --- Perfiles ---
+     Las rayas grises del pie van a la mitad, desde el borde derecho, por
+     detrás de la esquina de la última tarjeta: asoman debajo y la banda casi
+     no necesita aire abajo (el contenido va sobre la decoración). Las formas
+     de servicios van a color pleno. */
+  .profiles__inner {
+    padding-bottom: var(--space-12);
+  }
+
+  .profiles .deco > [data-deco-pair='rayas'] {
+    scale: 0.5;
+    transform-origin: 100% 100%;
+  }
+
+  .services .deco {
+    --deco-op: 1;
+  }
+
+  /* En celular, sin la continuación rosa de las rayas: arriba de «Tous nos
+     services» sobraba. Las grises del pie de perfiles quedan solas. */
+  .services .deco > [data-deco-pair='rayas'] {
+    display: none;
+  }
+
+  /* Los bandeaux de perfiles con el degradé abajo: en desktop el color entra
+     desde la izquierda, pero acá tapaba media foto —que en el ancho de un
+     celular es casi toda— y el texto quedaba apretado. Las caras y las manos
+     están en la mitad de arriba de las dos fotos, así que el color sube desde
+     el pie y el texto va ahí, a tamaño legible, con la flecha a la derecha. */
+  .profile-banner--gradient {
+    min-height: 0;
+    aspect-ratio: 6 / 5;
+  }
+
+  .profile-banner--gradient .profile-banner__media {
+    width: 100%;
+    object-position: 50% 15%;
+  }
+
+  .profile-banner--gradient::after {
+    background: linear-gradient(
+      0deg,
+      var(--accent) 0%,
+      var(--accent) 34%,
+      color-mix(in srgb, var(--accent) 72%, transparent) 44%,
+      color-mix(in srgb, var(--accent) 30%, transparent) 53%,
+      color-mix(in srgb, var(--accent) 0%, transparent) 63%
+    );
+  }
+
+  /* El título usa todo el ancho —«Les professionnels» entra en un renglón—
+     y sólo la bajada le deja lugar a la flecha: el bloque queda bajo y el
+     degradé no llega a las caras. */
+  .profile-banner--gradient .profile-banner__body {
+    top: auto;
+    bottom: var(--space-6);
+    left: var(--space-6);
+    right: var(--space-6);
+    width: auto;
+  }
+
+  .profile-banner--gradient .profile-banner__title,
+  .profile-banner--gradient .profile-banner__text {
+    max-width: none;
+  }
+
+  .profile-banner--gradient .profile-banner__text {
+    margin-top: var(--space-2);
+    margin-right: 64px;
+    font-size: var(--fs-base);
+  }
+
+  .profile-banner--gradient .profile-banner__arrow {
+    left: auto;
+    right: var(--space-6);
+    bottom: var(--space-6);
+  }
+
+  /* --- Ritmo de la home en celular ---
+     Entre el título de cada sección y su contenido, 32px: los 80px de desktop,
+     apilado, despegaban el título de lo suyo. */
+  :root {
+    --head-gap: var(--space-8);
+  }
+
+  /* --- Servicios ---
+     Tarjetas compactas: miden lo que su contenido, con «En savoir plus» justo
+     debajo del texto. Con el alto fijo de desktop (290px) y 48px entre una y
+     otra, la sección medía más de cuatro pantallas. */
+  /* Las tarjetas apiladas, a 20px una de otra en toda la home: los perfiles
+     traían los 40px de desktop y los servicios, 48. */
+  .profiles__grid,
+  .services__grid {
+    gap: var(--space-5);
+  }
+
+  .service-card {
+    min-height: 0;
+    padding: 28px;
+  }
+
+  .service-card__badge {
+    top: 28px;
+    right: 28px;
+  }
+
+  .service-card__title {
+    margin-top: var(--space-5);
+  }
+
+  .service-card__text {
+    margin-top: var(--space-3);
+  }
+
+  .service-card .link-arrow {
+    margin-top: var(--space-5);
+    margin-bottom: 0;
+  }
+
+  /* Las 4 primeras y el botón para ver el resto (lo agrega
+     `initServicesMore`); la flecha gira al desplegar. */
+  .js .services__grid:not(.is-expanded) > :nth-child(n + 5) {
+    display: none;
+  }
+
+  /* Un link de texto y no un botón lleno: lleno pesaba demasiado al pie de
+     la lista. Mide 44px de alto para tocarlo cómodo. */
+  .services__more {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+
+  .services__more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 48px;
+    padding-inline: var(--space-2);
+    font-size: var(--fs-md);
+    font-weight: var(--fw-bold);
+    color: var(--c-teal-ink);
+  }
+
+  .services__more-btn .icon {
+    width: 12px;
+    height: 7px;
+  }
+
+  .services__more-btn:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .services__more .icon {
+    transition: rotate var(--dur-base) var(--ease-out);
+  }
+
+  .services__more [aria-expanded='true'] .icon {
+    rotate: 180deg;
+  }
+
+  /* Sin los chevrones turquesa del pie: debajo de «Afficher les … autres
+     services» sobraban. */
+  .services .deco > img.is-bottom {
+    display: none;
+  }
+
+  /* --- Actualités ---
+     Sin las formas de fondo, que quedaban detrás del título y de «Voir tout»:
+     en su lugar, la composición del pie (`.deco-foot`), con «Voir tout»
+     montado 40px sobre su fila de arriba, como «Page suivante» en las páginas
+     interiores. */
+  .news .deco {
+    display: none;
+  }
+
+  .news__inner {
+    padding-bottom: 122px;
+  }
+
+  /* Entre los controles del carrusel y «Voir tout», 32px y no los 64 de
+     desktop. */
+  .news__cta {
+    margin-top: var(--space-8);
+  }
+
+  /* --- Video ---
+     Sin formas en celular: el damero y el rombo pisaban el video y el texto,
+     y la X rosa sola arriba obligaba a dejarle un aire que se veía raro. */
+  .videoblock .deco {
+    display: none;
+  }
+
+  /* El video de borde a borde y pegado al borde de arriba de la banda, sin
+     redondeo: corta la sección como una franja. El texto sigue debajo con
+     los márgenes de siempre. */
+  .videoblock__inner {
+    padding-top: 0;
+  }
+
+  .videoblock__media {
+    margin-inline: calc((100% - 100vw) / 2);
+    border-radius: 0;
+  }
+
+  /* Los espacios por grupos: el título cerca de su video, la bajada y el texto
+     juntos, y el botón un poco más despegado. Venían casi todos iguales (48,
+     20, 20, 40) y no se leía qué iba con qué. */
+  .videoblock__inner {
+    gap: var(--space-6);
+  }
+
+  .videoblock__lead {
+    margin-top: var(--space-3);
+  }
+
+  .videoblock__text {
+    margin-top: var(--space-2);
+  }
+
+  .videoblock .btn {
+    margin-top: var(--space-6);
+  }
+
+  /* En celular, sin la continuación gris de la corona: le quitaba aire al
+     título de perfiles. La verde de Vision queda apoyada en su borde. */
+  .profiles .deco > [data-deco-pair='corona'] {
+    display: none;
+  }
 }

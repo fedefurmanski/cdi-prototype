@@ -221,6 +221,56 @@ button {
   height: var(--h, auto);
 }
 
+/* La composición de formas del pie (`.deco-foot`): sólo en celular, donde
+   reemplaza a las formas de fondo de la última banda —en las páginas
+   interiores y en la home—, que ahí quedaban detrás del texto. Escalonada en
+   dos filas, termina en diagonal: 3 casillas arriba y 4 abajo, con la grande
+   ocupando 2 × 2 a la izquierda, todas pegadas a 2px como los grupos de
+   desktop. Va apoyada sobre el footer; el contenido de la banda va por
+   encima (cada página le deja su lugar). */
+.deco-foot {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .deco-foot {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    grid-template-rows: repeat(2, 80px);
+    grid-template-areas:
+      'big big a .'
+      'big big b c';
+    gap: 2px;
+    opacity: var(--deco-op, 1);
+    pointer-events: none;
+  }
+
+  .deco-foot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .deco-foot__big {
+    grid-area: big;
+  }
+
+  .deco-foot > :nth-child(2) {
+    grid-area: a;
+  }
+
+  .deco-foot > :nth-child(3) {
+    grid-area: b;
+  }
+
+  .deco-foot > :nth-child(4) {
+    grid-area: c;
+  }
+}
+
 /* Riel para formas que acompañan el scroll: ocupa todo el alto de la banda y
    lleva adentro un `.deco-cluster` en flujo, a `--start` del tope. Al bajar,
    el grupo sube con la página hasta que su pie toca el de la ventana; ahí
@@ -257,11 +307,14 @@ button {
   text-align: center;
 }
 
+/* `balance` reparte el título en renglones parejos: en pantallas angostas
+   dejaba una palabra sola en el último («… services / pour»). */
 .section-title {
   font-size: var(--fs-h2);
   font-weight: var(--fw-regular);
   line-height: 1.3125;
   color: var(--c-ink);
+  text-wrap: balance;
 }
 
 .section-title strong {

@@ -143,14 +143,6 @@
   display: none;
 }
 
-/* La composición de formas del pie: sólo en celular, donde reemplaza a las
-   de los márgenes. Escalonada en dos filas, termina en diagonal: 3 casillas
-   arriba y 4 abajo, con la grande ocupando 2 × 2 a la izquierda, todas
-   pegadas a 2px como los grupos de desktop. */
-.deco-foot {
-  display: none;
-}
-
 /* --------------------------------------------------------------------------
    Encabezado y ritmo del contenido
    -------------------------------------------------------------------------- */
@@ -1547,6 +1539,8 @@
 
   /* Al terminar de leer, la página siguiente de la sección: sin esto, para
      seguir había que volver arriba hasta el submenú. */
+  /* Rosa claro de la sección y no blanco: blanca sobre blanco se mezclaba con
+     el fondo y con las formas grises de abajo. */
   .next-page {
     display: flex;
     align-items: center;
@@ -1556,7 +1550,7 @@
     padding: var(--space-5);
     border-left: 3px solid var(--section, var(--c-teal));
     border-radius: var(--r-card);
-    background: var(--c-surface);
+    background: color-mix(in srgb, var(--section, var(--c-teal)) 8%, var(--c-surface));
     box-shadow: var(--shadow-soft);
     color: var(--c-ink);
   }
@@ -1695,46 +1689,9 @@
 
   /* En las páginas interiores, en celular, las formas de los márgenes se
      esconden —eran demasiado grandes y quedaban detrás del texto— y en su
-     lugar va la composición del pie (`.deco-foot`, ver más arriba). */
+     lugar va la composición del pie (`.deco-foot`, en base.css). */
   .interior .deco {
     display: none;
-  }
-
-  .deco-foot {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 80px);
-    grid-template-rows: repeat(2, 80px);
-    grid-template-areas:
-      'big big a .'
-      'big big b c';
-    gap: 2px;
-    opacity: var(--deco-op, 1);
-    pointer-events: none;
-  }
-
-  .deco-foot img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .deco-foot__big {
-    grid-area: big;
-  }
-
-  .deco-foot > :nth-child(2) {
-    grid-area: a;
-  }
-
-  .deco-foot > :nth-child(3) {
-    grid-area: b;
-  }
-
-  .deco-foot > :nth-child(4) {
-    grid-area: c;
   }
 
   /* La composición mide 162px y la tarjeta de «Page suivante» se monta 40px

@@ -338,7 +338,7 @@
           <!-- B · r7: bandeau a sangre, foto en duotono sobre el color -->
           <div class="profiles__variant" data-profiles-variant="banners">
             <header class="section-head" data-reveal="up">
-              <h2 class="section-title">Consulter tous <strong>nos services pour</strong></h2>
+              <h2 class="section-title">Consulter tous <strong>nos services&nbsp;pour</strong></h2>
             </header>
 
             <div class="profiles__grid" data-reveal-group>
@@ -370,7 +370,7 @@
                que se vea a la gente no es un detalle menor. -->
           <div class="profiles__variant" data-profiles-variant="gradient">
             <header class="section-head" data-reveal="up">
-              <h2 class="section-title">Consulter tous <strong>nos services pour</strong></h2>
+              <h2 class="section-title">Consulter tous <strong>nos services&nbsp;pour</strong></h2>
             </header>
 
             <div class="profiles__grid" data-reveal-group>
@@ -416,7 +416,9 @@
             <p class="section-subtitle">Trouvez toutes les réponses à vos questions</p>
           </header>
 
-          <div class="services__grid" data-reveal-group>
+          <!-- En celular se ven las 4 primeras y un botón muestra el resto (ver
+               `initServicesMore`); en desktop, las 9. -->
+          <div class="services__grid" id="services-grid" data-reveal-group>
             <a class="service-card" href="#" style="--accent: var(--c-teal-deep)">
               <span class="service-card__badge" aria-hidden="true">
                 <span class="service-card__icon service-card__icon--diagnostic"></span>
@@ -729,6 +731,17 @@
               <span class="icon icon--arrow" aria-hidden="true"></span>
             </a>
           </div>
+        </div>
+        <!-- En celular, las formas de fondo de esta banda no van —quedaban
+             detrás del título y de «Voir tout»— y en su lugar va al pie, antes
+             del footer, la misma composición escalonada de las páginas
+             interiores, con las formas de esta banda (ver .deco-foot en
+             base.css). En desktop no se muestra. -->
+        <div class="deco-foot" aria-hidden="true">
+          <img class="deco-foot__big" src="assets/svg/deco-triangles-green.svg" alt="" />
+          <img src="assets/svg/deco-stripes-pink-2.svg" alt="" />
+          <img src="assets/svg/deco-burst-teal.svg" alt="" />
+          <img src="assets/svg/deco-grey-checkers2.svg" alt="" />
         </div>
       </section>
     </main>
