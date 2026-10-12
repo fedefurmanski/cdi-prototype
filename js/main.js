@@ -456,9 +456,7 @@ function initVideo() {
    -------------------------------------------------------------------------- */
 
 // `?popup=off` lo saca puntualmente, para mirar la página sin él.
-// TODO: apagado mientras se trabaja la versión mobile (12/10); volver a true
-// antes de mandarle el prototipo al cliente. `?popup=on` lo muestra igual.
-const POPUP_ENABLED = false;
+const POPUP_ENABLED = true;
 
 const REMEMBER_DISMISSAL = false;
 const POPUP_KEY = 'cdi:event-popup';

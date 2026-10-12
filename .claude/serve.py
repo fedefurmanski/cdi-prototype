@@ -28,7 +28,15 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
 
 
 Handler = functools.partial(NoCacheHandler, directory=ROOT)
-socketserver.TCPServer.allow_reuse_address = True
-with socketserver.TCPServer(("127.0.0.1", 4173), Handler) as httpd:
+
+
+# Un hilo por pedido: con un servidor de un solo hilo, una conexión que el
+# navegador deja abierta trababa todo el preview.
+class Server(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+
+with Server(("127.0.0.1", 4173), Handler) as httpd:
     print(f"serving {ROOT} on http://127.0.0.1:4173")
     httpd.serve_forever()
