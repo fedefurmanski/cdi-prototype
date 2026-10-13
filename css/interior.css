@@ -33,18 +33,6 @@
   padding-bottom: var(--section-pb);
 }
 
-/* La atenuación va en el grupo gris del margen y no en toda la capa: así la
-   forma de arriba a la derecha, en el rosa de la sección, queda plena
-   (prueba del 12/10). El riel no se anima —entran sus piezas—, así que esta
-   opacidad no se pisa con la de la entrada. */
-.interior .deco {
-  opacity: 1;
-}
-
-.interior .deco > .deco-rail {
-  opacity: var(--deco-op, 1);
-}
-
 /* La columna de formas del margen mide 676px y se ancla al pie de la sección;
    la tarjeta de la barra lateral termina a 650px del tope. Por debajo de la
    suma de las dos, las formas se meten detrás de la tarjeta y la mitad de la

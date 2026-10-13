@@ -73,8 +73,7 @@ assets/
     equipe/groupe-1.jpg        The only team group photo received so far
     equipe/personas/           Individual portraits (from cdi.lu), 39 files
   svg/                         Decorative shapes of the home, logos
-  svg/kit/                     Shapes from the brand design kit (À propos);
-                               *-rosa.svg are pink copies (see below)
+  svg/kit/                     Shapes from the brand design kit (À propos)
   icons/                       UI icons, service icons, social networks
   video/hero.mp4               Hero footage (see video/LEEME.txt)
 .claude/serve.py               Local server
@@ -144,11 +143,12 @@ spacing and motion. A few that are not obvious:
   Parents orange, Professionnels teal, Actualités coral, Contact green. In the
   nav the colour is only a thin underline (text stays black — the client
   rejected coloured nav text). On À propos pages it drives the sidebar, the
-  "next page" card, list bullets and the pink corner shape. Buttons are always
-  teal.
+  "next page" card and list bullets. Buttons are always teal.
 - **`--c-on-brand`** is the text/icon colour on brand colours (buttons, badges,
-  arrows): night blue, 7.9:1 on the teal. It becomes white in high contrast.
-  White text on the brand teal or orange does not pass AA.
+  arrows): **white, by the client's choice**, although white on the brand teal
+  is only 2.4:1 and does not pass AA. Night blue (`var(--c-navy)`, 7.8:1) was
+  tried and rejected; if an audit requires it, that one token is the switch.
+  In high contrast the brand colours darken and white passes.
 - **`--c-teal-ink`** (#008292, 4.56:1) is the teal for text links; the brand
   teal is only used for fills.
 - **Type scale** (`--fs-*`) is multiplied by `--fs-scale`, which the A−/A+
@@ -193,8 +193,8 @@ every page.
 
 **Brand-kit shapes** (`assets/svg/kit/`) carry their own grey through the SVG
 `color` attribute (`#E9EAEC`, painted with `currentColor`). Because they are
-used as `<img>`, CSS cannot recolour them; the pink corner shape of the À
-propos pages therefore uses pink copies (`kit-XX-Y-rosa.svg`, `#EA5F9E`). In
+used as `<img>`, CSS cannot recolour them (a pink version of the corner
+shape was tried and dropped; it would need coloured copies of the SVGs). In
 *Notre philosophie* the large shapes inside the coloured blocks are CSS masks
 (`.shape`) and take the block's colour.
 
@@ -251,11 +251,9 @@ the left shape column overlaps the sidebar card clearly (a near-touch reads as
 a mistake; a generous overlap reads as depth).
 
 **Shapes on desktop.** Each page has its own grey combination in the left
-column (a sticky `.deco-rail`) and **one pink shape at the top right**, cut by
-the window edge. Every page has a different pink shape (no big single circles,
-none repeating its own grey column); the seven annexe pages share the one of
-*Nos annexes*. The grey column is at 78% opacity (`--deco-op`), the pink shape
-at 100% — the opacity is set on the rail, not on the whole layer.
+column (a sticky `.deco-rail`) and one grey shape at the top right, cut by the
+window edge. The whole layer is at 78% opacity (`--deco-op`): the shapes
+accompany a column of long text, not a cover.
 
 **Per page:**
 
@@ -375,8 +373,9 @@ where nothing animates.
   raises the hero scrim to 0.72, underlines links and outlines cards. Stored in
   `localStorage` with the text size.
 - **Text size**: three steps through `--fs-scale`.
-- Buttons and links on brand colours use `--c-on-brand`; text links use
-  `--c-teal-ink` (AA).
+- Text links use `--c-teal-ink` (AA). White text and icons on brand colours
+  (buttons, badges, floating tools, social icons) do **not** pass AA; it is a
+  client decision, see `--c-on-brand` above.
 - Secondary grey text is darker than in Figma, whose #909090 failed AA (3.2:1
   on white, 2.6:1 on the tag pills). `--c-muted` is #707070 (4.7:1 or more on
   white and on the footer grey; inactive languages, copyright, date years,

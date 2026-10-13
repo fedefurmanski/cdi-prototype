@@ -1117,8 +1117,8 @@
 }
 
 /* En el turquesa del CDI, el mismo del botón de accesibilidad de al lado y
-   de los botones del sitio (MarkUp #45), con el texto en azul noche para que
-   pase AA (ver --c-on-brand). */
+   de los botones del sitio (MarkUp #45), con el texto en blanco (ver
+   --c-on-brand). */
 .float-tools__read {
   gap: var(--space-2);
   padding-inline: 14px 18px;
@@ -1137,13 +1137,6 @@
   width: 44px;
   border-radius: 50%;
   background: var(--c-teal);
-}
-
-/* Los íconos son SVG blancos: el filtro los pasa a oscuro, como el texto de
-   los botones (blanco sobre turquesa no llegaba al 3:1 de los íconos). */
-.float-tools__a11y img,
-.footer__social img {
-  filter: brightness(0);
 }
 
 .float-tools__a11y img {
